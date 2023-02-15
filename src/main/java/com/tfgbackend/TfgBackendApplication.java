@@ -29,7 +29,7 @@ public class TfgBackendApplication implements CommandLineRunner {
 
         repository.deleteAll();
 
-        repository.save(new User("Carlo","ulrich111@hotmail.com", LocalDateTime.now(), Rol.ADMIN));
+        repository.save(new User("Andres","ulrich111@hotmail.com", LocalDateTime.now(), Rol.ADMIN));
         repository.save(new User("Carlos","ulrich111@hotmail.com", LocalDateTime.now(), Rol.ADMIN));
 
         // fetch all customers

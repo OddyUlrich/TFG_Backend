@@ -11,8 +11,6 @@ import java.time.LocalDateTime;
 @RestController
 public class UserController {
 
-    private static final String template = "Hello, %s!";
-
     @GetMapping("/alumno")
     public User user(
             @RequestParam(value = "name", defaultValue = "Manuel") String name,
