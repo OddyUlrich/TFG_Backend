@@ -2,23 +2,21 @@ package com.tfgbackend.model;
 
 import jakarta.validation.constraints.NotBlank;
 import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
-@Document("users")
-public record User(
+@Document("ExerciseBatteries")
+public record ExerciseBattery (
         @Indexed(unique = true) @NotBlank String name,
-        @Indexed(unique = true) @NotBlank String email,
-        LocalDateTime birthday,
-        List<Subject> subjects,
-        @NotBlank Rol rol) {
+        @DBRef(lazy = true) List<Exercise> exerciseList,
+        @DBRef(lazy = true) @NotBlank Subject subject){
 
     @Override
     public String toString() {
         return String.format(
-                "User[" + name + "," + email + "," + rol + "]"
+                "User[" + name + "]"
         );
     }
 }

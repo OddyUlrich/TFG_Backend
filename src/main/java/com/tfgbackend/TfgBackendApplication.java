@@ -9,6 +9,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 
 @SpringBootApplication
 public class TfgBackendApplication implements CommandLineRunner {
@@ -29,8 +30,10 @@ public class TfgBackendApplication implements CommandLineRunner {
 
         repository.deleteAll();
 
-        repository.save(new User("Andres","ulrich111@hotmail.com", LocalDateTime.now(), Rol.ADMIN));
-        repository.save(new User("Carlos","ulrich111@hotmail.com", LocalDateTime.now(), Rol.ADMIN));
+        User profesor = new User("Andres","andres@hotmail.com", LocalDateTime.now(), Arrays.asList("foo", "bar"), Rol.TEACHER);
+
+        repository.save(profesor);
+        repository.save(new User("Carlos","ulrich111@hotmail.com", LocalDateTime.now(), Arrays.asList("foo", "bar"), Rol.ADMIN));
 
         // fetch all customers
         System.out.println("Customers found with findAll():");
@@ -43,8 +46,7 @@ public class TfgBackendApplication implements CommandLineRunner {
         // fetch an individual customer
         System.out.println("Customer found with findByFirstName('Carlos'):");
         System.out.println("--------------------------------");
-        for (User user : repository.findUserByName("Carlos")) {
-            System.out.println(user);
-        }
+        System.out.println(repository.findUserByName("Carlos"));
+
     }
 }
