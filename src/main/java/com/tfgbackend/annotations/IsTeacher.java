@@ -6,10 +6,10 @@ import jakarta.validation.Payload;
 import java.lang.annotation.*;
 
 @Documented
-@Constraint(validatedBy = isTeacherValidator.class)
-@Target( { ElementType.RECORD_COMPONENT })
+@Constraint(validatedBy = IsTeacherValidator.class)
+@Target( { ElementType.FIELD })
 @Retention(RetentionPolicy.RUNTIME)
-public @interface isTeacher {
+public @interface IsTeacher {
     String message() default "Invalid user, rol not correct";
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};

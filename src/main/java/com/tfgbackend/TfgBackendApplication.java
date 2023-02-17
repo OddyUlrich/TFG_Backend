@@ -1,15 +1,20 @@
 package com.tfgbackend;
 
+import com.tfgbackend.model.Exercise;
 import com.tfgbackend.model.Rol;
 import com.tfgbackend.model.User;
 import com.tfgbackend.repositories.UsersRepository;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
 
 @SpringBootApplication
 public class TfgBackendApplication implements CommandLineRunner {
@@ -30,10 +35,15 @@ public class TfgBackendApplication implements CommandLineRunner {
 
         repository.deleteAll();
 
-        User profesor = new User("Andres","andres@hotmail.com", LocalDateTime.now(), Arrays.asList("foo", "bar"), Rol.TEACHER);
+        User profesor = new User(null, "Andres","andres@hotmail.com", LocalDateTime.now(), List.of(), Rol.STUDENT);
+        Exercise ejercicio = new Exercise(null, "", profesor);
+
+        Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+        Set<ConstraintViolation<Exercise>> violaciones = validator.validate(ejercicio);
+        System.out.println(violaciones.toString());
 
         repository.save(profesor);
-        repository.save(new User("Carlos","ulrich111@hotmail.com", LocalDateTime.now(), Arrays.asList("foo", "bar"), Rol.ADMIN));
+        repository.save(new User(null, "Carlos","ulrich111@hotmail.com", LocalDateTime.now(), List.of(), Rol.ADMIN));
 
         // fetch all customers
         System.out.println("Customers found with findAll():");
