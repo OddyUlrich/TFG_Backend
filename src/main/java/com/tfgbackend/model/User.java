@@ -1,5 +1,7 @@
 package com.tfgbackend.model;
 
+import com.tfgbackend.model.enumerators.Rol;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
@@ -15,7 +17,7 @@ public record User(
         @Indexed(unique = true) @NotBlank String name,
         @Indexed(unique = true) @NotBlank String email,
         LocalDateTime birthday,
-        List<Subject> subjects,
+        List<@Valid Subject> subjects,
         @NotBlank Rol rol) {
 
     @Override

@@ -1,5 +1,6 @@
 package com.tfgbackend.model;
 
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import org.bson.types.ObjectId;
@@ -14,13 +15,13 @@ import java.util.List;
 public record ExerciseBattery (
         @Id ObjectId id,
         @Indexed(unique = true) @NotBlank String name,
-        @DBRef(lazy = true) List<Exercise> exerciseList,
-        @DBRef(lazy = true) @NotNull Subject subject){
+        @DBRef(lazy = true) List<@Valid Exercise> exerciseList,
+        @DBRef(lazy = true) @NotNull @Valid Subject subject){
 
     @Override
     public String toString() {
         return String.format(
-                "User[" + name + "]"
+                "ExerciseBattery[" + name + "]"
         );
     }
 }

@@ -1,6 +1,7 @@
 package com.tfgbackend.model;
 
 import com.tfgbackend.annotations.IsTeacher;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import org.bson.types.ObjectId;
@@ -19,12 +20,12 @@ public record Exercise(
         @NotBlank List<String> rules,
         @NotBlank String successCondition,
         @DBRef List<Tag> tags,
-        @DBRef(lazy = true) @NotNull @IsTeacher User teacher) {
+        @DBRef(lazy = true) @NotNull @IsTeacher @Valid User teacher) {
 
     @Override
     public String toString() {
         return String.format(
-                "User[" + name + ", Statement: " + statement + ", Tags: " + tags.toString() + "]"
+                "Exercise[" + name + ", Statement: " + statement + ", Tags: " + tags.toString() + "]"
         );
     }
 }

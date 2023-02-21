@@ -1,6 +1,6 @@
 package com.tfgbackend.annotations;
 
-import com.tfgbackend.model.Rol;
+import com.tfgbackend.model.enumerators.Rol;
 import com.tfgbackend.model.User;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;

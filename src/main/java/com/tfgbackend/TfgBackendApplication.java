@@ -1,9 +1,9 @@
 package com.tfgbackend;
 
 import com.tfgbackend.model.Exercise;
-import com.tfgbackend.model.Rol;
+import com.tfgbackend.model.enumerators.Rol;
 import com.tfgbackend.model.User;
-import com.tfgbackend.repositories.UsersRepository;
+import com.tfgbackend.repositories.UserRepository;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
@@ -19,10 +19,10 @@ import java.util.Set;
 @SpringBootApplication
 public class TfgBackendApplication implements CommandLineRunner {
 
-    private final UsersRepository repository;
+    private final UserRepository repository;
 
     @Autowired
-    public TfgBackendApplication(UsersRepository repository) {
+    public TfgBackendApplication(UserRepository repository) {
         this.repository = repository;
     }
 

@@ -8,7 +8,7 @@ public record Tag(
     @Override
     public String toString() {
         return String.format(
-                "User[" + name + "]"
+                "Tag[" + name + "]"
         );
     }
 }

@@ -7,7 +7,7 @@ import java.lang.annotation.*;
 
 @Documented
 @Constraint(validatedBy = IsTeacherValidator.class)
-@Target( { ElementType.FIELD })
+@Target( { ElementType.FIELD, ElementType.TYPE_USE })
 @Retention(RetentionPolicy.RUNTIME)
 public @interface IsTeacher {
     String message() default "Invalid user, rol not correct";
