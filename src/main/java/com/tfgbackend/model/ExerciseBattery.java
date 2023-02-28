@@ -15,7 +15,7 @@ import java.util.List;
 public record ExerciseBattery (
         @Id ObjectId id,
         @Indexed(unique = true) @NotBlank String name,
-        @DBRef(lazy = true) List<@Valid Exercise> exerciseList,
+        @DBRef(lazy = true) List<@Valid Exercise> exerciseList /*confirmar que debe seguir aqui*/,
         @DBRef(lazy = true) @NotNull @Valid Subject subject){
 
     @Override

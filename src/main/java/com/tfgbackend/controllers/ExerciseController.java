@@ -2,32 +2,37 @@ package com.tfgbackend.controllers;
 
 import com.tfgbackend.model.ExerciseBattery;
 import com.tfgbackend.repositories.ExerciseBatteryRepository;
+import com.tfgbackend.service.ExerciseService;
+import com.tfgbackend.service.dto.ExerciseSolutionDTO;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
 @RestController
-public class ExerciseController() {
+@RequestMapping("/exercises")
+public class ExerciseController{
 
-    private final ExerciseBatteryRepository eBR;
+    private final ExerciseService exerciseService;
 
     @Autowired
-    public ExerciseController(ExerciseBatteryRepository eBR){
-        this.eBR = eBR;
+    public ExerciseController(ExerciseService exerciseService) {
+        this.exerciseService = exerciseService;
     }
 
-    @GetMapping("/{studentId}/exercises")
-    public ResponseEntity<List<ExerciseBattery>> user(@PathVariable String studentId){
+    @GetMapping
+    public ResponseEntity<List<ExerciseSolutionDTO>> user() {
 
-        //Cambiar para que no acceda al repositorio sino a un servicio. Esto quiere decir que el atributo de la clase será el servicio, no esto.
-        //Sería el servicio el que accedería al otro controlador para, a partir del ID del alumno, conseguir las asignaturas y luego hacer esto, no?
-        //Queda la duda de si, en este punto tendríamos guardado al estudiante mientras que entramos en diferentes paginas y no haria falta buscarlo ya -> Axel
-        List<ExerciseBattery> exerciseBatteryFromStudent = eBR.allExerciseBatteryByUserSubjects();
-        return ResponseEntity.status(HttpStatus.OK).body(ejemplo);
+        //TODO Provisional, lo suyo es que lo recibe por argumento
+        ObjectId studentId = new ObjectId("635981f6e40f61599e000064");
+
+        //TODO Tendria que comprobar que pasa si vuelve algo vacío y enviar otro status, no? Recogiendo excepciones y eso
+        List<ExerciseSolutionDTO> listStudentExercises = exerciseService.allExercisesByStudent(studentId);
+        return ResponseEntity.status(HttpStatus.OK).body(listStudentExercises);
     }
 }

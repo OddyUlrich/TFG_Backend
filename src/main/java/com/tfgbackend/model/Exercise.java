@@ -20,6 +20,7 @@ public record Exercise(
         @NotBlank List<String> rules,
         @NotBlank String successCondition,
         @DBRef List<Tag> tags,
+        @DBRef(lazy = true) @NotNull @Valid ExerciseBattery exerciseBattery,
         @DBRef(lazy = true) @NotNull @IsTeacher @Valid User teacher) {
 
     @Override
