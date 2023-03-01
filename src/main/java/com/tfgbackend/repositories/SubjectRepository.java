@@ -11,6 +11,7 @@ import java.util.List;
 @Repository
 public interface SubjectRepository extends MongoRepository<Subject, Long> {
 
-    @Query("{ 'studentsList.id': ?0 }")
+    @Query(value = "{ 'studentsList.id': ?0 }", fields = "{'studentsList': 1, 'name' : 1, 'year': 1}")
     List<Subject> findAllByStudentID(ObjectId studentId);
+
 }

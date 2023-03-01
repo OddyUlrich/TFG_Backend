@@ -1,7 +1,6 @@
 package com.tfgbackend.controllers;
 
 import com.tfgbackend.model.ExerciseBattery;
-import com.tfgbackend.repositories.ExerciseBatteryRepository;
 import com.tfgbackend.service.ExerciseService;
 import com.tfgbackend.service.dto.ExerciseSolutionDTO;
 import org.bson.types.ObjectId;
@@ -16,7 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/exercises")
-public class ExerciseController{
+public class ExerciseController {
 
     private final ExerciseService exerciseService;
 
@@ -26,13 +25,19 @@ public class ExerciseController{
     }
 
     @GetMapping
-    public ResponseEntity<List<ExerciseSolutionDTO>> user() {
+    public ResponseEntity<List<ExerciseBattery>> user() {
 
         //TODO Provisional, lo suyo es que lo recibe por argumento
         ObjectId studentId = new ObjectId("635981f6e40f61599e000064");
 
         //TODO Tendria que comprobar que pasa si vuelve algo vacío y enviar otro status, no? Recogiendo excepciones y eso
-        List<ExerciseSolutionDTO> listStudentExercises = exerciseService.allExercisesByStudent(studentId);
-        return ResponseEntity.status(HttpStatus.OK).body(listStudentExercises);
+        //List<ExerciseSolutionDTO> listStudentExercises = exerciseService.allExercisesByStudent(studentId);
+        List<ExerciseBattery> lista = exerciseService.allExercisesByStudent(studentId);
+
+        for (ExerciseBattery eb : lista){
+            System.out.println("ATIENDE: " + eb.name() + ", Ejercicios: " + eb.exerciseList());
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body(lista);
     }
 }

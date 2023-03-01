@@ -6,9 +6,11 @@ import jakarta.validation.constraints.NotNull;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
 
+@Document("solutions")
 public record Solution(
         @Id ObjectId id,
         @NotNull LocalDateTime timestamp,

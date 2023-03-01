@@ -11,7 +11,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.List;
 
-@Document("ExerciseBatteries")
+@Document("exerciseBatteries")
 public record ExerciseBattery (
         @Id ObjectId id,
         @Indexed(unique = true) @NotBlank String name,

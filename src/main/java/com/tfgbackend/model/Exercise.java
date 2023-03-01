@@ -3,6 +3,7 @@ package com.tfgbackend.model;
 import com.tfgbackend.annotations.IsTeacher;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
@@ -16,9 +17,9 @@ import java.util.List;
 public record Exercise(
         @Id ObjectId id,
         @Indexed(unique = true) @NotBlank String name,
-        @NotBlank String statement,
-        @NotBlank List<String> rules,
-        @NotBlank String successCondition,
+        /*@NotBlank*/ String statement,
+        /*@NotEmpty*/ List<String> rules,
+        /*@NotBlank*/ String successCondition,
         @DBRef List<Tag> tags,
         @DBRef(lazy = true) @NotNull @Valid ExerciseBattery exerciseBattery,
         @DBRef(lazy = true) @NotNull @IsTeacher @Valid User teacher) {
