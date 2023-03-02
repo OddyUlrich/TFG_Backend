@@ -1,14 +1,9 @@
 package com.tfgbackend;
 
-import com.tfgbackend.model.Exercise;
-import com.tfgbackend.model.ExerciseBattery;
-import com.tfgbackend.model.Subject;
+import com.tfgbackend.model.*;
 import com.tfgbackend.model.enumerators.Rol;
-import com.tfgbackend.model.User;
-import com.tfgbackend.repositories.ExerciseBatteryRepository;
-import com.tfgbackend.repositories.ExerciseRepository;
-import com.tfgbackend.repositories.SubjectRepository;
-import com.tfgbackend.repositories.UserRepository;
+import com.tfgbackend.model.enumerators.StatusExercise;
+import com.tfgbackend.repositories.*;
 import com.tfgbackend.service.ExerciseService;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
@@ -18,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.data.mongodb.core.convert.LazyLoadingProxy;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -28,18 +22,20 @@ import java.util.Set;
 public class TfgBackendApplication implements CommandLineRunner {
 
     private final UserRepository ur;
-    private final SubjectRepository sr;
+    private final SubjectRepository subjectRepository;
     private final ExerciseRepository er;
     private final ExerciseService es;
     private final ExerciseBatteryRepository ebr;
+    private final SolutionRepository solutionRepository;
 
     @Autowired
-    public TfgBackendApplication(UserRepository ur, SubjectRepository sr, ExerciseRepository er, ExerciseBatteryRepository ebr, ExerciseService es) {
+    public TfgBackendApplication(UserRepository ur, SubjectRepository subjectRepository, ExerciseRepository er, ExerciseBatteryRepository ebr, ExerciseService es, SolutionRepository solutionRepository) {
         this.ur = ur;
-        this.sr = sr;
+        this.subjectRepository = subjectRepository;
         this.er = er;
         this.es = es;
         this.ebr = ebr;
+        this.solutionRepository = solutionRepository;
     }
 
     public static void main(String[] args) {
@@ -52,58 +48,60 @@ public class TfgBackendApplication implements CommandLineRunner {
         ur.deleteAll();
         er.deleteAll();
         ebr.deleteAll();
-        sr.deleteAll();
+        subjectRepository.deleteAll();
+        solutionRepository.deleteAll();
 
-        ObjectId subjectId = new ObjectId("635981f6e40f61599e000060");
-        ObjectId batteryId = new ObjectId("635981f6e40f61599e000068");
-        ObjectId exerciseId = new ObjectId("635981f6e40a61599e000064");
+        ObjectId subjectId1 = new ObjectId("635981f6e40f61599e000060");
+        ObjectId subjectId2 = new ObjectId("635981f6e40f61599e000056");
+        ObjectId batteryId1 = new ObjectId("635981f6e40f61599e000068");
+        ObjectId batteryId2 = new ObjectId("635981f6e40f61599a000068");
+        ObjectId exerciseId1 = new ObjectId("635981f6e40a61599e000064");
+        ObjectId exerciseId2 = new ObjectId("635981f6e40a61599e000068");
         ObjectId profesorId = new ObjectId("635981f6e40b61599e000064");
         ObjectId estudianteID = new ObjectId("635981f6e40c61599e000064");
 
-        User profesor = new User(profesorId, "Andres","andres@hotmail.com", LocalDateTime.now(), List.of(), Rol.TEACHER);
-        User estudiante = new User(estudianteID, "Estudiante","andres21@hotmail.com", LocalDateTime.now(), List.of(), Rol.STUDENT);
-        Subject asignatura = new Subject(subjectId,"Mates", 2020, List.of(), List.of(estudiante));
+        User profesor = new User(profesorId, "profesor","profesor@hotmail.com", LocalDateTime.now(), List.of(), Rol.TEACHER);
+        User estudiante = new User(estudianteID, "estudiante","estudiante@hotmail.com", LocalDateTime.now(), List.of(), Rol.STUDENT);
+        Subject asignatura1 = new Subject(subjectId1,"Mates", 2020, List.of(), List.of(estudiante));
+        Subject asignatura2 = new Subject(subjectId2,"Lengua", 2020, List.of(), List.of(profesor));
+        //TODO ACTUALIZAR LA LISTA DE ASIGNATURAS DEL ESTUDIANTE
 
-        System.out.println("ALUMNOS: " + asignatura.studentsList().toString());
+        ExerciseBattery bateria1 = new ExerciseBattery(batteryId1, "Bateria_1", List.of(), asignatura1);
+        ExerciseBattery bateria2 = new ExerciseBattery(batteryId2, "Bateria_2", List.of(), asignatura2);
+        Exercise ejercicio1 = new Exercise(exerciseId1, "Ejercicio_1", "", List.of(), "", List.of(), bateria1, profesor);
+        Exercise ejercicio2 = new Exercise(exerciseId2, "Ejercicio_2", "", List.of(), "", List.of(), bateria2, profesor);
 
-        ExerciseBattery bateria = new ExerciseBattery(batteryId, "Bateria_1", List.of(), asignatura);
-        Exercise ejercicio = new Exercise(exerciseId, "Ejercicio_1", "", List.of(), "", List.of(), bateria, profesor);
+        Solution solucion = new Solution(null, LocalDateTime.now(), StatusExercise.PENDING, estudiante, ejercicio1,0);
 
         Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
-        Set<ConstraintViolation<Exercise>> violaciones = validator.validate(ejercicio);
+        Set<ConstraintViolation<Exercise>> violaciones = validator.validate(ejercicio1);
         System.out.println("Violaciones: " + violaciones.size() + ", texto: " + violaciones.toString());
 
         ur.save(profesor);
-        sr.save(asignatura);
-        ebr.save(bateria);
-        er.save(ejercicio);
-        ur.save(new User(null, "Carlos","ulrich111@hotmail.com", LocalDateTime.now(), List.of(), Rol.ADMIN));
+        subjectRepository.save(asignatura1);
+        subjectRepository.save(asignatura2);
+        solutionRepository.save(solucion);
+        ebr.save(bateria1);
+        ebr.save(bateria2);
+        er.save(ejercicio1);
+        er.save(ejercicio2);
 
-        List<Subject> lista = sr.findAllByStudentID(estudiante.id());
+        ur.save(estudiante);
 
-        for (Subject eb : lista){
-            System.out.println("ATIENDE, Asignatura: " + eb.name() + ", Alumnos: " + eb.studentsList());
-            if (eb.studentsList() instanceof LazyLoadingProxy lazy){
-                List<User> estudiantes = (List<User>) lazy.getTarget();
+        List<Exercise> lista = es.allExercisesByStudent(estudiante.getId());
 
-                for (User e : estudiantes){
-                    System.out.println("Estudiante: " + e.name());
-                }
-            }
+        for (Exercise e : lista){
+            System.out.println("ATIENDE, Ejercicio: " + e.getName() + " Bateria:" + e.getExerciseBattery().getName());
+
         }
 
         // fetch all customers
-        System.out.println("Customers found with findAll():");
+        System.out.println("\nCustomers found with findAll():");
         System.out.println("-------------------------------");
         for (User user : ur.findAll()) {
             System.out.println(user);
         }
         System.out.println();
-
-        // fetch an individual customer
-        System.out.println("Customer found with findByFirstName('Carlos'):");
-        System.out.println("--------------------------------");
-        System.out.println(ur.findUserByName("Carlos"));
 
     }
 }

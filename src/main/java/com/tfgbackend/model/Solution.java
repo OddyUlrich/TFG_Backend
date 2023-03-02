@@ -27,7 +27,7 @@ public record Solution(
     @Override
     public String toString() {
         return String.format(
-                "Solution[" + id + "," + student.name() + "," + exercise.name() + "]"
+                "Solution[" + id + "," + student.getName() + "," + exercise.getName() + "]"
         );
     }
 }

@@ -1,12 +1,10 @@
 package com.tfgbackend.service.dto;
 
-import com.tfgbackend.model.ExerciseBattery;
 import com.tfgbackend.model.Subject;
 import com.tfgbackend.model.Tag;
 import com.tfgbackend.model.User;
 import com.tfgbackend.model.enumerators.StatusExercise;
 import org.bson.types.ObjectId;
-import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.LocalDateTime;
 import java.util.List;

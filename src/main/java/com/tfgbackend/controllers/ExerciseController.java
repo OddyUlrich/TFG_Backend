@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -32,10 +34,13 @@ public class ExerciseController {
 
         //TODO Tendria que comprobar que pasa si vuelve algo vacío y enviar otro status, no? Recogiendo excepciones y eso
         //List<ExerciseSolutionDTO> listStudentExercises = exerciseService.allExercisesByStudent(studentId);
-        List<ExerciseBattery> lista = exerciseService.allExercisesByStudent(studentId);
+        //List<ExerciseBattery> lista = exerciseService.allExercisesByStudent(studentId);
+
+        ExerciseBattery list = new ExerciseBattery(null, "Bateria131", new ArrayList<>(List.of()), null);
+        ArrayList<ExerciseBattery> lista = new ArrayList(List.of(list));
 
         for (ExerciseBattery eb : lista){
-            System.out.println("ATIENDE: " + eb.name() + ", Ejercicios: " + eb.exerciseList());
+            System.out.println("ATIENDE: " + eb.getName() + ", Ejercicios: " + eb.getExerciseList());
         }
 
         return ResponseEntity.status(HttpStatus.OK).body(lista);
