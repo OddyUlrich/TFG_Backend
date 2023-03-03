@@ -17,7 +17,7 @@ public class ExerciseBattery {
     private ObjectId id;
     @Indexed(unique = true)
     private @NotBlank String name;
-    @DBRef(lazy = false)
+    @DBRef(lazy = true)
     private List<@Valid Exercise> exerciseList;/*confirmar que debe seguir aqui*/
     @DBRef(lazy = true)
     private @NotNull @Valid Subject subject;

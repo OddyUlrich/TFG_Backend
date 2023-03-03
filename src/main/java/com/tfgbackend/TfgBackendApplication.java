@@ -5,6 +5,7 @@ import com.tfgbackend.model.enumerators.Rol;
 import com.tfgbackend.model.enumerators.StatusExercise;
 import com.tfgbackend.repositories.*;
 import com.tfgbackend.service.ExerciseService;
+import com.tfgbackend.service.dto.ExerciseSolutionDTO;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
@@ -75,7 +76,7 @@ public class TfgBackendApplication implements CommandLineRunner {
 
         Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
         Set<ConstraintViolation<Exercise>> violaciones = validator.validate(ejercicio1);
-        System.out.println("Violaciones: " + violaciones.size() + ", texto: " + violaciones.toString());
+        System.out.println("Violaciones: " + violaciones.size() + ", texto: " + violaciones);
 
         ur.save(profesor);
         subjectRepository.save(asignatura1);
@@ -88,12 +89,14 @@ public class TfgBackendApplication implements CommandLineRunner {
 
         ur.save(estudiante);
 
-        List<Exercise> lista = es.allExercisesByStudent(estudiante.getId());
+        List<ExerciseSolutionDTO> lista = es.allExercisesByStudent(estudiante.getId());
 
-        for (Exercise e : lista){
-            System.out.println("ATIENDE, Ejercicio: " + e.getName() + " Bateria:" + e.getExerciseBattery().getName());
-
+        for (ExerciseSolutionDTO e : lista){
+            System.out.println("ATIENDE: EjercicioSolution: " + e.getName() + " Numero de errores:" + e.getNumberErrorsSolution());
         }
+
+        /*DBREF -> Ejercicio.Bateria ----> lazy = true ----> NO SE PUEDE GUARDAR EJERCICIO
+        * Ref.Manual -> Ejercicio.linkBateria -> EJERCICO SE GUARDA -------> EjercicioBateriaDTO -----> NO SE PUEDE GUARDAR*/
 
         // fetch all customers
         System.out.println("\nCustomers found with findAll():");

@@ -17,14 +17,14 @@ public class Subject{
     @Id
     private ObjectId id;
     private String name;
-    private int year;
+    private Integer year;
     //No se comprueba que la lista este vacia porque en algun momento podra estarlo
     @DBRef(lazy = true)
     private List<@IsTeacher @Valid User> teachersList;
     @DBRef(lazy = true)
     private List</*@IsStudent*/ @Valid User> studentsList;
 
-    public Subject(ObjectId id, String name, int year, List<User> teachersList, List<User> studentsList) {
+    public Subject(ObjectId id, String name, Integer year, List<User> teachersList, List<User> studentsList) {
         this.id = id;
         this.name = name;
         this.year = year;

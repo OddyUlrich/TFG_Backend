@@ -1,9 +1,9 @@
 package com.tfgbackend.service;
 
-import com.tfgbackend.model.Exercise;
 import com.tfgbackend.model.Subject;
 import com.tfgbackend.repositories.ExerciseBatteryRepository;
 import com.tfgbackend.repositories.ExerciseRepository;
+import com.tfgbackend.service.dto.ExerciseSolutionDTO;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,13 +25,14 @@ public class ExerciseService {
         this.ebr = ebr;
     }
 
-    public List<Exercise> allExercisesByStudent(ObjectId studentId){
+    public List<ExerciseSolutionDTO> allExercisesByStudent(ObjectId studentId){
         List<Subject> subjects = subjectService.subjectsByStudentId(studentId);
 
-        List<ObjectId> subjectIds = new ArrayList<>();
-        for (var e : subjects){
+        ArrayList<ObjectId> subjectIds = new ArrayList<>();
+        for (var e: subjects){
             subjectIds.add(e.getId());
         }
+
         return er.allExerciseByUserSubjects(subjectIds);
 
         //Debemos retornar una lista de ExerciseSolutionDTO
