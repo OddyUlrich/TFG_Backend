@@ -21,15 +21,13 @@ public class User {
     private @Indexed(unique = true)
     @NotBlank String email;
     private LocalDateTime birthday;
-    private List<@Valid Subject> subjects;
     private @NotNull Rol rol;
 
-    public User(ObjectId id, String name, String email, LocalDateTime birthday, List<Subject> subjects, Rol rol) {
+    public User(ObjectId id, String name, String email, LocalDateTime birthday, Rol rol) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.birthday = birthday;
-        this.subjects = subjects;
         this.rol = rol;
     }
 
@@ -63,14 +61,6 @@ public class User {
 
     public void setBirthday(LocalDateTime birthday) {
         this.birthday = birthday;
-    }
-
-    public List<Subject> getSubjects() {
-        return subjects;
-    }
-
-    public void setSubjects(List<Subject> subjects) {
-        this.subjects = subjects;
     }
 
     public Rol getRol() {

@@ -23,16 +23,14 @@ import java.util.Set;
 public class TfgBackendApplication implements CommandLineRunner {
 
     private final UserRepository ur;
-    private final SubjectRepository subjectRepository;
     private final ExerciseRepository er;
     private final ExerciseService es;
     private final ExerciseBatteryRepository ebr;
     private final SolutionRepository solutionRepository;
 
     @Autowired
-    public TfgBackendApplication(UserRepository ur, SubjectRepository subjectRepository, ExerciseRepository er, ExerciseBatteryRepository ebr, ExerciseService es, SolutionRepository solutionRepository) {
+    public TfgBackendApplication(UserRepository ur, ExerciseRepository er, ExerciseBatteryRepository ebr, ExerciseService es, SolutionRepository solutionRepository) {
         this.ur = ur;
-        this.subjectRepository = subjectRepository;
         this.er = er;
         this.es = es;
         this.ebr = ebr;
@@ -49,11 +47,8 @@ public class TfgBackendApplication implements CommandLineRunner {
         ur.deleteAll();
         er.deleteAll();
         ebr.deleteAll();
-        subjectRepository.deleteAll();
         solutionRepository.deleteAll();
 
-        ObjectId subjectId1 = new ObjectId("635981f6e40f61599e000060");
-        ObjectId subjectId2 = new ObjectId("635981f6e40f61599e000056");
         ObjectId batteryId1 = new ObjectId("635981f6e40f61599e000068");
         ObjectId batteryId2 = new ObjectId("635981f6e40f61599a000068");
         ObjectId exerciseId1 = new ObjectId("635981f6e40a61599e000064");
@@ -61,14 +56,12 @@ public class TfgBackendApplication implements CommandLineRunner {
         ObjectId profesorId = new ObjectId("635981f6e40b61599e000064");
         ObjectId estudianteID = new ObjectId("635981f6e40c61599e000064");
 
-        User profesor = new User(profesorId, "profesor","profesor@hotmail.com", LocalDateTime.now(), List.of(), Rol.TEACHER);
-        User estudiante = new User(estudianteID, "estudiante","estudiante@hotmail.com", LocalDateTime.now(), List.of(), Rol.STUDENT);
-        Subject asignatura1 = new Subject(subjectId1,"Mates", 2020, List.of(), List.of(estudiante));
-        Subject asignatura2 = new Subject(subjectId2,"Lengua", 2020, List.of(), List.of(profesor));
+        User profesor = new User(profesorId, "profesor","profesor@hotmail.com", LocalDateTime.now(), Rol.TEACHER);
+        User estudiante = new User(estudianteID, "estudiante","estudiante@hotmail.com", LocalDateTime.now(), Rol.STUDENT);
         //TODO ACTUALIZAR LA LISTA DE ASIGNATURAS DEL ESTUDIANTE
 
-        ExerciseBattery bateria1 = new ExerciseBattery(batteryId1, "Bateria_1", List.of(), asignatura1);
-        ExerciseBattery bateria2 = new ExerciseBattery(batteryId2, "Bateria_2", List.of(), asignatura2);
+        ExerciseBattery bateria1 = new ExerciseBattery(batteryId1, "Bateria_1", List.of());
+        ExerciseBattery bateria2 = new ExerciseBattery(batteryId2, "Bateria_2", List.of());
         Exercise ejercicio1 = new Exercise(exerciseId1, "Ejercicio_1", "", List.of(), "", List.of(), bateria1, profesor);
         Exercise ejercicio2 = new Exercise(exerciseId2, "Ejercicio_2", "", List.of(), "", List.of(), bateria2, profesor);
 
@@ -79,8 +72,6 @@ public class TfgBackendApplication implements CommandLineRunner {
         System.out.println("Violaciones: " + violaciones.size() + ", texto: " + violaciones);
 
         ur.save(profesor);
-        subjectRepository.save(asignatura1);
-        subjectRepository.save(asignatura2);
         solutionRepository.save(solucion);
         ebr.save(bateria1);
         ebr.save(bateria2);

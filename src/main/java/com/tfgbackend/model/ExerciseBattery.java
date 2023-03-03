@@ -19,14 +19,11 @@ public class ExerciseBattery {
     private @NotBlank String name;
     @DBRef(lazy = true)
     private List<@Valid Exercise> exerciseList;/*confirmar que debe seguir aqui*/
-    @DBRef(lazy = true)
-    private @NotNull @Valid Subject subject;
 
-    public ExerciseBattery(ObjectId id, String name, List<Exercise> exerciseList, Subject subject) {
+    public ExerciseBattery(ObjectId id, String name, List<Exercise> exerciseList) {
         this.id = id;
         this.name = name;
         this.exerciseList = exerciseList;
-        this.subject = subject;
     }
 
     public ObjectId getId() {
@@ -51,14 +48,6 @@ public class ExerciseBattery {
 
     public void setExerciseList(List<Exercise> exerciseList) {
         this.exerciseList = exerciseList;
-    }
-
-    public Subject getSubject() {
-        return subject;
-    }
-
-    public void setSubject(Subject subject) {
-        this.subject = subject;
     }
 
     @Override

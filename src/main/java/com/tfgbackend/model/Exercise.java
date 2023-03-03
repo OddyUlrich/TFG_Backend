@@ -14,7 +14,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.util.List;
 
 @Document("exercises")
-@CompoundIndex(def = "{'name': 1, 'exerciseBattery': 1}, unique = true")
+@CompoundIndex(def = "{'name': 1, 'exerciseBattery': 1}", unique = true)
 public class Exercise {
     @Id
     private ObjectId id;

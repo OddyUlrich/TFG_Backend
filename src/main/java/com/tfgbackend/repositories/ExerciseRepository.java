@@ -19,25 +19,23 @@ public interface ExerciseRepository extends MongoRepository<Exercise, Long> {
                     "'foreignField': '_id'," +
                     "'as': 'exerciseBattery'} }",
             "{'$unwind': {path: '$exerciseBattery'} }",
-            "{'$match': {'exerciseBattery.subject.$id': { $in: ?0} } }",
             "{'$lookup': { " +
                     "'from': 'solutions'," +
                     "'localField': '_id'," +
                     "'foreignField': 'exercise.$id'," +
                     "'as': 'solution'} }",
-            "{'$unwind': {path: '$solution'} }",
+            "{'$unwind': {path: '$solution', preserveNullAndEmptyArrays: true}, }",
+            "{'$match': {'solution.student.$id': ?0 } }",
             "{'$project': {" +
                     "'id': 1, " +
                     "'name': 1, " +
                     "'statement': 1, " +
                     "'tags': 1, " +
-                    "'subject': '$exerciseBattery.subject', " +
                     "'batteryName': '$exerciseBattery.name'," +
                     "'teacher': 1," +
                     "'numberErrorsSolution': '$solution.numberErrors'," +
                     "'timestampSolution': '$solution.timestamp'," +
                     "'statusSolution': '$solution.status'} }",
     })
-    List<ExerciseSolutionDTO> allExerciseByUserSubjects(List<ObjectId> subjects);
-
+    List<ExerciseSolutionDTO> allExerciseByUserSubjects(ObjectId studentId);
 }

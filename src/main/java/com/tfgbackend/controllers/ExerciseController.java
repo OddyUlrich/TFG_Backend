@@ -36,7 +36,7 @@ public class ExerciseController {
         //List<ExerciseSolutionDTO> listStudentExercises = exerciseService.allExercisesByStudent(studentId);
         //List<ExerciseBattery> lista = exerciseService.allExercisesByStudent(studentId);
 
-        ExerciseBattery list = new ExerciseBattery(null, "Bateria131", new ArrayList<>(List.of()), null);
+        ExerciseBattery list = new ExerciseBattery(null, "Bateria131", null);
         ArrayList<ExerciseBattery> lista = new ArrayList(List.of(list));
 
         for (ExerciseBattery eb : lista){

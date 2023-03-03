@@ -13,7 +13,7 @@ public class UserController {
     @GetMapping("/alumno")
     public ResponseEntity<User> user(@RequestBody User usuario){
 
-        User ejemplo = new User(null, usuario.getName(), usuario.getEmail(), usuario.getBirthday(), usuario.getSubjects(), usuario.getRol());
+        User ejemplo = new User(null, usuario.getName(), usuario.getEmail(), usuario.getBirthday(), usuario.getRol());
         return ResponseEntity.status(HttpStatus.OK).body(ejemplo);
     }
 }

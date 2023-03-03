@@ -10,7 +10,7 @@ import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document("files")
-@CompoundIndex(def = "{'name': 1, 'exercise': 1}, unique = true")
+@CompoundIndex(def = "{'name': 1, 'exercise': 1}", unique = true)
 public record File(
         @Id ObjectId id,
         @NotBlank String name,
