@@ -1,12 +1,12 @@
 package com.tfgbackend.repositories;
 
-import com.tfgbackend.model.Solution;
+import com.tfgbackend.model.Tag;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface SolutionRepository extends MongoRepository<Solution, Long> {
+public interface TagRepository extends MongoRepository<Tag, Long> {
 
-    Solution findById(String id);
+    Tag findTagByName(String name);
 
 }

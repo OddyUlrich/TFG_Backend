@@ -26,14 +26,16 @@ public class TfgBackendApplication implements CommandLineRunner {
     private final ExerciseRepository er;
     private final ExerciseService es;
     private final ExerciseBatteryRepository ebr;
+    private final TagRepository tr;
     private final SolutionRepository solutionRepository;
 
     @Autowired
-    public TfgBackendApplication(UserRepository ur, ExerciseRepository er, ExerciseBatteryRepository ebr, ExerciseService es, SolutionRepository solutionRepository) {
+    public TfgBackendApplication(UserRepository ur, ExerciseRepository er, ExerciseBatteryRepository ebr, ExerciseService es, SolutionRepository solutionRepository, TagRepository tr) {
         this.ur = ur;
         this.er = er;
         this.es = es;
         this.ebr = ebr;
+        this.tr = tr;
         this.solutionRepository = solutionRepository;
     }
 
@@ -44,6 +46,7 @@ public class TfgBackendApplication implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 
+        tr.deleteAll();
         ur.deleteAll();
         er.deleteAll();
         ebr.deleteAll();
@@ -51,36 +54,54 @@ public class TfgBackendApplication implements CommandLineRunner {
 
         ObjectId batteryId1 = new ObjectId("635981f6e40f61599e000068");
         ObjectId batteryId2 = new ObjectId("635981f6e40f61599a000068");
-        ObjectId exerciseId1 = new ObjectId("635981f6e40a61599e000064");
+        ObjectId exerciseId1 = new ObjectId("635981f6e40a61599e000063");
+        ObjectId exerciseId3 = new ObjectId("635981f6e40a61599e000062");
+        ObjectId exerciseId4 = new ObjectId("635981f6e40a61599e000061");
+        ObjectId exerciseId5 = new ObjectId("635981f6e40a61599e000060");
         ObjectId exerciseId2 = new ObjectId("635981f6e40a61599e000068");
         ObjectId profesorId = new ObjectId("635981f6e40b61599e000064");
         ObjectId estudianteID = new ObjectId("635981f6e40c61599e000064");
+        ObjectId tag1ID = new ObjectId();
+        ObjectId tag2ID = new ObjectId();
 
-        User profesor = new User(profesorId, "profesor","profesor@hotmail.com", LocalDateTime.now(), Rol.TEACHER);
-        User estudiante = new User(estudianteID, "estudiante","estudiante@hotmail.com", LocalDateTime.now(), Rol.STUDENT);
+        User profesor = new User(profesorId.toString(), "profesor","profesor@hotmail.com", LocalDateTime.now(), Rol.TEACHER, List.of());
+        User estudiante = new User(estudianteID.toString(), "estudiante","estudiante@hotmail.com", LocalDateTime.now(), Rol.STUDENT, List.of());
         //TODO ACTUALIZAR LA LISTA DE ASIGNATURAS DEL ESTUDIANTE
 
-        ExerciseBattery bateria1 = new ExerciseBattery(batteryId1, "Bateria_1", List.of());
-        ExerciseBattery bateria2 = new ExerciseBattery(batteryId2, "Bateria_2", List.of());
-        Exercise ejercicio1 = new Exercise(exerciseId1, "Ejercicio_1", "", List.of(), "", List.of(), bateria1, profesor);
-        Exercise ejercicio2 = new Exercise(exerciseId2, "Ejercicio_2", "", List.of(), "", List.of(), bateria2, profesor);
+        Tag herencia = new Tag(tag1ID.toString(),"Herencia");
+        Tag getter = new Tag(tag2ID.toString(),"Getter");
 
-        Solution solucion = new Solution(null, LocalDateTime.now(), StatusExercise.PENDING, estudiante, ejercicio1,0);
+        ExerciseBattery bateria1 = new ExerciseBattery(batteryId1, "Bateria de Herencia", List.of());
+        ExerciseBattery bateria2 = new ExerciseBattery(batteryId2, "Bateria de Poliformismo", List.of());
+        Exercise ejercicio1 = new Exercise(exerciseId1.toString(), "Ejercicio 1", "", List.of(), "", List.of(herencia, getter), bateria1, profesor);
+        Exercise ejercicio3 = new Exercise(exerciseId3.toString(), "Ejercicio 3", "", List.of(), "", List.of(herencia, getter), bateria1, profesor);
+        Exercise ejercicio4 = new Exercise(exerciseId4.toString(), "Ejercicio 4", "", List.of(), "", List.of(herencia, getter), bateria1, profesor);
+        Exercise ejercicio5 = new Exercise(exerciseId5.toString(), "Ejercicio 5", "", List.of(), "", List.of(herencia, getter), bateria1, profesor);
+
+        Exercise ejercicio2 = new Exercise(exerciseId2.toString(), "Ejercicio 2", "", List.of(), "", List.of(herencia, getter), bateria2, profesor);
+
+        Solution solucion = new Solution(null, LocalDateTime.now(), StatusExercise.COMPLETED, estudiante, ejercicio1,5);
 
         Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
         Set<ConstraintViolation<Exercise>> violaciones = validator.validate(ejercicio1);
         System.out.println("Violaciones: " + violaciones.size() + ", texto: " + violaciones);
 
         ur.save(profesor);
+        tr.save(herencia);
+        tr.save(getter);
         solutionRepository.save(solucion);
         ebr.save(bateria1);
         ebr.save(bateria2);
         er.save(ejercicio1);
         er.save(ejercicio2);
+        er.save(ejercicio3);
+        er.save(ejercicio4);
+        er.save(ejercicio5);
 
         ur.save(estudiante);
 
-        List<ExerciseSolutionDTO> lista = es.allExercisesByStudent(estudiante.getId());
+
+        List<ExerciseSolutionDTO> lista = es.allExercisesSolutionsByStudent("635981f6e40c61599e000064");
 
         for (ExerciseSolutionDTO e : lista){
             System.out.println("ATIENDE: EjercicioSolution: " + e.getName() + " Numero de errores:" + e.getNumberErrorsSolution());

@@ -1,21 +1,18 @@
 package com.tfgbackend.controllers;
 
-import com.tfgbackend.model.ExerciseBattery;
+import com.tfgbackend.exceptions.ResourceNotFoundException;
 import com.tfgbackend.service.ExerciseService;
 import com.tfgbackend.service.dto.ExerciseSolutionDTO;
-import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
+
+@CrossOrigin(origins ="http://localhost:3000/")
 @RequestMapping("/exercises")
 public class ExerciseController {
 
@@ -27,22 +24,22 @@ public class ExerciseController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ExerciseBattery>> user() {
-
-        //TODO Provisional, lo suyo es que lo recibe por argumento
-        ObjectId studentId = new ObjectId("635981f6e40f61599e000064");
+    public ResponseEntity<List<ExerciseSolutionDTO>> allExercises(String studentId) {
 
         //TODO Tendria que comprobar que pasa si vuelve algo vacío y enviar otro status, no? Recogiendo excepciones y eso
-        //List<ExerciseSolutionDTO> listStudentExercises = exerciseService.allExercisesByStudent(studentId);
-        //List<ExerciseBattery> lista = exerciseService.allExercisesByStudent(studentId);
 
-        ExerciseBattery list = new ExerciseBattery(null, "Bateria131", null);
-        ArrayList<ExerciseBattery> lista = new ArrayList(List.of(list));
-
-        for (ExerciseBattery eb : lista){
-            System.out.println("ATIENDE: " + eb.getName() + ", Ejercicios: " + eb.getExerciseList());
-        }
+        //TODO Ver como hacer el token con los datos del usuario (en marcadores)
+        String userID = "635981f6e40c61599e000064";
+        List<ExerciseSolutionDTO> lista = exerciseService.allExercisesSolutionsByStudent(userID);
 
         return ResponseEntity.status(HttpStatus.OK).body(lista);
     }
+
+//    @PutMapping("/{id}")
+//    public ResponseEntity<List<ExerciseSolutionDTO>> user(@PathVariable String id) {
+//
+//        List<ExerciseSolutionDTO> lista = exerciseService.updateExercise(id).orElseThrow(() -> new ResourceNotFoundException("Objeto no encontrado con el ID: " + id));
+//
+//        return ResponseEntity.status(HttpStatus.OK).body(lista);
+//    }
 }

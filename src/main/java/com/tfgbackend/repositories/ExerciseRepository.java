@@ -25,17 +25,26 @@ public interface ExerciseRepository extends MongoRepository<Exercise, Long> {
                     "'foreignField': 'exercise.$id'," +
                     "'as': 'solution'} }",
             "{'$unwind': {path: '$solution', preserveNullAndEmptyArrays: true}, }",
-            "{'$match': {'solution.student.$id': ?0 } }",
+            "{'$lookup': { " +
+                    "'from': 'users', " +
+                    "'pipeline': [{'$match': {'$expr': {'$eq': ['$_id', ?0]}}}], " +
+                    "'as': 'user'}}",
+            "{'$unwind': {path: '$user'}, }",
+            "{'$addFields': {" +
+                    "'favorite': {'$in': ['$_id', '$user.favoriteExercises']}}}",
             "{'$project': {" +
                     "'id': 1, " +
                     "'name': 1, " +
                     "'statement': 1, " +
                     "'tags': 1, " +
+                    "'favorite': 1,"+
                     "'batteryName': '$exerciseBattery.name'," +
-                    "'teacher': 1," +
                     "'numberErrorsSolution': '$solution.numberErrors'," +
                     "'timestampSolution': '$solution.timestamp'," +
-                    "'statusSolution': '$solution.status'} }",
+                    "'statusSolution': {$ifNull: ['$solution.status','$false']} } }",
+
     })
-    List<ExerciseSolutionDTO> allExerciseByUserSubjects(ObjectId studentId);
+    List<ExerciseSolutionDTO> allExerciseSolutionsByUserId(ObjectId studentId);
+
+    Exercise findExerciseById(String id);
 }

@@ -1,44 +1,40 @@
 package com.tfgbackend.service.dto;
 
 import com.tfgbackend.model.Tag;
-import com.tfgbackend.model.User;
 import com.tfgbackend.model.enumerators.StatusExercise;
-import org.bson.types.ObjectId;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 public class ExerciseSolutionDTO {
 
-    private ObjectId id;
+    private String id;
     private String name;
     private String statement;
     private List<Tag> tags;
+    private Boolean favorite;
     private String batteryName;
-    private User teacher;
-    private int numberErrorsSolution;
+    private Integer numberErrorsSolution;
     private LocalDateTime timestampSolution;
     private StatusExercise statusSolution;
-    //private List<String> rules; TODO revisar si esto acaba haciendo falta
-    //private String successCondition; TODO revisar si esto acaba haciendo falta
-    //User student TODO revisar si esto acaba haciendo falta
 
-    public ExerciseSolutionDTO(String name, String statement, List<Tag> tags, String batteryName, User teacher, int numberErrorsSolution, LocalDateTime timestampSolution, StatusExercise statusSolution){
+    public ExerciseSolutionDTO(String name, String statement, List<Tag> tags, Boolean favorite, String batteryName, Integer numberErrorsSolution, LocalDateTime timestampSolution, StatusExercise statusSolution) {
         this.name = name;
         this.statement = statement;
         this.tags = tags;
+        this.favorite = favorite;
         this.batteryName = batteryName;
-        this.teacher = teacher;
         this.numberErrorsSolution = numberErrorsSolution;
         this.timestampSolution = timestampSolution;
-        this.statusSolution = statusSolution;
+        this.statusSolution = Objects.requireNonNullElse(statusSolution, StatusExercise.PENDING);
     }
 
-    public ObjectId getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(ObjectId id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -65,6 +61,15 @@ public class ExerciseSolutionDTO {
     public void setTags(List<Tag> tags) {
         this.tags = tags;
     }
+
+    public Boolean getFavorite() {
+        return favorite;
+    }
+
+    public void setFavorite(Boolean favorite) {
+        favorite = favorite;
+    }
+
     public String getBatteryName() {
         return batteryName;
     }
@@ -73,19 +78,11 @@ public class ExerciseSolutionDTO {
         this.batteryName = batteryName;
     }
 
-    public User getTeacher() {
-        return teacher;
-    }
-
-    public void setTeacher(User teacher) {
-        this.teacher = teacher;
-    }
-
-    public int getNumberErrorsSolution() {
+    public Integer getNumberErrorsSolution() {
         return numberErrorsSolution;
     }
 
-    public void setNumberErrorsSolution(int numberErrorsSolution) {
+    public void setNumberErrorsSolution(Integer numberErrorsSolution) {
         this.numberErrorsSolution = numberErrorsSolution;
     }
 

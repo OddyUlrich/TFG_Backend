@@ -1,7 +1,6 @@
 package com.tfgbackend.model;
 
 import com.tfgbackend.model.enumerators.Rol;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import org.bson.types.ObjectId;
@@ -15,27 +14,30 @@ import java.util.List;
 @Document("users")
 public class User {
     @Id
-    private ObjectId id;
+    private String id;
     private @Indexed(unique = true)
     @NotBlank String name;
     private @Indexed(unique = true)
     @NotBlank String email;
     private LocalDateTime birthday;
     private @NotNull Rol rol;
+    private List<ObjectId> favoriteExercises;
 
-    public User(ObjectId id, String name, String email, LocalDateTime birthday, Rol rol) {
+
+    public User(String id, String name, String email, LocalDateTime birthday, Rol rol, List<ObjectId> favoriteExercises) {
         this.id = id;
         this.name = name;
         this.email = email;
         this.birthday = birthday;
         this.rol = rol;
+        this.favoriteExercises = favoriteExercises;
     }
 
-    public ObjectId getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(ObjectId id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -69,6 +71,14 @@ public class User {
 
     public void setRol(Rol rol) {
         this.rol = rol;
+    }
+
+    public List<ObjectId> getFavoriteExercises() {
+        return favoriteExercises;
+    }
+
+    public void setFavoriteExercises(List<ObjectId> favoriteExercises) {
+        this.favoriteExercises = favoriteExercises;
     }
 
     @Override

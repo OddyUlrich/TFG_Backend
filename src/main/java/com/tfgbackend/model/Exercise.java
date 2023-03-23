@@ -17,7 +17,7 @@ import java.util.List;
 @CompoundIndex(def = "{'name': 1, 'exerciseBattery': 1}", unique = true)
 public class Exercise {
     @Id
-    private ObjectId id;
+    private String id;
     private @NotBlank String name;
     private /*@NotBlank*/ String statement;
     private /*@NotEmpty*/ List<String> rules;
@@ -29,7 +29,7 @@ public class Exercise {
     @DBRef(lazy = true)
     private @NotNull @IsTeacher @Valid User teacher;
 
-    public Exercise(ObjectId id, String name, String statement, List<String> rules, String successCondition, List<Tag> tags, ExerciseBattery exerciseBattery, User teacher) {
+    public Exercise(String id, String name, String statement, List<String> rules, String successCondition, List<Tag> tags, ExerciseBattery exerciseBattery, User teacher) {
         this.id = id;
         this.name = name;
         this.statement = statement;
@@ -40,11 +40,11 @@ public class Exercise {
         this.teacher = teacher;
     }
 
-    public ObjectId getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(ObjectId id) {
+    public void setId(String id) {
         this.id = id;
     }
 
