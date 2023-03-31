@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class UserService {
@@ -17,32 +18,25 @@ public class UserService {
     private final ExerciseService es;
 
     @Autowired
-    public UserService(UserRepository ur, ExerciseService es){
+    public UserService(UserRepository ur, ExerciseService es) {
         this.ur = ur;
         this.es = es;
     }
 
-    public User updateUserFavorites(String userId, String exerciseId) throws ResourceNotFoundException{
-        User updateUser = ur.findUserById(userId);
-        Exercise exercise = es.findExerciseById(exerciseId);
-
-        if (updateUser == null) {
-            throw new ResourceNotFoundException("User does not exist with that ID");
-        }
-
-        if (exercise == null){
-            throw new ResourceNotFoundException("Exercise does not exist with that ID");
-        }
+    public User updateUserFavorites(String userId, String exerciseId) throws ResourceNotFoundException {
+        User updateUser = ur.findUserById(userId).orElseThrow(() -> new ResourceNotFoundException("User does not exist with that ID"));
+        es.findExerciseById(exerciseId).orElseThrow(() -> new ResourceNotFoundException("Exercise does not exist with that ID"));
 
         List<ObjectId> favoriteList = updateUser.getFavoriteExercises();
-        for (int i = 0; i < favoriteList.size(); i++){
-            if (favoriteList.get(i).toString().equals(exerciseId)){
-                favoriteList.remove(i);
-                ur.save(updateUser);
-                return updateUser;
-            }
+        ObjectId exerciseObjectId = new ObjectId(exerciseId);
+
+        if (favoriteList.contains(exerciseObjectId)) {
+            favoriteList.remove(exerciseObjectId);
+            ur.save(updateUser);
+            return updateUser;
         }
-        favoriteList.add(new ObjectId(exerciseId));
+
+        favoriteList.add(exerciseObjectId);
         ur.save(updateUser);
         return updateUser;
     }
