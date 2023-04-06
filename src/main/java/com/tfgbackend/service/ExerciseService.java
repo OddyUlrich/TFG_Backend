@@ -25,8 +25,6 @@ public class ExerciseService {
 
         return er.allExerciseSolutionsByUserId(new ObjectId(studentId)).orElseThrow(() -> new ResourceNotFoundException("Data could not be obtained"));
 
-
-        //Ojo, si ya lo ha completado alguna vez el status a mostrar sera "completado"
     }
 
     public Optional<Exercise> findExerciseById(String exerciseId){

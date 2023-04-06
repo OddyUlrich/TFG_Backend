@@ -26,15 +26,16 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(ejemplo);
     }
 
-    @PutMapping("/users/{userId}/favorites/{exerciseId}")
+    @PatchMapping("/users/{userId}/favorites/{exerciseId}")
     public ResponseEntity<User> user(@PathVariable String exerciseId) {
 
         //TODO Ver como hacer el token con los datos del usuario (en marcadores)
         String userID = "635981f6e40c61599e000064";
 
         try {
-            User user = userService.updateUserFavorites(userID, exerciseId);
-            return ResponseEntity.status(HttpStatus.OK).body(user);
+            userService.updateUserFavorites(userID, exerciseId);
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+
         } catch (ResourceNotFoundException e) {
             System.out.println(e.getMessage());
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);

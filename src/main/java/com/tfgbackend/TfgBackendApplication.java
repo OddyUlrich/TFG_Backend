@@ -58,6 +58,7 @@ public class TfgBackendApplication implements CommandLineRunner {
         ObjectId exerciseId3 = new ObjectId("635981f6e40a61599e000062");
         ObjectId exerciseId4 = new ObjectId("635981f6e40a61599e000061");
         ObjectId exerciseId5 = new ObjectId("635981f6e40a61599e000060");
+        ObjectId exerciseId6 = new ObjectId("635981f6e40a61599e000064");
         ObjectId exerciseId2 = new ObjectId("635981f6e40a61599e000068");
         ObjectId profesorId = new ObjectId("635981f6e40b61599e000064");
         ObjectId estudianteID = new ObjectId("635981f6e40c61599e000064");
@@ -78,6 +79,7 @@ public class TfgBackendApplication implements CommandLineRunner {
         Exercise ejercicio4 = new Exercise(exerciseId4.toString(), "Ejercicio 4", "", List.of(), "", List.of(herencia, getter), bateria1, profesor);
         Exercise ejercicio5 = new Exercise(exerciseId5.toString(), "Ejercicio 5", "", List.of(), "", List.of(herencia, getter), bateria1, profesor);
 
+        Exercise ejercicio6 = new Exercise(exerciseId6.toString(), "Ejercicio 6", "", List.of(), "", List.of(herencia, getter), bateria2, profesor);
         Exercise ejercicio2 = new Exercise(exerciseId2.toString(), "Ejercicio 2", "", List.of(), "", List.of(herencia, getter), bateria2, profesor);
 
         Solution solucion = new Solution(null, LocalDateTime.now(), StatusExercise.COMPLETED, estudiante, ejercicio1,5);
@@ -97,6 +99,7 @@ public class TfgBackendApplication implements CommandLineRunner {
         er.save(ejercicio3);
         er.save(ejercicio4);
         er.save(ejercicio5);
+        er.save(ejercicio6);
 
         ur.save(estudiante);
 
