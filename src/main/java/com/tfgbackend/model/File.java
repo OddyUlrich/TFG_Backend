@@ -14,6 +14,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public record File(
         @Id ObjectId id,
         @NotBlank String name,
+        @NotBlank String path,
         @DBRef(lazy = true) @NotNull @Valid Exercise exercise
 ) {
 

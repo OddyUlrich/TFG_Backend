@@ -17,13 +17,12 @@ public class ExerciseBattery {
     private ObjectId id;
     @Indexed(unique = true)
     private @NotBlank String name;
-    @DBRef(lazy = true)
-    private List<@Valid Exercise> exerciseList;/*confirmar que debe seguir aqui*/
+//    @DBRef(lazy = true)
+//    private List<@Valid Exercise> exerciseList;/*confirmar que debe seguir aqui*/
 
-    public ExerciseBattery(ObjectId id, String name, List<Exercise> exerciseList) {
+    public ExerciseBattery(ObjectId id, String name) {
         this.id = id;
         this.name = name;
-        this.exerciseList = exerciseList;
     }
 
     public ObjectId getId() {
@@ -40,14 +39,6 @@ public class ExerciseBattery {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public List<Exercise> getExerciseList() {
-        return exerciseList;
-    }
-
-    public void setExerciseList(List<Exercise> exerciseList) {
-        this.exerciseList = exerciseList;
     }
 
     @Override

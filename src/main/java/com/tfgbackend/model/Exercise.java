@@ -3,14 +3,13 @@ package com.tfgbackend.model;
 import com.tfgbackend.annotations.IsTeacher;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
-import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Document("exercises")
@@ -28,8 +27,9 @@ public class Exercise {
     private /*@NotNull*/ @Valid ExerciseBattery exerciseBattery;
     @DBRef(lazy = true)
     private @NotNull @IsTeacher @Valid User teacher;
+    private @NotNull LocalDateTime timestamp;
 
-    public Exercise(String id, String name, String statement, List<String> rules, String successCondition, List<Tag> tags, ExerciseBattery exerciseBattery, User teacher) {
+    public Exercise(String id, String name, String statement, List<String> rules, String successCondition, List<Tag> tags, ExerciseBattery exerciseBattery, User teacher, LocalDateTime timestamp) {
         this.id = id;
         this.name = name;
         this.statement = statement;
@@ -38,6 +38,7 @@ public class Exercise {
         this.tags = tags;
         this.exerciseBattery = exerciseBattery;
         this.teacher = teacher;
+        this.timestamp = timestamp;
     }
 
     public String getId() {
@@ -102,6 +103,14 @@ public class Exercise {
 
     public void setTeacher(User teacher) {
         this.teacher = teacher;
+    }
+
+    public LocalDateTime getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(LocalDateTime timestamp) {
+        this.timestamp = timestamp;
     }
 
     @Override

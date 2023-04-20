@@ -1,7 +1,7 @@
 package com.tfgbackend.repositories;
 
 import com.tfgbackend.model.Exercise;
-import com.tfgbackend.service.dto.ExerciseSolutionDTO;
+import com.tfgbackend.dto.ExerciseHomeDTO;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.repository.Aggregation;
 import org.springframework.data.mongodb.repository.MongoRepository;
@@ -24,28 +24,66 @@ public interface ExerciseRepository extends MongoRepository<Exercise, Long> {
                     "'from': 'solutions'," +
                     "'localField': '_id'," +
                     "'foreignField': 'exercise.$id'," +
+                    "'pipeline': [{'$match': {'$expr': {'$eq': ['$student.$id', ?0]}}}], " +
                     "'as': 'solution'} }",
-            "{'$unwind': {path: '$solution', preserveNullAndEmptyArrays: true}, }",
             "{'$lookup': { " +
                     "'from': 'users', " +
                     "'pipeline': [{'$match': {'$expr': {'$eq': ['$_id', ?0]}}}], " +
-                    "'as': 'user'}}",
-            "{'$unwind': {path: '$user'}, }",
-            "{'$addFields': {" +
-                    "'favorite': {'$in': ['$_id', '$user.favoriteExercises']}}}",
+                    "'as': 'student'}}",
+            "{'$unwind': {path: '$student'}, }",
+            """
+            {'$addFields': {
+                'favorite': {'$in': ['$_id', '$student.favoriteExercises']},
+                'latestSolution': {
+                    '$reduce': {
+                    'input': '$solution',
+                    'initialValue': None,
+                    'in': {
+                    '$cond': {
+                        'if': {
+                            '$eq': ['$$this.status', 'COMPLETED']
+                        },
+                        'then': '$$this',
+                        'else': {
+                            '$cond': {
+                                'if': {
+                                    '$and': [
+                                        {
+                                        '$ne': ['$$value.status', 'COMPLETED']
+                                        }, {
+                                        '$eq': ['$$this.status', 'PENDING']
+                                        }, {
+                                        '$gt': ['$$this.creationTimestamp', '$$value.creationTimestamp']
+                                        }
+                                            ]
+                                        },
+                                        'then': '$$this',
+                                        'else': '$$value'
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            }
+            """,
             "{'$project': {" +
                     "'id': 1, " +
                     "'name': 1, " +
-                    "'statement': 1, " +
                     "'tags': 1, " +
                     "'favorite': 1,"+
+                    "'creationTimestamp': 1," +
                     "'batteryName': '$exerciseBattery.name'," +
-                    "'numberErrorsSolution': '$solution.numberErrors'," +
-                    "'timestampSolution': '$solution.timestamp'," +
-                    "'statusSolution': {$ifNull: ['$solution.status','$false']} } }",
+                    "'numberErrorsSolution': {$ifNull: ['$latestSolution.numberErrors', 0]}," +
+                    "'timestampSolution': '$latestSolution.creationTimestamp'," +
+                    "'statusSolution': '$latestSolution.status'} }",
 
     })
-    Optional<List<ExerciseSolutionDTO>> allExerciseSolutionsByUserId(ObjectId studentId);
+    Optional<List<ExerciseHomeDTO>> allExerciseSolutionsByUserId(ObjectId studentId);
 
     Optional<Exercise> findExerciseById(String id);
 }
+
+
+

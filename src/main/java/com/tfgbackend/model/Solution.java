@@ -12,15 +12,15 @@ import java.time.LocalDateTime;
 @Document("solutions")
 public record Solution(
         @Id String id,
-        @NotNull LocalDateTime timestamp,
+        @NotNull LocalDateTime creationTimestamp,
         @NotNull StatusExercise status,
         @DBRef(lazy = true) @NotNull  /*IsStudent*/ @Valid User student,
         @DBRef(lazy = true) @NotNull @Valid Exercise exercise,
         Integer numberErrors
         //"String codigo" y "@DBRef(lazy = true) @NotNull File file" o "File file" con el mismo nombre que en el template para que pueda ser sustituido
 ) {
-    public Solution(LocalDateTime timestamp, User student, Exercise exercise, Integer numberErrors) {
-        this(null, timestamp, StatusExercise.PENDING, student, exercise,0);
+    public Solution(LocalDateTime creationTimestamp, User student, Exercise exercise, Integer numberErrors) {
+        this(null, creationTimestamp, StatusExercise.PENDING, student, exercise,0);
     }
 
     @Override

@@ -23,7 +23,7 @@ public class UserService {
 
     public void updateUserFavorites(String userId, String exerciseId) throws ResourceNotFoundException {
         User updateUser = ur.findUserById(userId).orElseThrow(() -> new ResourceNotFoundException("User does not exist with that ID"));
-        es.findExerciseById(exerciseId).orElseThrow(() -> new ResourceNotFoundException("Exercise does not exist with that ID"));
+        es.findExerciseById(exerciseId);
 
         List<ObjectId> favoriteList = updateUser.getFavoriteExercises();
         ObjectId exerciseObjectId = new ObjectId(exerciseId);
