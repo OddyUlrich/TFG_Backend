@@ -26,7 +26,7 @@ public class ExerciseHomeDTO {
         this.favorite = favorite;
         this.batteryName = batteryName;
         this.creationTimestamp = creationTimestamp;
-        this.numberErrorsSolution = numberErrorsSolution;
+        this.numberErrorsSolution = Objects.requireNonNullElse(numberErrorsSolution, 0);
         this.timestampSolution = timestampSolution;
         this.statusSolution = Objects.requireNonNullElse(statusSolution, StatusExercise.PENDING);
     }

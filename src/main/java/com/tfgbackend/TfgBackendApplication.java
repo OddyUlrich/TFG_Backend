@@ -15,6 +15,8 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import java.io.File;
+import java.nio.file.Files;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
@@ -30,15 +32,17 @@ public class TfgBackendApplication implements CommandLineRunner {
     private final ExerciseBatteryRepository ebr;
     private final TagRepository tr;
     private final SolutionRepository solutionRepository;
+    private final ExerciseFileRepository efr;
 
     @Autowired
-    public TfgBackendApplication(UserRepository ur, ExerciseRepository er, ExerciseBatteryRepository ebr, ExerciseService es, SolutionRepository solutionRepository, TagRepository tr) {
+    public TfgBackendApplication(UserRepository ur, ExerciseRepository er, ExerciseBatteryRepository ebr, ExerciseService es, SolutionRepository solutionRepository, TagRepository tr, ExerciseFileRepository efr) {
         this.ur = ur;
         this.er = er;
         this.es = es;
         this.ebr = ebr;
         this.tr = tr;
         this.solutionRepository = solutionRepository;
+        this.efr = efr;
     }
 
     public static void main(String[] args) {
@@ -52,6 +56,7 @@ public class TfgBackendApplication implements CommandLineRunner {
         ur.deleteAll();
         er.deleteAll();
         ebr.deleteAll();
+        efr.deleteAll();
         solutionRepository.deleteAll();
 
         ObjectId batteryId1 = new ObjectId("635981f6e40f61599e000068");
@@ -75,9 +80,9 @@ public class TfgBackendApplication implements CommandLineRunner {
         ObjectId tag1ID = new ObjectId();
         ObjectId tag2ID = new ObjectId();
 
-        User profesor = new User(profesorId.toString(), "profesor","profesor@hotmail.com", LocalDateTime.now(), Rol.TEACHER, List.of());
-        User estudiante = new User(estudianteID.toString(), "estudiante","estudiante@hotmail.com", LocalDateTime.now(), Rol.STUDENT, List.of());
-        User estudiante2 = new User(estudianteID2.toString(), "estudiante2","estudiante2@hotmail.com", LocalDateTime.now(), Rol.STUDENT, List.of());
+        User profesor = new User(profesorId.toString(), "profesor", password, "profesor@hotmail.com", LocalDateTime.now(), Rol.TEACHER, List.of());
+        User estudiante = new User(estudianteID.toString(), "estudiante", password, "estudiante@hotmail.com", LocalDateTime.now(), Rol.STUDENT, List.of());
+        User estudiante2 = new User(estudianteID2.toString(), "estudiante2", password, "estudiante2@hotmail.com", LocalDateTime.now(), Rol.STUDENT, List.of());
         //TODO ACTUALIZAR LA LISTA DE ASIGNATURAS DEL ESTUDIANTE
 
         Tag herencia = new Tag(tag1ID.toString(),"Herencia");
@@ -115,6 +120,15 @@ public class TfgBackendApplication implements CommandLineRunner {
         Solution solucion7 = new Solution(null, LocalDateTime.now(), StatusExercise.COMPLETED, estudiante2, ejercicio1,2);
         sleep(5);
         Solution solucion8 = new Solution(null, LocalDateTime.now(), StatusExercise.COMPLETED, estudiante2, ejercicio2,2);
+
+
+        //FILES
+        File archivo = new File("E:/Escritorio/ATM-Machine-master/Account.java");
+        ExerciseFiles nuevoArchivo = new ExerciseFiles(null, archivo.getName(), archivo.getPath(), Files.readAllBytes(archivo.toPath()), ejercicio1);
+
+        efr.save(nuevoArchivo);
+
+        //System.out.println("AQUI: " + new String(nuevoArchivo.getContent(), StandardCharsets.UTF_8));
 
         Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
         Set<ConstraintViolation<Exercise>> violaciones = validator.validate(ejercicio1);

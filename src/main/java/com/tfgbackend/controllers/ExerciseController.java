@@ -1,7 +1,9 @@
 package com.tfgbackend.controllers;
 
+import com.tfgbackend.dto.ExerciseEditorDTO;
 import com.tfgbackend.exceptions.ResourceNotFoundException;
 import com.tfgbackend.model.Exercise;
+import com.tfgbackend.model.ExerciseFiles;
 import com.tfgbackend.service.ExerciseService;
 import com.tfgbackend.dto.ExerciseHomeDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,9 +30,9 @@ public class ExerciseController {
     public ResponseEntity<List<ExerciseHomeDTO>> allExercises(String studentId) {
 
         //TODO Ver como hacer el token con los datos del usuario (en marcadores)
-        String userID = "635981f6e40c61599e000064";
+        String userId = "635981f6e40c61599e000064";
         try {
-            List<ExerciseHomeDTO> lista = exerciseService.allExercisesSolutionsByStudent(userID);
+            List<ExerciseHomeDTO> lista = exerciseService.allExercisesSolutionsByStudent(userId);
             return ResponseEntity.status(HttpStatus.OK).body(lista);
         } catch (ResourceNotFoundException e) {
             System.out.println(e.getMessage());
@@ -39,9 +41,12 @@ public class ExerciseController {
     }
 
     @GetMapping("/{exerciseId}")
-    public ResponseEntity<Exercise> getExercise(@PathVariable String exerciseId) {
+    public ResponseEntity<ExerciseEditorDTO> getExercise(@PathVariable String exerciseId, String studentId) {
+        //TODO Ver como hacer el token con los datos del usuario (en marcadores)
+        String userId = "635981f6e40c61599e000064";
+
         try{
-            Exercise exercise = exerciseService.findExerciseById(exerciseId);
+            ExerciseEditorDTO exercise = exerciseService.exerciseFilesAndSolutionByIdAndStudent(exerciseId, userId);
             return ResponseEntity.status(HttpStatus.OK).body(exercise);
         }catch (ResourceNotFoundException e) {
             System.out.println(e.getMessage());

@@ -1,5 +1,6 @@
 package com.tfgbackend.repositories;
 
+import com.tfgbackend.dto.ExerciseEditorDTO;
 import com.tfgbackend.model.Exercise;
 import com.tfgbackend.dto.ExerciseHomeDTO;
 import org.bson.types.ObjectId;
@@ -36,26 +37,26 @@ public interface ExerciseRepository extends MongoRepository<Exercise, Long> {
                 'favorite': {'$in': ['$_id', '$student.favoriteExercises']},
                 'latestSolution': {
                     '$reduce': {
-                    'input': '$solution',
-                    'initialValue': None,
-                    'in': {
-                    '$cond': {
-                        'if': {
-                            '$eq': ['$$this.status', 'COMPLETED']
-                        },
-                        'then': '$$this',
-                        'else': {
+                        'input': '$solution',
+                        'initialValue': None,
+                        'in': {
                             '$cond': {
                                 'if': {
-                                    '$and': [
-                                        {
-                                        '$ne': ['$$value.status', 'COMPLETED']
-                                        }, {
-                                        '$eq': ['$$this.status', 'PENDING']
-                                        }, {
-                                        '$gt': ['$$this.creationTimestamp', '$$value.creationTimestamp']
-                                        }
-                                            ]
+                                    '$eq': ['$$this.status', 'COMPLETED']
+                                },
+                                'then': '$$this',
+                                'else': {
+                                    '$cond': {
+                                        'if': {
+                                            '$and': [
+                                                {
+                                                '$ne': ['$$value.status', 'COMPLETED']
+                                                }, {
+                                                '$eq': ['$$this.status', 'PENDING']
+                                                }, {
+                                                '$gt': ['$$this.creationTimestamp', '$$value.creationTimestamp']
+                                                }
+                                                    ]
                                         },
                                         'then': '$$this',
                                         'else': '$$value'
@@ -75,12 +76,18 @@ public interface ExerciseRepository extends MongoRepository<Exercise, Long> {
                     "'favorite': 1,"+
                     "'creationTimestamp': 1," +
                     "'batteryName': '$exerciseBattery.name'," +
-                    "'numberErrorsSolution': {$ifNull: ['$latestSolution.numberErrors', 0]}," +
+                    "'numberErrorsSolution': '$latestSolution.numberErrors'," +
                     "'timestampSolution': '$latestSolution.creationTimestamp'," +
                     "'statusSolution': '$latestSolution.status'} }",
 
     })
     Optional<List<ExerciseHomeDTO>> allExerciseSolutionsByUserId(ObjectId studentId);
+
+    @Aggregation(pipeline = {
+            "{'$match': {'$expr': {'$eq': ['$_id', ?0]}}}",
+            " "
+    })
+    Optional<ExerciseEditorDTO> exerciseFilesAndSolutionByIdAndStudent(ObjectId studentId, ObjectId exerciseId);
 
     Optional<Exercise> findExerciseById(String id);
 }

@@ -1,6 +1,6 @@
 package com.tfgbackend.model;
 
-import com.tfgbackend.model.enumerators.Rol;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import org.bson.types.ObjectId;
@@ -15,21 +15,27 @@ import java.util.List;
 public class User {
     @Id
     private String id;
-    private @Indexed(unique = true)
-    @NotBlank String name;
-    private @Indexed(unique = true)
-    @NotBlank String email;
+    @Indexed(unique = true)
+    @NotBlank(message = "User's name can not be empty")
+    private String name;
+    @NotBlank(message = "User's password can not be empty")
+    private String password;
+    @Indexed(unique = true)
+    @Email(message = "Email format is incorrect")
+    @NotBlank(message = "User's email can not be empty")
+    private String email;
     private LocalDateTime birthday;
-    private @NotNull Rol rol;
+    private @NotNull List<String> rols;
     private List<ObjectId> favoriteExercises;
 
 
-    public User(String id, String name, String email, LocalDateTime birthday, Rol rol, List<ObjectId> favoriteExercises) {
+    public User(String id, String name, String password, String email, LocalDateTime birthday, List<String> rols, List<ObjectId> favoriteExercises) {
         this.id = id;
         this.name = name;
+        this.password = password;
         this.email = email;
         this.birthday = birthday;
-        this.rol = rol;
+        this.rols = rols;
         this.favoriteExercises = favoriteExercises;
     }
 
@@ -49,6 +55,14 @@ public class User {
         this.name = name;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     public String getEmail() {
         return email;
     }
@@ -65,12 +79,12 @@ public class User {
         this.birthday = birthday;
     }
 
-    public Rol getRol() {
-        return rol;
+    public List<String> getRols() {
+        return rols;
     }
 
-    public void setRol(Rol rol) {
-        this.rol = rol;
+    public void setRols(List<String> rols) {
+        this.rols = rols;
     }
 
     public List<ObjectId> getFavoriteExercises() {
@@ -83,8 +97,6 @@ public class User {
 
     @Override
     public String toString() {
-        return String.format(
-                "User[" + name + "," + email + "," + rol + "]"
-        );
+        return String.format("User[" + name + "," + email + "," + rols + "]");
     }
 }
