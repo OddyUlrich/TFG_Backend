@@ -1,5 +1,6 @@
 package com.tfgbackend.model;
 
+import com.tfgbackend.model.enumerators.Rol;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -25,11 +26,11 @@ public class User {
     @NotBlank(message = "User's email can not be empty")
     private String email;
     private LocalDateTime birthday;
-    private @NotNull List<String> rols;
+    private @NotNull List<Rol> rols;
     private List<ObjectId> favoriteExercises;
 
 
-    public User(String id, String name, String password, String email, LocalDateTime birthday, List<String> rols, List<ObjectId> favoriteExercises) {
+    public User(String id, String name, String password, String email, LocalDateTime birthday, List<Rol> rols, List<ObjectId> favoriteExercises) {
         this.id = id;
         this.name = name;
         this.password = password;
@@ -79,11 +80,11 @@ public class User {
         this.birthday = birthday;
     }
 
-    public List<String> getRols() {
+    public List<Rol> getRols() {
         return rols;
     }
 
-    public void setRols(List<String> rols) {
+    public void setRols(List<Rol> rols) {
         this.rols = rols;
     }
 

@@ -22,10 +22,11 @@ public class UserController {
     @GetMapping("/alumno")
     public ResponseEntity<User> user(@RequestBody User usuario) {
 
-        User ejemplo = new User(null, usuario.getName(), password, usuario.getEmail(), usuario.getBirthday(), usuario.getRols(), usuario.getFavoriteExercises());
+        User ejemplo = new User(null, usuario.getName(), usuario.getPassword(), usuario.getEmail(), usuario.getBirthday(), usuario.getRols(), usuario.getFavoriteExercises());
         return ResponseEntity.status(HttpStatus.OK).body(ejemplo);
     }
 
+    //TODO Cambiar para que no dependa de un "userId" que puede poner cualquiera, sino "/addFavorite/{exerciseId}, checkear para saber como se podria poner el exerciseID en el body
     @PatchMapping("/users/{userId}/favorites/{exerciseId}")
     public ResponseEntity<User> user(@PathVariable String exerciseId) {
 

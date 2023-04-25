@@ -1,6 +1,7 @@
 package com.tfgbackend.service;
 
 import com.tfgbackend.model.User;
+import com.tfgbackend.model.enumerators.Rol;
 import com.tfgbackend.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -8,6 +9,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
+import java.util.stream.Collectors;
 
 @Service
 public class AuthenticationService implements UserDetailsService {
@@ -33,7 +36,7 @@ public class AuthenticationService implements UserDetailsService {
                 // Establecemos a lista de roles que ten o usuario.
                 // Por convenio, os roles sempre teñen o prefixo "ROLE_"
                 .authorities(AuthorityUtils.commaSeparatedStringToAuthorityList(
-                        String.join(",", user.getRols())
+                        user.getRols().stream().map(Rol::toString).collect(Collectors.joining(","))
                 ))
                 // Xeneramos o obxecto do usuario a partir dos datos introducidos no builder
                 .build();
