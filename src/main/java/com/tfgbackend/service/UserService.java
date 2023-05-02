@@ -51,4 +51,12 @@ public class UserService {
             ur.updateUserFavorites(userId, favoriteList);
         }
     }
+
+    public User getUser(String email) throws ResourceNotFoundException{
+        User user = ur.findUserByEmail(email).orElseThrow(() -> new ResourceNotFoundException("User does not exist with that email"));
+        System.out.println("XO " + user.getPassword().equals(encoder.encode("password")));
+        System.out.println(user.getPassword());
+        System.out.println(encoder.encode("password"));
+        return user;
+    }
 }

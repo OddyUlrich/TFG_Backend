@@ -13,6 +13,8 @@ public interface UserRepository extends MongoRepository<User, Long>, CustomUserR
 
     Optional<User> findUserById(String id);
 
+    Optional<User> findUserByEmail(String email);
+
     boolean existsByEmail(String email);
 
 }

@@ -1,7 +1,5 @@
 package com.tfgbackend.configuration;
 
-import com.tfgbackend.filters.AuthenticationFilter;
-import com.tfgbackend.filters.AuthorizationFilter;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.context.annotation.Bean;
@@ -34,17 +32,16 @@ public class SecurityConfiguration {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        AuthenticationManager authenticationManager = http.getSharedObject(AuthenticationManager.class);
 
-        http.csrf().disable()
+        http.cors().and().csrf().disable()
                 // Indicamos que por defecto permitimos o acceso a login por parte de calqueira
                 .authorizeHttpRequests().requestMatchers("/login").permitAll()
-                // Calquera outra peticion necesita el rol de usuario
-                .anyRequest().hasRole("USER")
+                // Calquera outra peticion necesita, minimo, el rol de usuario
+                .anyRequest().authenticated()
                 .and()
                 // Engadimos os nosos filtros á cadea de filtros das chamadas
-                .addFilter(new AuthenticationFilter(authenticationManager, tokenSignKey()))
-                .addFilter(new AuthorizationFilter(authenticationManager, tokenSignKey()))
+                .apply(new CustomConfigurer(tokenSignKey()))
+                .and()
                 // Especificamos que queremos sesións sen estado (REST é, por definición, sen estado)
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         return http.build();
@@ -60,8 +57,7 @@ public class SecurityConfiguration {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
-        // Creamos unha instancia do algoritmo BCrypt para empregar como encoder
-        // de contrasinais
+        // Creamos unha instancia do algoritmo BCrypt para empregar como encoder de contrasinais
         return new BCryptPasswordEncoder();
     }
 
@@ -70,7 +66,7 @@ public class SecurityConfiguration {
 
         // Creamos a nosa xerarquia de roles a partir do map definido previamente
         RoleHierarchyImpl hierarchy = new RoleHierarchyImpl();
-        hierarchy.setHierarchy("ROLE_ADMIN > ROLE_TEACHER > ROLE_USER");
+        hierarchy.setHierarchy("ROLE_ADMIN > ROLE_TEACHER\n ROLE_ADMIN > ROLE_STUDENT");
 
         return hierarchy;
     }

@@ -35,10 +35,10 @@ public class TfgBackendApplication implements CommandLineRunner {
     private final SolutionRepository solutionRepository;
     private final ExerciseFileRepository efr;
 
-    private final BCryptPasswordEncoder bcrypt;
+    private final BCryptPasswordEncoder bcrypt = new BCryptPasswordEncoder();
 
     @Autowired
-    public TfgBackendApplication(UserRepository ur, ExerciseRepository er, ExerciseBatteryRepository ebr, ExerciseService es, SolutionRepository solutionRepository, TagRepository tr, ExerciseFileRepository efr, BCryptPasswordEncoder bcrypt) {
+    public TfgBackendApplication(UserRepository ur, ExerciseRepository er, ExerciseBatteryRepository ebr, ExerciseService es, SolutionRepository solutionRepository, TagRepository tr, ExerciseFileRepository efr) {
         this.ur = ur;
         this.er = er;
         this.es = es;
@@ -46,7 +46,6 @@ public class TfgBackendApplication implements CommandLineRunner {
         this.tr = tr;
         this.solutionRepository = solutionRepository;
         this.efr = efr;
-        this.bcrypt = bcrypt;
     }
 
     public static void main(String[] args) {
@@ -85,8 +84,8 @@ public class TfgBackendApplication implements CommandLineRunner {
         ObjectId tag2ID = new ObjectId();
 
         User profesor = new User(profesorId.toString(), "profesor", bcrypt.encode("password"), "profesor@hotmail.com", LocalDateTime.now(), List.of(Rol.TEACHER), List.of());
-        User estudiante = new User(estudianteID.toString(), "estudiante", password, "estudiante@hotmail.com", LocalDateTime.now(), Rol.STUDENT, List.of());
-        User estudiante2 = new User(estudianteID2.toString(), "estudiante2", password, "estudiante2@hotmail.com", LocalDateTime.now(), Rol.STUDENT, List.of());
+        User estudiante = new User(estudianteID.toString(), "estudiante", bcrypt.encode("password"), "estudiante@hotmail.com", LocalDateTime.now(),  List.of(Rol.STUDENT), List.of());
+        User estudiante2 = new User(estudianteID2.toString(), "estudiante2", bcrypt.encode("password"), "estudiante2@hotmail.com", LocalDateTime.now(),  List.of(Rol.STUDENT), List.of());
         //TODO ACTUALIZAR LA LISTA DE ASIGNATURAS DEL ESTUDIANTE
 
         Tag herencia = new Tag(tag1ID.toString(),"Herencia");

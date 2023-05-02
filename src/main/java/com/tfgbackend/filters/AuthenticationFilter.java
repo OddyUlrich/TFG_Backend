@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import jakarta.servlet.FilterChain;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -28,6 +29,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     // Establecemos unha duración para os tokens
     private static long TOKEN_DURATION = Duration.ofMinutes(60).toMillis();
+    private static int COOKIE_DURATION = (int) Duration.ofMinutes(60).toSeconds();
 
     public AuthenticationFilter(AuthenticationManager manager, Key key){
         this.manager = manager;
@@ -78,8 +80,11 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
                 // Asinamos o token coa nosa clave secreta
                 .signWith(key);
 
-        // Engadimos o token á resposta na cabeceira "Authentication"
-        response.addHeader("Authentication", String.format("Bearer %s", tokenBuilder.compact()));
+        // Engadimos o token á resposta nunha cookie de "Authentication"
+        Cookie jwtTokenCookie = new Cookie("Authentication", tokenBuilder.compact());
+        jwtTokenCookie.setMaxAge(COOKIE_DURATION);
+        jwtTokenCookie.setHttpOnly(true);
+        response.addCookie(jwtTokenCookie);
     }
 
 }

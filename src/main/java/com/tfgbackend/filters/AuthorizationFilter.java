@@ -5,6 +5,7 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -30,24 +31,29 @@ public class AuthorizationFilter extends BasicAuthenticationFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         try{
-            // Lemos o token da cabeceira "Authentication"
-            String header = request.getHeader("Authorization");
-
-            // Se non hai un token, ou non comeza co string "Bearer" (é dicir, non é un token JWT)
-            // pasamos seguimos executando a cadea de filtros, e non facemos nada mais neste
-            if(header == null || !header.startsWith("Bearer")){
+            Cookie[] cookies = request.getCookies();
+            if (cookies == null) {
                 chain.doFilter(request, response);
                 return;
             }
 
-            // No caso de que o token sexa un JWT, comprobamos que sexa valido
-            UsernamePasswordAuthenticationToken authentication = getAuthentication(header);
+            // Find the cookie with the cookie name for the JWT token
+            for (Cookie cookie : cookies) {
+                if (!cookie.getName().equals("Authentication")) {
+                    continue;
+                }
+                // No caso de que o token sexa un JWT, comprobamos que sexa valido
+                UsernamePasswordAuthenticationToken authentication = getAuthentication(cookie.getValue());
 
-            // Se o token era válido, establecemolo no contexto de seguridade de Spring para poder empregalo
-            // nos nosos servizos
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+                // Se o token era válido, establecemolo no contexto de seguridade de Spring para poder empregalo
+                // nos nosos servizos
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+
+                break;
+            }
 
             chain.doFilter(request, response);
+
         } catch(ExpiredJwtException e){
             // Se se sobrepasou a duración do token devolvemos un erro 419.
             response.setStatus(419);
@@ -60,7 +66,7 @@ public class AuthorizationFilter extends BasicAuthenticationFilter {
                 .setSigningKey(key)
                 .build()
                 // Parseamos o corpo do token
-                .parseClaimsJws(token.replace("Bearer", "").trim())
+                .parseClaimsJws(token)
                 .getBody();
 
         // Obtemos o nome do propietario do token

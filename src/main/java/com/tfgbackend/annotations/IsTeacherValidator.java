@@ -9,6 +9,6 @@ public class IsTeacherValidator implements ConstraintValidator<IsTeacher, User> 
 
     @Override
     public boolean isValid(User value, ConstraintValidatorContext context) {
-        return value.getRols().equals(Rol.TEACHER) || value.getRols().equals(Rol.ADMIN);
+        return value.getRols().contains(Rol.TEACHER) || value.getRols().contains(Rol.ADMIN);
     }
 }
