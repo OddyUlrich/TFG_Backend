@@ -45,10 +45,8 @@ public class UserController {
         }
     }
 
-    @CrossOrigin(origins = "http://localhost:3000")
     @PostMapping("/login")
-    public ResponseEntity<User> get(@RequestBody LoginForm form) {
-        System.out.println("Email: " + form.getEmail() + "\nPassword: " + form.getPassword() + "\nRemember: " + form.getRemember());
+    public ResponseEntity<String> get(@RequestBody LoginForm form) {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 }
