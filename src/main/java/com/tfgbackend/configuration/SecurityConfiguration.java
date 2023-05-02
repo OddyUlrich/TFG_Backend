@@ -2,6 +2,8 @@ package com.tfgbackend.configuration;
 
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
@@ -18,12 +20,21 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler;
 
+import java.nio.charset.StandardCharsets;
 import java.security.Key;
 
 @Configuration
+@EnableConfigurationProperties
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfiguration {
+
+    private final SignatureKeyJWT signatureKeyJWT;
+
+    @Autowired
+    public SecurityConfiguration(SignatureKeyJWT signatureKeyJWT) {
+        this.signatureKeyJWT = signatureKeyJWT;
+    }
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
@@ -73,7 +84,10 @@ public class SecurityConfiguration {
 
     @Bean
     public Key tokenSignKey() {
-        // Xeramos unha clave de firmado aleatoria para o algoritmo SHA512
-        return Keys.secretKeyFor(SignatureAlgorithm.HS512);
+        if (this.signatureKeyJWT.getSecret() != null && !this.signatureKeyJWT.getSecret().isBlank()) {
+            return Keys.hmacShaKeyFor(this.signatureKeyJWT.getSecret().getBytes(StandardCharsets.UTF_8));
+        } else {
+            return Keys.secretKeyFor(SignatureAlgorithm.HS512);
+        }
     }
 }

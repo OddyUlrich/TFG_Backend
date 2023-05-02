@@ -26,10 +26,10 @@ import java.util.stream.Collectors;
 public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private final AuthenticationManager manager;
     private final Key key;
+    private boolean remember;
 
     // Establecemos unha duración para os tokens
-    private static long TOKEN_DURATION = Duration.ofMinutes(60).toMillis();
-    private static int COOKIE_DURATION = (int) Duration.ofMinutes(60).toSeconds();
+    private static Duration TOKEN_DURATION = Duration.ofMinutes(60);
 
     public AuthenticationFilter(AuthenticationManager manager, Key key){
         this.manager = manager;
@@ -42,6 +42,9 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         try {
             // Obtemos o obxecto JSON do body da request HTTP
             JsonNode credentials = new ObjectMapper().readValue(request.getInputStream(), JsonNode.class);
+
+            //If the remember check was checked we mark the variable "remember" as true, if not (null), as false
+            remember = credentials.get("remember").textValue() == null ? false : true;
 
             // Tentamos autenticarnos coas credenciais proporcionadas
             return manager.authenticate(
@@ -60,6 +63,14 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) {
         // Almacenamos o momento actual
         long now = System.currentTimeMillis();
+        Duration rememberDuration;
+
+        // If the user checked "remember me" we extend the duration of the token for 30 days
+        if (remember){
+            rememberDuration = Duration.ofDays(30);
+        }else{
+            rememberDuration = Duration.ofDays(0);
+        }
 
         // Obtemos a lista de roles asignados ao usuario e concatenamolso nun string separado por comas
         List<String> authorities = authResult.getAuthorities()
@@ -74,7 +85,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
                 // Establecemos a data de emisión do token
                 .setIssuedAt(new Date(now))
                 // Establecemos a data máxima de validez do token
-                .setExpiration(new Date(now + TOKEN_DURATION))
+                .setExpiration(new Date(now + TOKEN_DURATION.toMillis() + rememberDuration.toMillis()))
                 // Engadimos un atributo máis ao corpo do token cos roles do usuario
                 .claim("roles", authorities)
                 // Asinamos o token coa nosa clave secreta
@@ -82,7 +93,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
         // Engadimos o token á resposta nunha cookie de "Authentication"
         Cookie jwtTokenCookie = new Cookie("Authentication", tokenBuilder.compact());
-        jwtTokenCookie.setMaxAge(COOKIE_DURATION);
+        jwtTokenCookie.setMaxAge((int)TOKEN_DURATION.toMillis() + (int)rememberDuration.toSeconds());
         jwtTokenCookie.setHttpOnly(true);
         response.addCookie(jwtTokenCookie);
     }
