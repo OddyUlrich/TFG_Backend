@@ -36,7 +36,7 @@ public class AuthenticationService implements UserDetailsService {
                 // Establecemos a lista de roles que ten o usuario.
                 // Por convenio, os roles sempre teñen o prefixo "ROLE_"
                 .authorities(AuthorityUtils.commaSeparatedStringToAuthorityList(
-                        user.getRols().stream().map(Rol::toString).collect(Collectors.joining(","))
+                        user.getRoles().stream().map(Rol::toString).collect(Collectors.joining(","))
                 ))
                 // Xeneramos o obxecto do usuario a partir dos datos introducidos no builder
                 .build();

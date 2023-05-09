@@ -17,26 +17,26 @@ public class User {
     @Id
     private String id;
     @Indexed(unique = true)
-    @NotBlank(message = "User's name can not be empty")
-    private String name;
+    @NotBlank(message = "User's username can not be empty")
+    private String username;
     @NotBlank(message = "User's password can not be empty")
     private String password;
     @Indexed(unique = true)
     @Email(message = "Email format is incorrect")
     @NotBlank(message = "User's email can not be empty")
     private String email;
-    private LocalDateTime birthday;
-    private @NotNull List<Rol> rols;
+    private LocalDateTime creationDate;
+    private @NotNull List<Rol> roles;
     private List<ObjectId> favoriteExercises;
 
 
-    public User(String id, String name, String password, String email, LocalDateTime birthday, List<Rol> rols, List<ObjectId> favoriteExercises) {
+    public User(String id, String username, String password, String email, LocalDateTime creationDate, List<Rol> roles, List<ObjectId> favoriteExercises) {
         this.id = id;
-        this.name = name;
+        this.username = username;
         this.password = password;
         this.email = email;
-        this.birthday = birthday;
-        this.rols = rols;
+        this.creationDate = creationDate;
+        this.roles = roles;
         this.favoriteExercises = favoriteExercises;
     }
 
@@ -48,12 +48,12 @@ public class User {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getUsername() {
+        return username;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getPassword() {
@@ -72,20 +72,20 @@ public class User {
         this.email = email;
     }
 
-    public LocalDateTime getBirthday() {
-        return birthday;
+    public LocalDateTime getCreationDate() {
+        return creationDate;
     }
 
-    public void setBirthday(LocalDateTime birthday) {
-        this.birthday = birthday;
+    public void setCreationDate(LocalDateTime creationDate) {
+        this.creationDate = creationDate;
     }
 
-    public List<Rol> getRols() {
-        return rols;
+    public List<Rol> getRoles() {
+        return roles;
     }
 
-    public void setRols(List<Rol> rols) {
-        this.rols = rols;
+    public void setRoles(List<Rol> roles) {
+        this.roles = roles;
     }
 
     public List<ObjectId> getFavoriteExercises() {
@@ -98,6 +98,6 @@ public class User {
 
     @Override
     public String toString() {
-        return String.format("User[" + name + "," + email + "," + rols + "]");
+        return String.format("User[" + username + "," + email + "," + roles + "]");
     }
 }

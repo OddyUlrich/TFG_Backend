@@ -1,12 +1,16 @@
 package com.tfgbackend.service;
 
+import com.tfgbackend.dto.UserDTO;
 import com.tfgbackend.exceptions.ResourceNotFoundException;
+import com.tfgbackend.forms.SignUpForm;
 import com.tfgbackend.model.User;
+import com.tfgbackend.model.enumerators.Rol;
 import com.tfgbackend.repositories.UserRepository;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import java.time.LocalDateTime;
 
 import java.util.List;
 import java.util.Optional;
@@ -15,48 +19,44 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository ur;
-    private final ExerciseService es;
     private final PasswordEncoder encoder;
 
     @Autowired
-    public UserService(UserRepository ur, ExerciseService es, PasswordEncoder encoder) {
+    public UserService(UserRepository ur, PasswordEncoder encoder) {
         this.ur = ur;
-        this.es = es;
         this.encoder = encoder;
     }
 
-    public Optional<User> create(User user){
-        if(!ur.existsByEmail(user.getEmail())) {
-            user.setPassword(encoder.encode(user.getPassword()));
-            return Optional.of(ur.insert(user));
+    public User create(SignUpForm userData){
+        if(!ur.existsByEmail(userData.getEmail())) {
+            User finalUser = new User(null, userData.getUsername(), encoder.encode(userData.getPassword()), userData.getEmail(), LocalDateTime.now(),List.of(Rol.STUDENT),List.of() );
+            return ur.insert(finalUser);
         } else {
-            return Optional.empty();
+            return null;
         }
     }
 
-    public void updateUserFavorites(String userId, String exerciseId) throws ResourceNotFoundException {
-        User updateUser = ur.findUserById(userId).orElseThrow(() -> new ResourceNotFoundException("User does not exist with that ID"));
-
-        //This method is only used here to check if the exercise exists. If not, an exception is thrown
-        es.findExerciseById(exerciseId);
+    public void updateUserFavorites(String email, String exerciseId) throws ResourceNotFoundException {
+        User updateUser = ur.findUserByEmail(email).orElseThrow(() -> new ResourceNotFoundException("User does not exist with that ID"));
 
         List<ObjectId> favoriteList = updateUser.getFavoriteExercises();
         ObjectId exerciseObjectId = new ObjectId(exerciseId);
 
         if (favoriteList.contains(exerciseObjectId)) {
             favoriteList.remove(exerciseObjectId);
-            ur.updateUserFavorites(userId, favoriteList);
+            ur.updateUserFavorites(updateUser.getId(), favoriteList);
         }else{
             favoriteList.add(exerciseObjectId);
-            ur.updateUserFavorites(userId, favoriteList);
+            ur.updateUserFavorites(updateUser.getId(), favoriteList);
         }
     }
 
     public User getUser(String email) throws ResourceNotFoundException{
-        User user = ur.findUserByEmail(email).orElseThrow(() -> new ResourceNotFoundException("User does not exist with that email"));
-        System.out.println("XO " + user.getPassword().equals(encoder.encode("password")));
-        System.out.println(user.getPassword());
-        System.out.println(encoder.encode("password"));
-        return user;
+        return ur.findUserByEmail(email).orElseThrow(() -> new ResourceNotFoundException("User does not exist with that email"));
     }
+
+    public UserDTO getUserInfo(String email){
+        return ur.getUserInfo(email).orElseThrow(() -> new ResourceNotFoundException("User does not exist with that email"));
+    }
+
 }

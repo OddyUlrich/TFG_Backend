@@ -167,7 +167,7 @@ public class TfgBackendApplication implements CommandLineRunner {
         ur.save(estudiante2);
 
 
-        List<ExerciseHomeDTO> lista = es.allExercisesSolutionsByStudent("635981f6e40c61599e000064");
+        List<ExerciseHomeDTO> lista = es.allExercisesSolutionsByStudent("estudiante@hotmail.com");
 
         for (ExerciseHomeDTO e : lista){
             System.out.println("ATIENDE: EjercicioSolution: " + e.getName() + " Numero de errores:" + e.getNumberErrorsSolution());

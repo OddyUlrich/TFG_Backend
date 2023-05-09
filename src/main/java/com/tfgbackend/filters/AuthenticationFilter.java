@@ -29,7 +29,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private boolean remember;
 
     // Establecemos unha duración para os tokens
-    private static Duration TOKEN_DURATION = Duration.ofMinutes(60);
+    private static Duration TOKEN_DURATION = Duration.ofMinutes(1);
 
     public AuthenticationFilter(AuthenticationManager manager, Key key){
         this.manager = manager;
@@ -43,8 +43,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
             // Obtemos o obxecto JSON do body da request HTTP
             JsonNode credentials = new ObjectMapper().readValue(request.getInputStream(), JsonNode.class);
 
-            //If the remember check was checked we mark the variable "remember" as true, if not (null), as false
-            remember = credentials.get("remember").textValue() == null ? false : true;
+            remember = (credentials.get("remember") != null) ? credentials.get("remember").booleanValue() : false;
 
             // Tentamos autenticarnos coas credenciais proporcionadas
             return manager.authenticate(
@@ -60,7 +59,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     // Método que se chama cando a autenticación do metodo anterior é satisfactoria
     @Override
-    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) {
+    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException {
         // Almacenamos o momento actual
         long now = System.currentTimeMillis();
         Duration rememberDuration;
@@ -93,7 +92,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
         // Engadimos o token á resposta nunha cookie de "Authentication"
         Cookie jwtTokenCookie = new Cookie("Authentication", tokenBuilder.compact());
-        jwtTokenCookie.setMaxAge((int)TOKEN_DURATION.toMillis() + (int)rememberDuration.toSeconds());
+        jwtTokenCookie.setMaxAge((int)TOKEN_DURATION.toSeconds() + (int)rememberDuration.toSeconds());
         jwtTokenCookie.setHttpOnly(true);
         response.addCookie(jwtTokenCookie);
     }
