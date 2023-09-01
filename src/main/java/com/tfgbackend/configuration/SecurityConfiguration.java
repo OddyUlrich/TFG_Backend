@@ -46,7 +46,8 @@ public class SecurityConfiguration {
 
         http.cors().and().csrf().disable()
                 // Indicamos que por defecto permitimos o acceso a login por parte de calqueira
-                .authorizeHttpRequests().requestMatchers("/login").permitAll()
+                .authorizeHttpRequests().requestMatchers("/login", "/signup").permitAll()
+                .requestMatchers("/error").anonymous()
                 // Calquera outra peticion necesita, minimo, el rol de usuario
                 .anyRequest().authenticated()
                 .and()

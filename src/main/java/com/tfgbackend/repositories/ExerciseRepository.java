@@ -84,8 +84,7 @@ public interface ExerciseRepository extends MongoRepository<Exercise, Long> {
     Optional<List<ExerciseHomeDTO>> allExerciseSolutionsByUserId(ObjectId studentId);
 
     @Aggregation(pipeline = {
-            "{'$match': {'$expr': {'$eq': ['$_id', ?0]}}}",
-            " "
+            "{'$match': {'$expr': {'$eq': ['$_id', ?0]}}}"
     })
     Optional<ExerciseEditorDTO> exerciseFilesAndSolutionByIdAndStudent(ObjectId studentId, ObjectId exerciseId);
 

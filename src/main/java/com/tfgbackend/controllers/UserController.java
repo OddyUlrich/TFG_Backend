@@ -9,6 +9,7 @@ import com.tfgbackend.service.ExerciseService;
 import com.tfgbackend.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -37,15 +38,17 @@ public class UserController {
         }
     }
 
-    @PostMapping("/signup")
+    @PostMapping(value = "/signup", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<UserDTO> checkAuth(@RequestBody SignUpForm user) {
 
         User newUser = userService.create(user);
         if (newUser != null) {
-            UserDTO userLogin = userService.getUserInfo(newUser.getEmail());
-            return ResponseEntity.status(HttpStatus.CREATED).body(userLogin);
+            UserDTO userDTO = new UserDTO(newUser.getUsername(), newUser.getEmail(), newUser.getCreationDate(), newUser.getRoles());
+            return ResponseEntity.status(HttpStatus.CREATED).body(userDTO);
         }else{
-            return ResponseEntity.status(HttpStatus.CONFLICT).body();
+            //TODO falta cambiar esto para que indique cual de los 2 es repetido
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "hola");
+            //return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
     }
 

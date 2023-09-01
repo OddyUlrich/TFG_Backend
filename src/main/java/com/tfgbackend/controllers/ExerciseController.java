@@ -2,12 +2,11 @@ package com.tfgbackend.controllers;
 
 import com.tfgbackend.dto.ExerciseEditorDTO;
 import com.tfgbackend.exceptions.ResourceNotFoundException;
-import com.tfgbackend.model.Exercise;
-import com.tfgbackend.model.ExerciseFiles;
 import com.tfgbackend.service.ExerciseService;
 import com.tfgbackend.dto.ExerciseHomeDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -44,7 +43,7 @@ public class ExerciseController {
         }
     }
 
-    @GetMapping("/{exerciseId}")
+    @GetMapping( value = "/{exerciseId}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ExerciseEditorDTO> getExercise(@PathVariable String exerciseId, Authentication auth) {
 
         try{
