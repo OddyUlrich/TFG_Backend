@@ -51,10 +51,12 @@ public class UserService {
     }
 
     public User getUser(String email) throws ResourceNotFoundException{
+        System.out.println("DAME EL EMAIL: " + email);
         return ur.findUserByEmail(email).orElseThrow(() -> new ResourceNotFoundException("User does not exist with that email"));
     }
 
     public UserDTO getUserInfo(String email){
+        System.out.println("ES MI CULPA EL EMAIL: " + email);
         return ur.getUserInfo(email).orElseThrow(() -> new ResourceNotFoundException("User does not exist with that email"));
     }
 

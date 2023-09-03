@@ -5,26 +5,35 @@ import com.tfgbackend.exceptions.ResourceNotFoundException;
 import com.tfgbackend.forms.SignUpForm;
 import com.tfgbackend.model.Exercise;
 import com.tfgbackend.model.User;
+import com.tfgbackend.model.enumerators.Rol;
 import com.tfgbackend.service.ExerciseService;
 import com.tfgbackend.service.UserService;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.security.Key;
+import java.time.Duration;
+import java.util.List;
+
+import static com.tfgbackend.configuration.Util.successfulCookieAuthentication;
 
 @RestController
 public class UserController {
 
     private final UserService userService;
     private final ExerciseService exerciseService;
+    private final Key key;
 
     @Autowired
-    public UserController(UserService userService, ExerciseService exerciseService) {
+    public UserController(UserService userService, ExerciseService exerciseService, Key key) {
         this.userService = userService;
         this.exerciseService = exerciseService;
+        this.key = key;
     }
 
     @GetMapping("/users/check")
@@ -39,12 +48,21 @@ public class UserController {
     }
 
     @PostMapping(value = "/signup", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UserDTO> checkAuth(@RequestBody SignUpForm user) {
+    public ResponseEntity<UserDTO> checkAuth(@RequestBody SignUpForm user, HttpServletResponse response) {
 
         User newUser = userService.create(user);
         if (newUser != null) {
-            UserDTO userDTO = new UserDTO(newUser.getUsername(), newUser.getEmail(), newUser.getCreationDate(), newUser.getRoles());
-            return ResponseEntity.status(HttpStatus.CREATED).body(userDTO);
+
+            //Creating the userDTO for the frontend with the new created user
+            UserDTO userLogin = new UserDTO(newUser.getUsername(), newUser.getEmail(), newUser.getCreationDate(), newUser.getRoles());
+
+            //Creating the cookie so that the user has access to the application after the signup without having to log in.
+            Cookie cookie = successfulCookieAuthentication(List.of(Rol.STUDENT.toString()), Duration.ofMillis(0), userLogin.getEmail(), key);
+
+            //Returning the response with cookie
+            response.addCookie(cookie);
+            return ResponseEntity.status(HttpStatus.CREATED).body(userLogin);
+
         }else{
             //TODO falta cambiar esto para que indique cual de los 2 es repetido
             throw new ResponseStatusException(HttpStatus.CONFLICT, "hola");

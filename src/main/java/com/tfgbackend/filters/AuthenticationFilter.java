@@ -23,13 +23,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.tfgbackend.configuration.Util.successfulCookieAuthentication;
+
 public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private final AuthenticationManager manager;
     private final Key key;
     private boolean remember;
-
-    // Establecemos unha duración para os tokens
-    private static Duration TOKEN_DURATION = Duration.ofMinutes(1);
 
     public AuthenticationFilter(AuthenticationManager manager, Key key){
         this.manager = manager;
@@ -60,8 +59,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     // Método que se chama cando a autenticación do metodo anterior é satisfactoria
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException {
-        // Almacenamos o momento actual
-        long now = System.currentTimeMillis();
+
         Duration rememberDuration;
 
         // If the user checked "remember me" we extend the duration of the token for 30 days
@@ -77,24 +75,12 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
 
-        // Creamos o token JWT empregando o builder
-        JwtBuilder tokenBuilder = Jwts.builder()
-                // Establecemos como "propietario" do token ao usuario que fixo login
-                .setSubject(((User)authResult.getPrincipal()).getUsername())
-                // Establecemos a data de emisión do token
-                .setIssuedAt(new Date(now))
-                // Establecemos a data máxima de validez do token
-                .setExpiration(new Date(now + TOKEN_DURATION.toMillis() + rememberDuration.toMillis()))
-                // Engadimos un atributo máis ao corpo do token cos roles do usuario
-                .claim("roles", authorities)
-                // Asinamos o token coa nosa clave secreta
-                .signWith(key);
+        //Obtemos o nome de usuario que fixo login
+        String username = ((User)authResult.getPrincipal()).getUsername();
 
-        // Engadimos o token á resposta nunha cookie de "Authentication"
-        Cookie jwtTokenCookie = new Cookie("Authentication", tokenBuilder.compact());
-        jwtTokenCookie.setMaxAge((int)TOKEN_DURATION.toSeconds() + (int)rememberDuration.toSeconds());
-        jwtTokenCookie.setHttpOnly(true);
+        Cookie jwtTokenCookie = successfulCookieAuthentication(authorities, rememberDuration, username, key);
         response.addCookie(jwtTokenCookie);
+
     }
 
 }
