@@ -9,6 +9,7 @@ import com.tfgbackend.model.enumerators.Rol;
 import com.tfgbackend.service.ExerciseService;
 import com.tfgbackend.service.UserService;
 import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
@@ -48,10 +49,12 @@ public class UserController {
     }
 
     @PostMapping(value = "/signup", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<UserDTO> checkAuth(@RequestBody SignUpForm user, HttpServletResponse response) {
+    public ResponseEntity<UserDTO> signup(@RequestBody SignUpForm user, HttpServletResponse response) {
 
-        User newUser = userService.create(user);
-        if (newUser != null) {
+        try {
+
+            //Trying creating the new user and adding it to the database
+            User newUser = userService.create(user);
 
             //Creating the userDTO for the frontend with the new created user
             UserDTO userLogin = new UserDTO(newUser.getUsername(), newUser.getEmail(), newUser.getCreationDate(), newUser.getRoles());
@@ -63,11 +66,28 @@ public class UserController {
             response.addCookie(cookie);
             return ResponseEntity.status(HttpStatus.CREATED).body(userLogin);
 
-        }else{
-            //TODO falta cambiar esto para que indique cual de los 2 es repetido
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "hola");
-            //return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        }catch (Exception e){
+            //If the email or username is already in use we must warn the user instead of add a new user in the database
+            System.out.println(e.getMessage());
+            throw new ResponseStatusException(HttpStatus.CONFLICT, e.getMessage(), e);
         }
+    }
+
+    @PostMapping("/close-session")
+    public ResponseEntity<Void> logout(HttpServletRequest request, HttpServletResponse response){
+
+        Cookie[] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals("Authentication")) {
+                    cookie.setMaxAge(0);
+                    response.addCookie(cookie);
+                    break;
+                }
+            }
+        }
+
+        return ResponseEntity.ok().build();
     }
 
     @PatchMapping("/users/favorites/{exerciseId}")

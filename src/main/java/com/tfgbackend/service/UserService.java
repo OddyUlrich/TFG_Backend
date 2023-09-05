@@ -10,6 +10,7 @@ import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
 import java.time.LocalDateTime;
 
 import java.util.List;
@@ -26,13 +27,19 @@ public class UserService {
         this.encoder = encoder;
     }
 
-    public User create(SignUpForm userData){
-        if(!ur.existsByEmail(userData.getEmail())) {
-            User finalUser = new User(null, userData.getUsername(), encoder.encode(userData.getPassword()), userData.getEmail(), LocalDateTime.now(),List.of(Rol.STUDENT),List.of() );
-            return ur.insert(finalUser);
-        } else {
-            return null;
+    public User create(SignUpForm userData) throws Exception {
+
+        if (ur.existsByUsername(userData.getUsername())){
+            throw new Exception("This username is already in use");
         }
+
+        if (ur.existsByEmail(userData.getEmail())){
+            throw new Exception("This email is already in use");
+        }
+
+        User finalUser = new User(null, userData.getUsername(), encoder.encode(userData.getPassword()), userData.getEmail(), LocalDateTime.now(), List.of(Rol.STUDENT), List.of());
+        return ur.insert(finalUser);
+
     }
 
     public void updateUserFavorites(String email, String exerciseId) throws ResourceNotFoundException {
@@ -44,19 +51,17 @@ public class UserService {
         if (favoriteList.contains(exerciseObjectId)) {
             favoriteList.remove(exerciseObjectId);
             ur.updateUserFavorites(updateUser.getId(), favoriteList);
-        }else{
+        } else {
             favoriteList.add(exerciseObjectId);
             ur.updateUserFavorites(updateUser.getId(), favoriteList);
         }
     }
 
-    public User getUser(String email) throws ResourceNotFoundException{
-        System.out.println("DAME EL EMAIL: " + email);
+    public User getUser(String email) throws ResourceNotFoundException {
         return ur.findUserByEmail(email).orElseThrow(() -> new ResourceNotFoundException("User does not exist with that email"));
     }
 
-    public UserDTO getUserInfo(String email){
-        System.out.println("ES MI CULPA EL EMAIL: " + email);
+    public UserDTO getUserInfo(String email) {
         return ur.getUserInfo(email).orElseThrow(() -> new ResourceNotFoundException("User does not exist with that email"));
     }
 

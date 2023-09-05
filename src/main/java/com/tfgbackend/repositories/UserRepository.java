@@ -21,5 +21,6 @@ public interface UserRepository extends MongoRepository<User, Long>, CustomUserR
     Optional<UserDTO> getUserInfo (String email);
 
     boolean existsByEmail(String email);
+    boolean existsByUsername(String username);
 
 }
