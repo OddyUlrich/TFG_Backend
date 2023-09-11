@@ -17,10 +17,15 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import static java.lang.Thread.sleep;
 
@@ -125,13 +130,31 @@ public class TfgBackendApplication implements CommandLineRunner {
         Solution solucion8 = new Solution(null, LocalDateTime.now(), StatusExercise.COMPLETED, estudiante2, ejercicio2,2);
 
 
+        EditableMethod metodosEjercicio1 = new EditableMethod("Pepe", 18);
+
         //FILES
-        File archivo = new File("E:/Escritorio/ATM-Machine-master/Account.java");
-        ExerciseFiles nuevoArchivo = new ExerciseFiles(null, archivo.getName(), archivo.getPath(), Files.readAllBytes(archivo.toPath()), ejercicio1);
+        try (Stream<Path> filePathStream=Files.walk(Paths.get("E:/Escritorio/Proyectos/ATM"))) {
+            filePathStream.forEach(filePath -> {
+                if (Files.isRegularFile(filePath)) {
+                    File archivo = new File(String.valueOf(filePath));
+                    try {
+                        ExerciseFiles nuevoArchivo = new ExerciseFiles(null, archivo.getName(), archivo.getPath(), Files.readAllBytes(archivo.toPath()), ejercicio1, null, List.of(metodosEjercicio1));
+                        efr.save(nuevoArchivo);
+                    } catch (IOException e) {
+                        throw new RuntimeException("Error con los archivos: " + e);
+                    }
+                }
+            });
+        }
 
-        efr.save(nuevoArchivo);
+//        File archivo = new File("E:/Escritorio/Proyectos/");
+//        ExerciseFiles nuevoArchivo = new ExerciseFiles(null, archivo.getName(), archivo.getPath(), Files.readAllBytes(archivo.toPath()), ejercicio1);
+//
+//        efr.save(nuevoArchivo);
 
-        //System.out.println("AQUI: " + new String(nuevoArchivo.getContent(), StandardCharsets.UTF_8));
+//        System.out.println("AQUI: " + new String(nuevoArchivo.getContent(), StandardCharsets.UTF_8));
+
+
 
         Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
         Set<ConstraintViolation<Exercise>> violaciones = validator.validate(ejercicio1);
