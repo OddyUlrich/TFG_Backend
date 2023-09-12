@@ -85,6 +85,7 @@ public class TfgBackendApplication implements CommandLineRunner {
         ObjectId profesorId = new ObjectId("635981f6e40b61599e000064");
         ObjectId estudianteID = new ObjectId("635981f6e40c61599e000064");
         ObjectId estudianteID2 = new ObjectId("635981f6e40c61599e000062");
+
         ObjectId tag1ID = new ObjectId();
         ObjectId tag2ID = new ObjectId();
 
@@ -93,12 +94,24 @@ public class TfgBackendApplication implements CommandLineRunner {
         User estudiante2 = new User(estudianteID2.toString(), "estudiante2", bcrypt.encode("password"), "estudiante2@hotmail.com", LocalDateTime.now(),  List.of(Rol.STUDENT), List.of());
         //TODO ACTUALIZAR LA LISTA DE ASIGNATURAS DEL ESTUDIANTE
 
+        ur.save(estudiante);
+        ur.save(estudiante2);
+        ur.save(profesor);
+
         Tag herencia = new Tag(tag1ID.toString(),"Herencia");
         Tag getter = new Tag(tag2ID.toString(),"Getter");
+
+        tr.save(herencia);
+        tr.save(getter);
 
         ExerciseBattery bateria1 = new ExerciseBattery(batteryId1, "Bateria de Herencia");
         ExerciseBattery bateria2 = new ExerciseBattery(batteryId2, "Bateria de Poliformismo");
         ExerciseBattery bateria3 = new ExerciseBattery(batteryId3, "Bateria de Ejemplo");
+
+        ebr.save(bateria1);
+        ebr.save(bateria2);
+        ebr.save(bateria3);
+
         Exercise ejercicio1 = new Exercise(exerciseId1.toString(), "Ejercicio 1", "", List.of(), "", List.of(herencia, getter), bateria1, profesor, LocalDateTime.now());
         Exercise ejercicio3 = new Exercise(exerciseId3.toString(), "Ejercicio 3", "", List.of(), "", List.of(herencia, getter), bateria1, profesor, LocalDateTime.now());
         Exercise ejercicio4 = new Exercise(exerciseId4.toString(), "Ejercicio 4", "", List.of(), "", List.of(herencia, getter), bateria1, profesor, LocalDateTime.now());
@@ -112,23 +125,45 @@ public class TfgBackendApplication implements CommandLineRunner {
         Exercise ejercicio11 = new Exercise(exerciseId11.toString(), "Ejercicio 11", "", List.of(), "", List.of(herencia, getter), bateria3, profesor, LocalDateTime.now());
         Exercise ejercicio2 = new Exercise(exerciseId2.toString(), "Ejercicio 2", "", List.of(), "", List.of(herencia, getter), bateria2, profesor, LocalDateTime.now());
 
-        Solution solucion = new Solution(null, LocalDateTime.now(), StatusExercise.PENDING, estudiante, ejercicio1,5);
-        sleep(5);
-        Solution solucion2 = new Solution(null, LocalDateTime.now(), StatusExercise.PENDING, estudiante, ejercicio1,1);
-        sleep(5);
-        Solution solucion3 = new Solution(null, LocalDateTime.now(), StatusExercise.COMPLETED, estudiante, ejercicio1,1);
-        sleep(5);
-        Solution solucion4 = new Solution(null, LocalDateTime.now(), StatusExercise.PENDING, estudiante, ejercicio2,5);
-        sleep(5);
-        Solution solucion5 = new Solution(null, LocalDateTime.now(), StatusExercise.PENDING, estudiante, ejercicio2,1);
-        sleep(5);
-        Solution solucion6 = new Solution(null, LocalDateTime.now(), StatusExercise.PENDING, estudiante, ejercicio2,1);
+        er.save(ejercicio1);
+        er.save(ejercicio2);
+        er.save(ejercicio3);
+        er.save(ejercicio4);
+        er.save(ejercicio5);
+        er.save(ejercicio6);
+        er.save(ejercicio7);
+        er.save(ejercicio8);
+        er.save(ejercicio9);
+        er.save(ejercicio10);
+        er.save(ejercicio11);
 
+        //ESTUDIANTE
+        Solution solucion = new Solution(LocalDateTime.now(), StatusExercise.PENDING, estudiante, ejercicio1,5);
         sleep(5);
-        Solution solucion7 = new Solution(null, LocalDateTime.now(), StatusExercise.COMPLETED, estudiante2, ejercicio1,2);
+        Solution solucion2 = new Solution(LocalDateTime.now(), StatusExercise.PENDING, estudiante, ejercicio1,4);
         sleep(5);
-        Solution solucion8 = new Solution(null, LocalDateTime.now(), StatusExercise.COMPLETED, estudiante2, ejercicio2,2);
+        Solution solucion3 = new Solution(LocalDateTime.now(), StatusExercise.COMPLETED, estudiante, ejercicio1,3);
+        sleep(5);
+        Solution solucion4 = new Solution(LocalDateTime.now(), StatusExercise.PENDING, estudiante, ejercicio2,5);
+        sleep(5);
+        Solution solucion5 = new Solution(LocalDateTime.now(), StatusExercise.PENDING, estudiante, ejercicio2,2);
+        sleep(5);
+        Solution solucion6 = new Solution(LocalDateTime.now(), StatusExercise.PENDING, estudiante, ejercicio2,1);
 
+        //ESTUDIANTE2
+        sleep(5);
+        Solution solucion7 = new Solution(LocalDateTime.now(), StatusExercise.COMPLETED, estudiante2, ejercicio1,2);
+        sleep(5);
+        Solution solucion8 = new Solution(LocalDateTime.now(), StatusExercise.COMPLETED, estudiante2, ejercicio2,2);
+
+        solutionRepository.save(solucion);
+        solutionRepository.save(solucion2);
+        solutionRepository.save(solucion3);
+        solutionRepository.save(solucion4);
+        solutionRepository.save(solucion5);
+        solutionRepository.save(solucion6);
+        solutionRepository.save(solucion7);
+        solutionRepository.save(solucion8);
 
         EditableMethod metodosEjercicio1 = new EditableMethod("Pepe", 18);
 
@@ -138,7 +173,12 @@ public class TfgBackendApplication implements CommandLineRunner {
                 if (Files.isRegularFile(filePath)) {
                     File archivo = new File(String.valueOf(filePath));
                     try {
-                        ExerciseFiles nuevoArchivo = new ExerciseFiles(null, archivo.getName(), archivo.getPath(), Files.readAllBytes(archivo.toPath()), ejercicio1, null, List.of(metodosEjercicio1));
+                        ExerciseFiles nuevoArchivo;
+                        if (archivo.getName().equals("Solucion_alumno.java")){
+                            nuevoArchivo = new ExerciseFiles(null, archivo.getName(), archivo.getPath(), Files.readAllBytes(archivo.toPath()), ejercicio1, solucion, List.of(metodosEjercicio1));
+                        }else{
+                            nuevoArchivo = new ExerciseFiles(null, archivo.getName(), archivo.getPath(), Files.readAllBytes(archivo.toPath()), ejercicio1, null, List.of(metodosEjercicio1));
+                        }
                         efr.save(nuevoArchivo);
                     } catch (IOException e) {
                         throw new RuntimeException("Error con los archivos: " + e);
@@ -155,40 +195,9 @@ public class TfgBackendApplication implements CommandLineRunner {
 //        System.out.println("AQUI: " + new String(nuevoArchivo.getContent(), StandardCharsets.UTF_8));
 
 
-
         Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
         Set<ConstraintViolation<Exercise>> violaciones = validator.validate(ejercicio1);
         System.out.println("Violaciones: " + violaciones.size() + ", texto: " + violaciones);
-
-        ur.save(profesor);
-        tr.save(herencia);
-        tr.save(getter);
-        solutionRepository.save(solucion);
-        solutionRepository.save(solucion2);
-        solutionRepository.save(solucion3);
-        solutionRepository.save(solucion4);
-        solutionRepository.save(solucion5);
-        solutionRepository.save(solucion6);
-        solutionRepository.save(solucion7);
-        solutionRepository.save(solucion8);
-        ebr.save(bateria1);
-        ebr.save(bateria2);
-        ebr.save(bateria3);
-        er.save(ejercicio1);
-        er.save(ejercicio2);
-        er.save(ejercicio3);
-        er.save(ejercicio4);
-        er.save(ejercicio5);
-        er.save(ejercicio6);
-        er.save(ejercicio7);
-        er.save(ejercicio8);
-        er.save(ejercicio9);
-        er.save(ejercicio10);
-        er.save(ejercicio11);
-
-        ur.save(estudiante);
-        ur.save(estudiante2);
-
 
         List<ExerciseHomeDTO> lista = es.allExercisesSolutionsByStudent("estudiante@hotmail.com");
 

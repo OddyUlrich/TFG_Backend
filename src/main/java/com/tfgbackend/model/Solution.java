@@ -10,17 +10,71 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.time.LocalDateTime;
 
 @Document("solutions")
-public record Solution(
-        @Id String id,
-        @NotNull LocalDateTime creationTimestamp,
-        @NotNull StatusExercise status,
-        @DBRef(lazy = true) @NotNull  /*IsStudent*/ @Valid User student,
-        @DBRef(lazy = true) @NotNull @Valid Exercise exercise,
-        Integer numberErrors
-        //"String codigo" y "@DBRef(lazy = true) @NotNull File file" o "File file" con el mismo nombre que en el template para que pueda ser sustituido
-) {
-    public Solution(LocalDateTime creationTimestamp, User student, Exercise exercise, Integer numberErrors) {
-        this(null, creationTimestamp, StatusExercise.PENDING, student, exercise,0);
+public class Solution {
+    @Id
+    private String id;
+    private @NotNull LocalDateTime creationTimestamp;
+    private @NotNull StatusExercise status;
+    @DBRef(lazy = true)
+    private @NotNull  /*IsStudent*/ @Valid User student;
+    @DBRef(lazy = true)
+    private @NotNull @Valid Exercise exercise;
+    private Integer numberErrors;
+
+    public Solution(LocalDateTime creationTimestamp, StatusExercise status, User student, Exercise exercise, Integer numberErrors) {
+        this.creationTimestamp = creationTimestamp;
+        this.status = status;
+        this.student = student;
+        this.exercise = exercise;
+        this.numberErrors = numberErrors;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public LocalDateTime getCreationTimestamp() {
+        return creationTimestamp;
+    }
+
+    public void setCreationTimestamp(LocalDateTime creationTimestamp) {
+        this.creationTimestamp = creationTimestamp;
+    }
+
+    public StatusExercise getStatus() {
+        return status;
+    }
+
+    public void setStatus(StatusExercise status) {
+        this.status = status;
+    }
+
+    public User getStudent() {
+        return student;
+    }
+
+    public void setStudent(User student) {
+        this.student = student;
+    }
+
+    public Exercise getExercise() {
+        return exercise;
+    }
+
+    public void setExercise(Exercise exercise) {
+        this.exercise = exercise;
+    }
+
+    public Integer getNumberErrors() {
+        return numberErrors;
+    }
+
+    public void setNumberErrors(Integer numberErrors) {
+        this.numberErrors = numberErrors;
     }
 
     @Override
@@ -29,4 +83,5 @@ public record Solution(
                 "Solution[" + id + "," + student.getUsername() + "," + exercise.getName() + "]"
         );
     }
+
 }

@@ -1,7 +1,8 @@
 package com.tfgbackend.controllers;
 
-import com.tfgbackend.dto.ExerciseEditorDTO;
+import com.tfgbackend.dto.ExerciseFilesDTO;
 import com.tfgbackend.exceptions.ResourceNotFoundException;
+import com.tfgbackend.service.ExerciseFilesService;
 import com.tfgbackend.service.ExerciseService;
 import com.tfgbackend.dto.ExerciseHomeDTO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,10 +21,12 @@ import java.util.List;
 public class ExerciseController {
 
     private final ExerciseService exerciseService;
+    private final ExerciseFilesService exerciseFilesService;
 
     @Autowired
-    public ExerciseController(ExerciseService exerciseService) {
+    public ExerciseController(ExerciseService exerciseService, ExerciseFilesService exerciseFilesService) {
         this.exerciseService = exerciseService;
+        this.exerciseFilesService = exerciseFilesService;
     }
 
     @GetMapping
@@ -34,7 +37,7 @@ public class ExerciseController {
                 String email = auth.getName();
                 List<ExerciseHomeDTO> lista = exerciseService.allExercisesSolutionsByStudent(email);
                 return ResponseEntity.status(HttpStatus.OK).body(lista);
-            }else{
+            } else {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
             }
         } catch (ResourceNotFoundException e) {
@@ -43,18 +46,18 @@ public class ExerciseController {
         }
     }
 
-    @GetMapping( value = "/{exerciseId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ExerciseEditorDTO> getExercise(@PathVariable String exerciseId, Authentication auth) {
+    @GetMapping(value = "/{exerciseId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ExerciseFilesDTO> getExercise(@PathVariable String exerciseId, Authentication auth) {
 
-        try{
+        try {
             if (auth != null && auth.isAuthenticated()) {
                 String email = auth.getName();
-                ExerciseEditorDTO exercise = exerciseService.exerciseFilesAndSolutionByIdAndStudent(exerciseId, email);
+                ExerciseFilesDTO exercise = exerciseFilesService.exerciseFilesAndSolutionByIdAndStudent(exerciseId, email);
                 return ResponseEntity.status(HttpStatus.OK).body(exercise);
-            }else{
+            } else {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
             }
-        }catch (ResourceNotFoundException e) {
+        } catch (ResourceNotFoundException e) {
             System.out.println(e.getMessage());
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
         }

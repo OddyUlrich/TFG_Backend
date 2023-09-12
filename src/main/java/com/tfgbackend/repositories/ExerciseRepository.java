@@ -1,6 +1,5 @@
 package com.tfgbackend.repositories;
 
-import com.tfgbackend.dto.ExerciseEditorDTO;
 import com.tfgbackend.model.Exercise;
 import com.tfgbackend.dto.ExerciseHomeDTO;
 import org.bson.types.ObjectId;
@@ -38,7 +37,7 @@ public interface ExerciseRepository extends MongoRepository<Exercise, Long> {
                 'latestSolution': {
                     '$reduce': {
                         'input': '$solution',
-                        'initialValue': None,
+                        'initialValue': null,
                         'in': {
                             '$cond': {
                                 'if': {
@@ -82,11 +81,6 @@ public interface ExerciseRepository extends MongoRepository<Exercise, Long> {
 
     })
     Optional<List<ExerciseHomeDTO>> allExerciseSolutionsByUserId(ObjectId studentId);
-
-    @Aggregation(pipeline = {
-            "{'$match': {'$expr': {'$eq': ['$_id', ?0]}}}"
-    })
-    Optional<ExerciseEditorDTO> exerciseFilesAndSolutionByIdAndStudent(ObjectId studentId, ObjectId exerciseId);
 
     Optional<Exercise> findExerciseById(String id);
 }
