@@ -90,16 +90,16 @@ public class TfgBackendApplication implements CommandLineRunner {
         ObjectId tag2ID = new ObjectId();
 
         User profesor = new User(profesorId.toString(), "profesor", bcrypt.encode("password"), "profesor@hotmail.com", LocalDateTime.now(), List.of(Rol.TEACHER), List.of());
-        User estudiante = new User(estudianteID.toString(), "estudiante", bcrypt.encode("password"), "estudiante@hotmail.com", LocalDateTime.now(),  List.of(Rol.STUDENT), List.of());
-        User estudiante2 = new User(estudianteID2.toString(), "estudiante2", bcrypt.encode("password"), "estudiante2@hotmail.com", LocalDateTime.now(),  List.of(Rol.STUDENT), List.of());
+        User estudiante = new User(estudianteID.toString(), "estudiante", bcrypt.encode("password"), "estudiante@hotmail.com", LocalDateTime.now(), List.of(Rol.STUDENT), List.of());
+        User estudiante2 = new User(estudianteID2.toString(), "estudiante2", bcrypt.encode("password"), "estudiante2@hotmail.com", LocalDateTime.now(), List.of(Rol.STUDENT), List.of());
         //TODO ACTUALIZAR LA LISTA DE ASIGNATURAS DEL ESTUDIANTE
 
         ur.save(estudiante);
         ur.save(estudiante2);
         ur.save(profesor);
 
-        Tag herencia = new Tag(tag1ID.toString(),"Herencia");
-        Tag getter = new Tag(tag2ID.toString(),"Getter");
+        Tag herencia = new Tag(tag1ID.toString(), "Herencia");
+        Tag getter = new Tag(tag2ID.toString(), "Getter");
 
         tr.save(herencia);
         tr.save(getter);
@@ -138,23 +138,23 @@ public class TfgBackendApplication implements CommandLineRunner {
         er.save(ejercicio11);
 
         //ESTUDIANTE
-        Solution solucion = new Solution(LocalDateTime.now(), StatusExercise.PENDING, estudiante, ejercicio1,5);
+        Solution solucion = new Solution(LocalDateTime.now(), StatusExercise.PENDING, estudiante, ejercicio1, 5);
         sleep(5);
-        Solution solucion2 = new Solution(LocalDateTime.now(), StatusExercise.PENDING, estudiante, ejercicio1,4);
+        Solution solucion2 = new Solution(LocalDateTime.now(), StatusExercise.PENDING, estudiante, ejercicio1, 4);
         sleep(5);
-        Solution solucion3 = new Solution(LocalDateTime.now(), StatusExercise.COMPLETED, estudiante, ejercicio1,3);
+        Solution solucion3 = new Solution(LocalDateTime.now(), StatusExercise.COMPLETED, estudiante, ejercicio1, 3);
         sleep(5);
-        Solution solucion4 = new Solution(LocalDateTime.now(), StatusExercise.PENDING, estudiante, ejercicio2,5);
+        Solution solucion4 = new Solution(LocalDateTime.now(), StatusExercise.PENDING, estudiante, ejercicio2, 5);
         sleep(5);
-        Solution solucion5 = new Solution(LocalDateTime.now(), StatusExercise.PENDING, estudiante, ejercicio2,2);
+        Solution solucion5 = new Solution(LocalDateTime.now(), StatusExercise.PENDING, estudiante, ejercicio2, 2);
         sleep(5);
-        Solution solucion6 = new Solution(LocalDateTime.now(), StatusExercise.PENDING, estudiante, ejercicio2,1);
+        Solution solucion6 = new Solution(LocalDateTime.now(), StatusExercise.PENDING, estudiante, ejercicio2, 1);
 
         //ESTUDIANTE2
         sleep(5);
-        Solution solucion7 = new Solution(LocalDateTime.now(), StatusExercise.COMPLETED, estudiante2, ejercicio1,2);
+        Solution solucion7 = new Solution(LocalDateTime.now(), StatusExercise.COMPLETED, estudiante2, ejercicio1, 2);
         sleep(5);
-        Solution solucion8 = new Solution(LocalDateTime.now(), StatusExercise.COMPLETED, estudiante2, ejercicio2,2);
+        Solution solucion8 = new Solution(LocalDateTime.now(), StatusExercise.COMPLETED, estudiante2, ejercicio2, 2);
 
         solutionRepository.save(solucion);
         solutionRepository.save(solucion2);
@@ -168,17 +168,23 @@ public class TfgBackendApplication implements CommandLineRunner {
         EditableMethod metodosEjercicio1 = new EditableMethod("Pepe", 18);
 
         //FILES
-        try (Stream<Path> filePathStream=Files.walk(Paths.get("E:/Escritorio/Proyectos/ATM"))) {
+        try (Stream<Path> filePathStream = Files.walk(Paths.get("E:/Escritorio/Proyectos/ATM"))) {
             filePathStream.forEach(filePath -> {
                 if (Files.isRegularFile(filePath)) {
                     File archivo = new File(String.valueOf(filePath));
                     try {
-                        ExerciseFiles nuevoArchivo;
-                        if (archivo.getName().equals("Solucion_alumno.java")){
-                            nuevoArchivo = new ExerciseFiles(null, archivo.getName(), archivo.getPath(), Files.readAllBytes(archivo.toPath()), ejercicio1, solucion, List.of(metodosEjercicio1));
-                        }else{
-                            nuevoArchivo = new ExerciseFiles(null, archivo.getName(), archivo.getPath(), Files.readAllBytes(archivo.toPath()), ejercicio1, null, List.of(metodosEjercicio1));
-                        }
+                        ExerciseFiles nuevoArchivo = switch (archivo.getName()) {
+                            case "Solucion_alumno.java" ->
+                                    new ExerciseFiles(null, archivo.getName(), archivo.getPath(), Files.readAllBytes(archivo.toPath()), ejercicio1, solucion, List.of(metodosEjercicio1));
+                            case "Solucion2_alumno.java" ->
+                                    new ExerciseFiles(null, archivo.getName(), archivo.getPath(), Files.readAllBytes(archivo.toPath()), ejercicio1, solucion2, List.of(metodosEjercicio1));
+                            case "Solucion_alumno2.java" ->
+                                    new ExerciseFiles(null, archivo.getName(), archivo.getPath(), Files.readAllBytes(archivo.toPath()), ejercicio1, solucion7, List.of(metodosEjercicio1));
+                            case "Otro_ejercicio.java" ->
+                                    new ExerciseFiles(null, archivo.getName(), archivo.getPath(), Files.readAllBytes(archivo.toPath()), ejercicio4, solucion8, List.of(metodosEjercicio1));
+                            default ->
+                                    new ExerciseFiles(null, archivo.getName(), archivo.getPath(), Files.readAllBytes(archivo.toPath()), ejercicio1, null, List.of(metodosEjercicio1));
+                        };
                         efr.save(nuevoArchivo);
                     } catch (IOException e) {
                         throw new RuntimeException("Error con los archivos: " + e);
@@ -201,12 +207,12 @@ public class TfgBackendApplication implements CommandLineRunner {
 
         List<ExerciseHomeDTO> lista = es.allExercisesSolutionsByStudent("estudiante@hotmail.com");
 
-        for (ExerciseHomeDTO e : lista){
+        for (ExerciseHomeDTO e : lista) {
             System.out.println("ATIENDE: EjercicioSolution: " + e.getName() + " Numero de errores:" + e.getNumberErrorsSolution());
         }
 
         /*DBREF -> Ejercicio.Bateria ----> lazy = true ----> NO SE PUEDE GUARDAR EJERCICIO
-        * Ref.Manual -> Ejercicio.linkBateria -> EJERCICO SE GUARDA -------> EjercicioBateriaDTO -----> NO SE PUEDE GUARDAR*/
+         * Ref.Manual -> Ejercicio.linkBateria -> EJERCICO SE GUARDA -------> EjercicioBateriaDTO -----> NO SE PUEDE GUARDAR*/
 
         // fetch all customers
         System.out.println("\nCustomers found with findAll():");

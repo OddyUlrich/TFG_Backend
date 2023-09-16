@@ -14,6 +14,7 @@ public class Solution {
     @Id
     private String id;
     private @NotNull LocalDateTime creationTimestamp;
+    private LocalDateTime updateTimestamp;
     private @NotNull StatusExercise status;
     @DBRef(lazy = true)
     private @NotNull  /*IsStudent*/ @Valid User student;
@@ -23,6 +24,7 @@ public class Solution {
 
     public Solution(LocalDateTime creationTimestamp, StatusExercise status, User student, Exercise exercise, Integer numberErrors) {
         this.creationTimestamp = creationTimestamp;
+        this.updateTimestamp = creationTimestamp;
         this.status = status;
         this.student = student;
         this.exercise = exercise;
@@ -43,6 +45,14 @@ public class Solution {
 
     public void setCreationTimestamp(LocalDateTime creationTimestamp) {
         this.creationTimestamp = creationTimestamp;
+    }
+
+    public LocalDateTime getUpdateTimestamp() {
+        return updateTimestamp;
+    }
+
+    public void setUpdateTimestamp(LocalDateTime updateTimestamp) {
+        this.updateTimestamp = updateTimestamp;
     }
 
     public StatusExercise getStatus() {

@@ -47,12 +47,12 @@ public class ExerciseController {
     }
 
     @GetMapping(value = "/{exerciseId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ExerciseFilesDTO> getExercise(@PathVariable String exerciseId, Authentication auth) {
+    public ResponseEntity<List<ExerciseFilesDTO>> getExercise(@PathVariable String exerciseId, Authentication auth) {
 
         try {
             if (auth != null && auth.isAuthenticated()) {
                 String email = auth.getName();
-                ExerciseFilesDTO exercise = exerciseFilesService.exerciseFilesAndSolutionByIdAndStudent(exerciseId, email);
+                List<ExerciseFilesDTO> exercise = exerciseFilesService.exerciseFilesAndSolutionByIdAndStudent(exerciseId, email);
                 return ResponseEntity.status(HttpStatus.OK).body(exercise);
             } else {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
@@ -62,13 +62,4 @@ public class ExerciseController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
         }
     }
-
-
-//    @PutMapping("/{id}")
-//    public ResponseEntity<List<ExerciseSolutionDTO>> user(@PathVariable String id) {
-//
-//        List<ExerciseSolutionDTO> lista = exerciseService.updateExercise(id).orElseThrow(() -> new ResourceNotFoundException("Objeto no encontrado con el ID: " + id));
-//
-//        return ResponseEntity.status(HttpStatus.OK).body(lista);
-//    }
 }

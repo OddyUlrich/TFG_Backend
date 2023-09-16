@@ -8,6 +8,8 @@ import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class ExerciseFilesService {
 
@@ -20,7 +22,7 @@ public class ExerciseFilesService {
         this.efr = efr;
     }
 
-    public ExerciseFilesDTO exerciseFilesAndSolutionByIdAndStudent(String exerciseId, String email){
+    public List<ExerciseFilesDTO> exerciseFilesAndSolutionByIdAndStudent(String exerciseId, String email){
         User user = us.getUser(email);
         return efr.exerciseFilesAndSolutionByIdAndStudent(new ObjectId(exerciseId), new ObjectId(user.getId())).orElseThrow(() -> new ResourceNotFoundException("Files about exercise could not be obtained"));
     }

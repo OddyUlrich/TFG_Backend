@@ -1,8 +1,9 @@
 package com.tfgbackend.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.tfgbackend.model.EditableMethod;
-import com.tfgbackend.model.Exercise;
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 public class ExerciseFilesDTO {
@@ -10,18 +11,20 @@ public class ExerciseFilesDTO {
     private String id;
     private String name;
     private String path;
-    private String content;
-    private Exercise exercise;
-    //private Solution solution;
+    private String idFromSolution;
     private List<EditableMethod> editableMethods; //Este campo ya nos permite saber si este archivo es editable por el alumno o no
 
-    public ExerciseFilesDTO (String id, String name, String path, String content, Exercise exercise, /*Solution solution,*/ List<EditableMethod> editableMethods) {
+    @JsonIgnore
+    private byte[] contentBinary;
+    private String content;
+
+    public ExerciseFilesDTO (String id, String name, String path, byte[] contentBinary, String idFromSolution, List<EditableMethod> editableMethods) {
         this.id = id;
         this.name = name;
         this.path = path;
-        this.content = content;
-        this.exercise = exercise;
-        //this.solution = solution;
+        this.contentBinary = contentBinary;
+        this.content = new String(contentBinary, StandardCharsets.US_ASCII);
+        this.idFromSolution = idFromSolution;
         this.editableMethods = editableMethods;
     }
 
@@ -57,12 +60,20 @@ public class ExerciseFilesDTO {
         this.content = content;
     }
 
-    public Exercise getExercise() {
-        return exercise;
+    public byte[] getContentBinary() {
+        return contentBinary;
     }
 
-    public void setExercise(Exercise exercise) {
-        this.exercise = exercise;
+    public void setContentBinary(byte[] contentBinary) {
+        this.contentBinary = contentBinary;
+    }
+
+    public String getIdFromSolution() {
+        return idFromSolution;
+    }
+
+    public void setIdFromSolution(String idFromSolution) {
+        this.idFromSolution = idFromSolution;
     }
 
     public List<EditableMethod> getEditableMethods() {
