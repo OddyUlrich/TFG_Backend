@@ -1,6 +1,6 @@
 package com.tfgbackend.service;
 
-import com.tfgbackend.dto.ExerciseFilesDTO;
+import com.tfgbackend.dto.ExerciseDTO;
 import com.tfgbackend.exceptions.ResourceNotFoundException;
 import com.tfgbackend.model.Exercise;
 import com.tfgbackend.model.User;
@@ -24,13 +24,17 @@ public class ExerciseService {
         this.us = us;
     }
 
-    public List<ExerciseHomeDTO> allExercisesSolutionsByStudent(String email){
+    public List<ExerciseHomeDTO> allExercisesWithSolutionByUserId(String email){
         User user = us.getUser(email);
-        return er.allExerciseSolutionsByUserId(new ObjectId(user.getId())).orElseThrow(() -> new ResourceNotFoundException("Data could not be obtained"));
+        return er.allExercisesWithSolutionByUserId(new ObjectId(user.getId())).orElseThrow(() -> new ResourceNotFoundException("Data could not be obtained"));
     }
 
     public Exercise findExerciseById(String exerciseId){
         return er.findExerciseById(exerciseId).orElseThrow(() -> new ResourceNotFoundException("Exercise does not exist with that ID"));
+    }
+
+    public ExerciseDTO findExerciseForEditorById(String exerciseId){
+        return er.findExerciseForEditorById(new ObjectId(exerciseId)).orElseThrow(() -> new ResourceNotFoundException("Exercise does not exist with that ID (Data for Editor)"));
     }
 
 }

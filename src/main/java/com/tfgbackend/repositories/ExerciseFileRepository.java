@@ -1,6 +1,6 @@
 package com.tfgbackend.repositories;
 
-import com.tfgbackend.dto.ExerciseFilesDTO;
+import com.tfgbackend.dto.ExerciseFileDTO;
 import com.tfgbackend.model.ExerciseFiles;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.repository.Aggregation;
@@ -154,5 +154,5 @@ public interface ExerciseFileRepository extends MongoRepository<ExerciseFiles, L
             "    }" +
             "  }"
 })
-    Optional<List<ExerciseFilesDTO>> exerciseFilesAndSolutionByIdAndStudent(ObjectId studentId, ObjectId exerciseId);
+    Optional<List<ExerciseFileDTO>> exerciseFilesAndSolutionByIdAndStudent(ObjectId studentId, ObjectId exerciseId);
 }

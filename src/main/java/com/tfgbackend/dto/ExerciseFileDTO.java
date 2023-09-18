@@ -6,7 +6,7 @@ import com.tfgbackend.model.EditableMethod;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
-public class ExerciseFilesDTO {
+public class ExerciseFileDTO {
 
     private String id;
     private String name;
@@ -18,7 +18,7 @@ public class ExerciseFilesDTO {
     private byte[] contentBinary;
     private String content;
 
-    public ExerciseFilesDTO (String id, String name, String path, byte[] contentBinary, String idFromSolution, List<EditableMethod> editableMethods) {
+    public ExerciseFileDTO(String id, String name, String path, byte[] contentBinary, String idFromSolution, List<EditableMethod> editableMethods) {
         this.id = id;
         this.name = name;
         this.path = path;

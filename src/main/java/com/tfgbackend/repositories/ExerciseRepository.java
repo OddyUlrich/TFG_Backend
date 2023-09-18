@@ -1,5 +1,6 @@
 package com.tfgbackend.repositories;
 
+import com.tfgbackend.dto.ExerciseDTO;
 import com.tfgbackend.model.Exercise;
 import com.tfgbackend.dto.ExerciseHomeDTO;
 import org.bson.types.ObjectId;
@@ -80,7 +81,36 @@ public interface ExerciseRepository extends MongoRepository<Exercise, Long> {
                     "'statusSolution': '$latestSolution.status'} }",
 
     })
-    Optional<List<ExerciseHomeDTO>> allExerciseSolutionsByUserId(ObjectId studentId);
+    Optional<List<ExerciseHomeDTO>> allExercisesWithSolutionByUserId(ObjectId studentId);
+
+    @Aggregation(pipeline = {
+            "{$match: {'_id': ?0}}",
+
+            "{$lookup:" +
+                "{" +
+                    "from: 'exerciseBatteries'," +
+                    "localField: 'exerciseBattery.$id'," +
+                    "foreignField: '_id'," +
+                    "as: 'exerciseBattery'," +
+                "}" +
+            "}",
+
+            "{$unwind: { path: '$exerciseBattery'}}",
+
+            "{$project:" +
+                    "{" +
+                    "   _id: 1," +
+                    "   name: 1," +
+                    "   statement: 1," +
+                    "   rules: 1," +
+                    "   successConditions: 1," +
+                    "   tags: 1," +
+                    "   idFromBattery: '$exerciseBattery._id'," +
+                    "   nameFromBattery: '$exerciseBattery.name'" +
+                    "}" +
+            "}"
+    })
+    Optional<ExerciseDTO> findExerciseForEditorById(ObjectId id);
 
     Optional<Exercise> findExerciseById(String id);
 }

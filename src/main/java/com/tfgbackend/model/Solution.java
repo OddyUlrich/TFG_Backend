@@ -13,6 +13,7 @@ import java.time.LocalDateTime;
 public class Solution {
     @Id
     private String id;
+    private String name;
     private @NotNull LocalDateTime creationTimestamp;
     private LocalDateTime updateTimestamp;
     private @NotNull StatusExercise status;
@@ -22,9 +23,10 @@ public class Solution {
     private @NotNull @Valid Exercise exercise;
     private Integer numberErrors;
 
-    public Solution(LocalDateTime creationTimestamp, StatusExercise status, User student, Exercise exercise, Integer numberErrors) {
+    public Solution(LocalDateTime creationTimestamp, String name, StatusExercise status, User student, Exercise exercise, Integer numberErrors) {
         this.creationTimestamp = creationTimestamp;
         this.updateTimestamp = creationTimestamp;
+        this.name = name;
         this.status = status;
         this.student = student;
         this.exercise = exercise;
@@ -37,6 +39,14 @@ public class Solution {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public LocalDateTime getCreationTimestamp() {

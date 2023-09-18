@@ -1,6 +1,6 @@
 package com.tfgbackend.service;
 
-import com.tfgbackend.dto.ExerciseFilesDTO;
+import com.tfgbackend.dto.ExerciseFileDTO;
 import com.tfgbackend.exceptions.ResourceNotFoundException;
 import com.tfgbackend.model.User;
 import com.tfgbackend.repositories.ExerciseFileRepository;
@@ -22,7 +22,7 @@ public class ExerciseFilesService {
         this.efr = efr;
     }
 
-    public List<ExerciseFilesDTO> exerciseFilesAndSolutionByIdAndStudent(String exerciseId, String email){
+    public List<ExerciseFileDTO> exerciseFilesAndSolutionByIdAndStudent(String exerciseId, String email){
         User user = us.getUser(email);
         return efr.exerciseFilesAndSolutionByIdAndStudent(new ObjectId(exerciseId), new ObjectId(user.getId())).orElseThrow(() -> new ResourceNotFoundException("Files about exercise could not be obtained"));
     }

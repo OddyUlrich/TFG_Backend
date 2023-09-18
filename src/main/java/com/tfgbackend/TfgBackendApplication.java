@@ -18,7 +18,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -138,23 +137,23 @@ public class TfgBackendApplication implements CommandLineRunner {
         er.save(ejercicio11);
 
         //ESTUDIANTE
-        Solution solucion = new Solution(LocalDateTime.now(), StatusExercise.PENDING, estudiante, ejercicio1, 5);
+        Solution solucion = new Solution(LocalDateTime.now(),"intento_1",StatusExercise.PENDING,estudiante, ejercicio1, 5);
         sleep(5);
-        Solution solucion2 = new Solution(LocalDateTime.now(), StatusExercise.PENDING, estudiante, ejercicio1, 4);
+        Solution solucion2 = new Solution(LocalDateTime.now(), "intento_2", StatusExercise.PENDING, estudiante, ejercicio1, 4);
         sleep(5);
-        Solution solucion3 = new Solution(LocalDateTime.now(), StatusExercise.COMPLETED, estudiante, ejercicio1, 3);
+        Solution solucion3 = new Solution(LocalDateTime.now(), "intento_3", StatusExercise.COMPLETED, estudiante, ejercicio1, 3);
         sleep(5);
-        Solution solucion4 = new Solution(LocalDateTime.now(), StatusExercise.PENDING, estudiante, ejercicio2, 5);
+        Solution solucion4 = new Solution(LocalDateTime.now(), "intento_1_2", StatusExercise.PENDING, estudiante, ejercicio2, 5);
         sleep(5);
-        Solution solucion5 = new Solution(LocalDateTime.now(), StatusExercise.PENDING, estudiante, ejercicio2, 2);
+        Solution solucion5 = new Solution(LocalDateTime.now(), "intento_2_2", StatusExercise.PENDING, estudiante, ejercicio2, 2);
         sleep(5);
-        Solution solucion6 = new Solution(LocalDateTime.now(), StatusExercise.PENDING, estudiante, ejercicio2, 1);
+        Solution solucion6 = new Solution(LocalDateTime.now(), "intento_3_2", StatusExercise.PENDING, estudiante, ejercicio2, 1);
 
         //ESTUDIANTE2
         sleep(5);
-        Solution solucion7 = new Solution(LocalDateTime.now(), StatusExercise.COMPLETED, estudiante2, ejercicio1, 2);
+        Solution solucion7 = new Solution(LocalDateTime.now(), "intento_1_3", StatusExercise.COMPLETED, estudiante2, ejercicio1, 2);
         sleep(5);
-        Solution solucion8 = new Solution(LocalDateTime.now(), StatusExercise.COMPLETED, estudiante2, ejercicio2, 2);
+        Solution solucion8 = new Solution(LocalDateTime.now(), "intento_2_4", StatusExercise.COMPLETED, estudiante2, ejercicio2, 2);
 
         solutionRepository.save(solucion);
         solutionRepository.save(solucion2);
@@ -205,7 +204,7 @@ public class TfgBackendApplication implements CommandLineRunner {
         Set<ConstraintViolation<Exercise>> violaciones = validator.validate(ejercicio1);
         System.out.println("Violaciones: " + violaciones.size() + ", texto: " + violaciones);
 
-        List<ExerciseHomeDTO> lista = es.allExercisesSolutionsByStudent("estudiante@hotmail.com");
+        List<ExerciseHomeDTO> lista = es.allExercisesWithSolutionByUserId("estudiante@hotmail.com");
 
         for (ExerciseHomeDTO e : lista) {
             System.out.println("ATIENDE: EjercicioSolution: " + e.getName() + " Numero de errores:" + e.getNumberErrorsSolution());

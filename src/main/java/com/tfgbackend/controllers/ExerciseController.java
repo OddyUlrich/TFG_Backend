@@ -1,10 +1,10 @@
 package com.tfgbackend.controllers;
 
-import com.tfgbackend.dto.ExerciseFilesDTO;
+import com.tfgbackend.dto.*;
 import com.tfgbackend.exceptions.ResourceNotFoundException;
 import com.tfgbackend.service.ExerciseFilesService;
 import com.tfgbackend.service.ExerciseService;
-import com.tfgbackend.dto.ExerciseHomeDTO;
+import com.tfgbackend.service.SolutionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -22,11 +22,13 @@ public class ExerciseController {
 
     private final ExerciseService exerciseService;
     private final ExerciseFilesService exerciseFilesService;
+    private final SolutionService solutionService;
 
     @Autowired
-    public ExerciseController(ExerciseService exerciseService, ExerciseFilesService exerciseFilesService) {
+    public ExerciseController(ExerciseService exerciseService, ExerciseFilesService exerciseFilesService, SolutionService solutionService) {
         this.exerciseService = exerciseService;
         this.exerciseFilesService = exerciseFilesService;
+        this.solutionService = solutionService;
     }
 
     @GetMapping
@@ -35,7 +37,7 @@ public class ExerciseController {
         try {
             if (auth != null && auth.isAuthenticated()) {
                 String email = auth.getName();
-                List<ExerciseHomeDTO> lista = exerciseService.allExercisesSolutionsByStudent(email);
+                List<ExerciseHomeDTO> lista = exerciseService.allExercisesWithSolutionByUserId(email);
                 return ResponseEntity.status(HttpStatus.OK).body(lista);
             } else {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
@@ -47,13 +49,17 @@ public class ExerciseController {
     }
 
     @GetMapping(value = "/{exerciseId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<ExerciseFilesDTO>> getExercise(@PathVariable String exerciseId, Authentication auth) {
+    public ResponseEntity<ExerciseEditorDataDTO> getExercise(@PathVariable String exerciseId, Authentication auth) {
 
         try {
             if (auth != null && auth.isAuthenticated()) {
                 String email = auth.getName();
-                List<ExerciseFilesDTO> exercise = exerciseFilesService.exerciseFilesAndSolutionByIdAndStudent(exerciseId, email);
-                return ResponseEntity.status(HttpStatus.OK).body(exercise);
+                List<ExerciseFileDTO> exerciseFiles = exerciseFilesService.exerciseFilesAndSolutionByIdAndStudent(exerciseId, email);
+                List<SolutionDTO> solutions = solutionService.allSolutionsByExerciseIdAndStudent(exerciseId, email);
+                ExerciseDTO exercise = exerciseService.findExerciseForEditorById(exerciseId);
+
+                ExerciseEditorDataDTO data = new ExerciseEditorDataDTO(exerciseFiles, solutions, exercise);
+                return ResponseEntity.status(HttpStatus.OK).body(data);
             } else {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
             }
