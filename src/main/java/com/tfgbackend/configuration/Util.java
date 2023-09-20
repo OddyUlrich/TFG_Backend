@@ -40,4 +40,8 @@ public class Util {
         jwtTokenCookie.setHttpOnly(true);
         return jwtTokenCookie;
     }
+
+    public static boolean isEmptyString(String string) {
+        return string == null || string.isEmpty();
+    }
 }

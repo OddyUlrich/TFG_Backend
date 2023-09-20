@@ -55,10 +55,13 @@ public class ExerciseController {
             if (auth != null && auth.isAuthenticated()) {
                 String email = auth.getName();
                 List<ExerciseFileDTO> exerciseFiles = exerciseFilesService.exerciseFilesAndSolutionByIdAndStudent(exerciseId, email);
+
+                List<ExerciseFileDTO> filesForDisplay = exerciseFilesService.filterFilesForDisplay(exerciseFiles);
+                List<ExerciseFileDTO> freshFiles = exerciseFilesService.filterFreshFiles(exerciseFiles);
                 List<SolutionDTO> solutions = solutionService.allSolutionsByExerciseIdAndStudent(exerciseId, email);
                 ExerciseDTO exercise = exerciseService.findExerciseForEditorById(exerciseId);
 
-                ExerciseEditorDataDTO data = new ExerciseEditorDataDTO(exerciseFiles, solutions, exercise);
+                ExerciseEditorDataDTO data = new ExerciseEditorDataDTO(filesForDisplay, freshFiles, solutions, exercise);
                 return ResponseEntity.status(HttpStatus.OK).body(data);
             } else {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();

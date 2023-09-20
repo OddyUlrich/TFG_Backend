@@ -4,22 +4,33 @@ import java.util.List;
 
 public class ExerciseEditorDataDTO {
 
-    private List<ExerciseFileDTO> files;
+    private List<ExerciseFileDTO> filesForDisplay;
+    private List<ExerciseFileDTO> freshFiles;
     private List<SolutionDTO> exerciseSolutions;
     private ExerciseDTO exercise;
 
-    public ExerciseEditorDataDTO(List<ExerciseFileDTO> files, List<SolutionDTO> exerciseSolutions, ExerciseDTO exercise) {
-        this.files = files;
+    public ExerciseEditorDataDTO(List<ExerciseFileDTO> filesForDisplay, List<ExerciseFileDTO> freshFiles, List<SolutionDTO> exerciseSolutions, ExerciseDTO exercise) {
+
+        this.filesForDisplay = filesForDisplay;
+        this.freshFiles = freshFiles;
         this.exerciseSolutions = exerciseSolutions;
         this.exercise = exercise;
     }
 
-    public List<ExerciseFileDTO> getFiles() {
-        return files;
+    public List<ExerciseFileDTO> getFilesForDisplay() {
+        return filesForDisplay;
     }
 
-    public void setFiles(List<ExerciseFileDTO> files) {
-        this.files = files;
+    public void setFilesForDisplay(List<ExerciseFileDTO> filesForDisplay) {
+        this.filesForDisplay = filesForDisplay;
+    }
+
+    public List<ExerciseFileDTO> getFreshFiles() {
+        return freshFiles;
+    }
+
+    public void setFreshFiles(List<ExerciseFileDTO> freshFiles) {
+        this.freshFiles = freshFiles;
     }
 
     public List<SolutionDTO> getExerciseSolutions() {
