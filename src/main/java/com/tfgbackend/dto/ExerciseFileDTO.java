@@ -23,7 +23,7 @@ public class ExerciseFileDTO {
         this.name = name;
         this.path = path;
         this.contentBinary = contentBinary;
-        this.content = new String(contentBinary, StandardCharsets.US_ASCII);
+        this.content = new String(contentBinary, StandardCharsets.UTF_8);
         this.idFromSolution = idFromSolution;
         this.editableMethods = editableMethods;
     }

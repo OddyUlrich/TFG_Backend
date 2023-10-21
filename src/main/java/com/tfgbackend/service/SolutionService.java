@@ -2,6 +2,8 @@ package com.tfgbackend.service;
 
 import com.tfgbackend.dto.SolutionDTO;
 import com.tfgbackend.exceptions.ResourceNotFoundException;
+import com.tfgbackend.model.Exercise;
+import com.tfgbackend.model.Solution;
 import com.tfgbackend.model.User;
 import com.tfgbackend.repositories.SolutionRepository;
 import org.bson.types.ObjectId;
@@ -25,6 +27,14 @@ public class SolutionService {
     public List<SolutionDTO> allSolutionsByExerciseIdAndStudent(String exerciseId, String email){
         User user = us.getUser(email);
         return sr.allSolutionsByExerciseIdAndStudent(new ObjectId(exerciseId), new ObjectId(user.getId())).orElseThrow(() -> new ResourceNotFoundException("Solutions about exercise could not be obtained"));
+    }
+
+    public Solution findSolucionById(String solutionId){
+        return sr.findById(solutionId);
+    }
+
+    public void saveSolution(Solution solution){
+        sr.save(solution);
     }
 
 }

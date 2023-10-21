@@ -167,22 +167,22 @@ public class TfgBackendApplication implements CommandLineRunner {
         EditableMethod metodosEjercicio1 = new EditableMethod("Pepe", 18);
 
         //FILES
-        try (Stream<Path> filePathStream = Files.walk(Paths.get("E:/Escritorio/Proyectos/ATM"))) {
+        try (Stream<Path> filePathStream = Files.walk(Paths.get("E:/Escritorio/A"))) {
             filePathStream.forEach(filePath -> {
                 if (Files.isRegularFile(filePath)) {
                     File archivo = new File(String.valueOf(filePath));
                     try {
                         ExerciseFiles nuevoArchivo = switch (archivo.getName()) {
                             case "Solucion_alumno.java" ->
-                                    new ExerciseFiles(null, archivo.getName(), archivo.getPath(), Files.readAllBytes(archivo.toPath()), ejercicio1, solucion, List.of(metodosEjercicio1));
+                                    new ExerciseFiles(archivo.getName(), archivo.getPath().replace("\\","/"), Files.readAllBytes(archivo.toPath()), ejercicio1, solucion, List.of(metodosEjercicio1));
                             case "Solucion2_alumno.java" ->
-                                    new ExerciseFiles(null, archivo.getName(), archivo.getPath(), Files.readAllBytes(archivo.toPath()), ejercicio1, solucion2, List.of(metodosEjercicio1));
+                                    new ExerciseFiles(archivo.getName(), archivo.getPath().replace("\\","/"), Files.readAllBytes(archivo.toPath()), ejercicio1, solucion2, List.of(metodosEjercicio1));
                             case "Solucion_alumno2.java" ->
-                                    new ExerciseFiles(null, archivo.getName(), archivo.getPath(), Files.readAllBytes(archivo.toPath()), ejercicio1, solucion7, List.of(metodosEjercicio1));
+                                    new ExerciseFiles(archivo.getName(), archivo.getPath().replace("\\","/"), Files.readAllBytes(archivo.toPath()), ejercicio1, solucion7, List.of(metodosEjercicio1));
                             case "Otro_ejercicio.java" ->
-                                    new ExerciseFiles(null, archivo.getName(), archivo.getPath(), Files.readAllBytes(archivo.toPath()), ejercicio4, solucion8, List.of(metodosEjercicio1));
+                                    new ExerciseFiles(archivo.getName(), archivo.getPath().replace("\\","/"), Files.readAllBytes(archivo.toPath()), ejercicio4, solucion8, List.of(metodosEjercicio1));
                             default ->
-                                    new ExerciseFiles(null, archivo.getName(), archivo.getPath(), Files.readAllBytes(archivo.toPath()), ejercicio1, null, List.of(metodosEjercicio1));
+                                    new ExerciseFiles(archivo.getName(), archivo.getPath().replace("\\","/"), Files.readAllBytes(archivo.toPath()), ejercicio1, null, null);
                         };
                         efr.save(nuevoArchivo);
                     } catch (IOException e) {

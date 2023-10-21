@@ -155,4 +155,17 @@ public interface ExerciseFileRepository extends MongoRepository<ExerciseFiles, L
             "  }"
 })
     Optional<List<ExerciseFileDTO>> exerciseFilesAndSolutionByIdAndStudent(ObjectId studentId, ObjectId exerciseId);
+
+    @Aggregation(pipeline = {
+            "{$match: {" +
+                    "$and: [{" +
+                    "          'name': ?0" +
+                    "        }," +
+                    "        {" +
+                    "          'solution.$id': ?1" +
+                    "        }" +
+                    "]" +
+                    "}}",
+    })
+    ExerciseFiles findByNameAndSolutionId(String name, ObjectId solutionId);
 }

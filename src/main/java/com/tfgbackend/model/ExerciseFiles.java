@@ -26,8 +26,7 @@ public class ExerciseFiles {
 
     private List<EditableMethod> editableMethods;
 
-    public ExerciseFiles(String id, String name, String path, byte[] content, Exercise exercise, Solution solution, List<EditableMethod> editableMethods) {
-        this.id = id;
+    public ExerciseFiles(String name, String path, byte[] content, Exercise exercise, Solution solution, List<EditableMethod> editableMethods) {
         this.name = name;
         this.path = path;
         this.content = content;
