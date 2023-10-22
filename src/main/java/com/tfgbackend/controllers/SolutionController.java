@@ -60,10 +60,14 @@ public class SolutionController {
             solution = new Solution(LocalDateTime.now(), null, StatusExercise.PENDING, user, exercise, 0);
             status = HttpStatus.CREATED;
         }else{
-            solution = solutionService.findSolucionById(solutionId);
+
+            //TODO ACTUALIZAR LOS DATOS DE LAS SOLUCIONES -> UPDATE TIMESTAMP DE LA ULTIMA ACTUALIZACIÓN
+            solution = solutionService.findSolutionById(solutionId);
             status = HttpStatus.OK;
         }
 
+        /* With this saveSolution we will make sure there is no possible null in solution.getId() when we save
+         the new content of the files so no template file could be overwritten or "created" by error*/
         solutionService.saveSolution(solution);
 
         for (ExerciseFileDTO file : filesForDisplay){

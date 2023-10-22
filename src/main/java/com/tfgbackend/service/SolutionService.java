@@ -29,8 +29,8 @@ public class SolutionService {
         return sr.allSolutionsByExerciseIdAndStudent(new ObjectId(exerciseId), new ObjectId(user.getId())).orElseThrow(() -> new ResourceNotFoundException("Solutions about exercise could not be obtained"));
     }
 
-    public Solution findSolucionById(String solutionId){
-        return sr.findById(solutionId);
+    public Solution findSolutionById(String solutionId){
+        return sr.findById(solutionId).orElseThrow(() -> new ResourceNotFoundException("Solutions with that ID cannot be found"));
     }
 
     public void saveSolution(Solution solution){

@@ -7,14 +7,14 @@ public class ExerciseEditorDataDTO {
     private List<ExerciseFileDTO> filesForDisplay;
     private List<ExerciseFileDTO> freshFiles;
     private List<SolutionDTO> exerciseSolutions;
-    private String lastSolution;
+    private String currentSolution;
     private ExerciseDTO exercise;
 
-    public ExerciseEditorDataDTO(List<ExerciseFileDTO> filesForDisplay, List<ExerciseFileDTO> freshFiles, List<SolutionDTO> exerciseSolutions, String lastSolution, ExerciseDTO exercise) {
+    public ExerciseEditorDataDTO(List<ExerciseFileDTO> filesForDisplay, List<ExerciseFileDTO> freshFiles, List<SolutionDTO> exerciseSolutions, String currentSolution, ExerciseDTO exercise) {
         this.filesForDisplay = filesForDisplay;
         this.freshFiles = freshFiles;
         this.exerciseSolutions = exerciseSolutions;
-        this.lastSolution = lastSolution;
+        this.currentSolution = currentSolution;
         this.exercise = exercise;
     }
 
@@ -42,12 +42,12 @@ public class ExerciseEditorDataDTO {
         this.exerciseSolutions = exerciseSolutions;
     }
 
-    public String getLastSolution() {
-        return lastSolution;
+    public String getCurrentSolution() {
+        return currentSolution;
     }
 
-    public void setLastSolution(String lastSolution) {
-        this.lastSolution = lastSolution;
+    public void setCurrentSolution(String currentSolution) {
+        this.currentSolution = currentSolution;
     }
 
     public ExerciseDTO getExercise() {

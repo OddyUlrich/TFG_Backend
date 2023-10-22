@@ -59,10 +59,10 @@ public class ExerciseController {
                 List<ExerciseFileDTO> filesForDisplay = exerciseFilesService.filterFilesForDisplay(exerciseFiles);
                 List<ExerciseFileDTO> templateFiles = exerciseFilesService.filterTemplateFiles(exerciseFiles);
                 List<SolutionDTO> solutions = solutionService.allSolutionsByExerciseIdAndStudent(exerciseId, email);
-                String lastSolution = exerciseFilesService.obtainSolutionFromExerciseFiles(exerciseFiles);
+                String currentSolution = exerciseFilesService.obtainSolutionFromExerciseFiles(exerciseFiles);
                 ExerciseDTO exercise = exerciseService.findExerciseForEditorById(exerciseId);
 
-                ExerciseEditorDataDTO data = new ExerciseEditorDataDTO(filesForDisplay, templateFiles, solutions, lastSolution, exercise);
+                ExerciseEditorDataDTO data = new ExerciseEditorDataDTO(filesForDisplay, templateFiles, solutions, currentSolution, exercise);
                 return ResponseEntity.status(HttpStatus.OK).body(data);
             } else {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();

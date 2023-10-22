@@ -11,7 +11,8 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface SolutionRepository extends MongoRepository<Solution, Long> {
+
+public interface SolutionRepository extends MongoRepository<Solution, String> {
 
     @Aggregation(pipeline = {
             "{$match: {" +
@@ -35,6 +36,5 @@ public interface SolutionRepository extends MongoRepository<Solution, Long> {
     })
     Optional<List<SolutionDTO>> allSolutionsByExerciseIdAndStudent(Object studentId, ObjectId exerciseId);
 
-    Solution findById(String id);
-
+    Optional<Solution> findById(String id);
 }

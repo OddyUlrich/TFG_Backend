@@ -9,6 +9,7 @@ import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,7 +33,13 @@ public class ExerciseFilesService {
 
     public List<ExerciseFileDTO> exerciseFilesAndSolutionByIdAndStudent(String exerciseId, String email){
         User user = us.getUser(email);
-        return efr.exerciseFilesAndSolutionByIdAndStudent(new ObjectId(exerciseId), new ObjectId(user.getId())).orElseThrow(() -> new ResourceNotFoundException("Files about exercise could not be obtained"));
+
+        List<ExerciseFileDTO> list = efr.exerciseFilesAndSolutionByIdAndStudent(new ObjectId(exerciseId), new ObjectId(user.getId())).orElseThrow(() -> new ResourceNotFoundException("Files about exercise could not be obtained"));
+        for (ExerciseFileDTO file : list){
+            file.setContent(new String(file.getContentBinary(), StandardCharsets.UTF_8));
+        }
+
+        return list;
     }
 
     /* From an array of ExerciseFileDTO we obtain a smaller array by removing the files that
