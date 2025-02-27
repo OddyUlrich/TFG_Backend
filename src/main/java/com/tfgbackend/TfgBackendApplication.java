@@ -137,9 +137,10 @@ public class TfgBackendApplication implements CommandLineRunner {
         er.save(ejercicio11);
 
         //ESTUDIANTE
-        Solution solucion = new Solution(LocalDateTime.now(),"intento_1",StatusExercise.PENDING,estudiante, ejercicio1, 5);
-        sleep(5);
+
         Solution solucion2 = new Solution(LocalDateTime.now(), "intento_2", StatusExercise.PENDING, estudiante, ejercicio1, 4);
+        sleep(5);
+        Solution solucion = new Solution(LocalDateTime.now(),"intento_1",StatusExercise.PENDING,estudiante, ejercicio1, 5);
         sleep(5);
         Solution solucion3 = new Solution(LocalDateTime.now(), "intento_3", StatusExercise.COMPLETED, estudiante, ejercicio1, 3);
         sleep(5);
