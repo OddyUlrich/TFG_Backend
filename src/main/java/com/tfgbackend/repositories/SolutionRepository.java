@@ -5,6 +5,7 @@ import com.tfgbackend.model.Solution;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.repository.Aggregation;
 import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -36,5 +37,5 @@ public interface SolutionRepository extends MongoRepository<Solution, String> {
     })
     Optional<List<SolutionDTO>> allSolutionsByExerciseIdAndStudent(Object studentId, ObjectId exerciseId);
 
-    Optional<Solution> findById(String id);
+    Optional<Solution> findById(@NonNull String id);
 }

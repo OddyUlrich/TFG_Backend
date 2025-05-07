@@ -18,7 +18,7 @@ public class Solution {
     private LocalDateTime updateTimestamp;
     private @NotNull StatusExercise status;
     @DBRef(lazy = true)
-    private @NotNull  /*IsStudent*/ @Valid User student;
+    private @NotNull /*IsStudent*/ @Valid User student;
     @DBRef(lazy = true)
     private @NotNull @Valid Exercise exercise;
     private Integer numberErrors;

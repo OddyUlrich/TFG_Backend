@@ -1,8 +1,8 @@
 package com.tfgbackend.controllers;
 
 import com.tfgbackend.dto.ExerciseFileDTO;
-import com.tfgbackend.dto.ExerciseHomeDTO;
 import com.tfgbackend.dto.SolutionCreationDTO;
+import com.tfgbackend.exceptions.ResourceNotFoundException;
 import com.tfgbackend.model.Exercise;
 import com.tfgbackend.model.ExerciseFiles;
 import com.tfgbackend.model.Solution;
@@ -56,29 +56,42 @@ public class SolutionController {
         Solution solution;
         HttpStatus status;
 
-        if (solutionId == null){
+        if (solutionId == null) {
             solution = new Solution(LocalDateTime.now(), null, StatusExercise.PENDING, user, exercise, 0);
             status = HttpStatus.CREATED;
-        }else{
 
-            //TODO ACTUALIZAR LOS DATOS DE LAS SOLUCIONES -> UPDATE TIMESTAMP DE LA ULTIMA ACTUALIZACIÓN
-            solution = solutionService.findSolutionById(solutionId);
-            status = HttpStatus.OK;
+            /* With this saveSolution we will make sure there is no possible null in solution.getId() when we save
+            the new content of the files so no template file could be overwritten or "created" by error*/
+            solutionService.saveSolution(solution);
+
+        } else {
+            /* Looking for the solution by ID: if it is found, then we just update the last update timestamp. If not,
+            we will receive an exception and warn the frontend about it.
+            * */
+            try {
+                solution = solutionService.findSolutionById(solutionId);
+                solution.setUpdateTimestamp(LocalDateTime.now());
+                solutionService.saveSolution(solution);
+                status = HttpStatus.OK;
+
+            } catch (ResourceNotFoundException e) {
+                System.out.println("Solution not found, not updated");
+                status = HttpStatus.NOT_FOUND;
+                return ResponseEntity.status(status).build();
+            }
         }
 
-        /* With this saveSolution we will make sure there is no possible null in solution.getId() when we save
-         the new content of the files so no template file could be overwritten or "created" by error*/
-        solutionService.saveSolution(solution);
-
-        for (ExerciseFileDTO file : filesForDisplay){
+        for (ExerciseFileDTO file : filesForDisplay) {
             ExerciseFiles fileInDatabase = exerciseFilesService.findByNameAndSolutionId(file.getName(), solution.getId());
-            if (fileInDatabase != null){
+            if (fileInDatabase != null) {
                 fileInDatabase.setContent(file.getContent().getBytes(StandardCharsets.UTF_8));
                 exerciseFilesService.saveFile(fileInDatabase);
-            }else{
+            } else {
                 exerciseFilesService.saveFile(new ExerciseFiles(file.getName(), file.getPath(), file.getContent().getBytes(StandardCharsets.UTF_8), exercise, solution, file.getEditableMethods()));
             }
         }
+
+        System.out.println("Solution saved with ID: " + solution.getId());
 
         return ResponseEntity.status(status).body(solution);
 

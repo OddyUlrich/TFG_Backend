@@ -1,5 +1,6 @@
 package com.tfgbackend.service;
 
+import com.mongodb.lang.NonNull;
 import com.tfgbackend.dto.SolutionDTO;
 import com.tfgbackend.exceptions.ResourceNotFoundException;
 import com.tfgbackend.model.Exercise;
