@@ -1,6 +1,6 @@
 package com.tfgbackend.model;
 
-import com.tfgbackend.model.enumerators.Rol;
+import com.tfgbackend.model.enumerator.Rol;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

@@ -1,4 +1,4 @@
-package com.tfgbackend.repositories;
+package com.tfgbackend.repository;
 
 import com.tfgbackend.dto.SolutionDTO;
 import com.tfgbackend.model.Solution;

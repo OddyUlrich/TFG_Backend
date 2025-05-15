@@ -1,8 +1,8 @@
 package com.tfgbackend.service;
 
 import com.tfgbackend.model.User;
-import com.tfgbackend.model.enumerators.Rol;
-import com.tfgbackend.repositories.UserRepository;
+import com.tfgbackend.model.enumerator.Rol;
+import com.tfgbackend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;

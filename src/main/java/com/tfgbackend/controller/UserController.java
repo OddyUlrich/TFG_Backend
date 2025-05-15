@@ -1,11 +1,11 @@
-package com.tfgbackend.controllers;
+package com.tfgbackend.controller;
 
 import com.tfgbackend.dto.UserDTO;
-import com.tfgbackend.exceptions.ResourceNotFoundException;
+import com.tfgbackend.exception.ResourceNotFoundException;
 import com.tfgbackend.forms.SignUpForm;
 import com.tfgbackend.model.Exercise;
 import com.tfgbackend.model.User;
-import com.tfgbackend.model.enumerators.Rol;
+import com.tfgbackend.model.enumerator.Rol;
 import com.tfgbackend.service.ExerciseService;
 import com.tfgbackend.service.UserService;
 import jakarta.servlet.http.Cookie;

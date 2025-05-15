@@ -1,7 +1,7 @@
 package com.tfgbackend.configuration;
 
-import com.tfgbackend.filters.AuthenticationFilter;
-import com.tfgbackend.filters.AuthorizationFilter;
+import com.tfgbackend.filter.AuthenticationFilter;
+import com.tfgbackend.filter.AuthorizationFilter;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;

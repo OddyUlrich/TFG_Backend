@@ -1,13 +1,13 @@
-package com.tfgbackend.controllers;
+package com.tfgbackend.controller;
 
 import com.tfgbackend.dto.ExerciseFileDTO;
 import com.tfgbackend.dto.SolutionCreationDTO;
-import com.tfgbackend.exceptions.ResourceNotFoundException;
+import com.tfgbackend.exception.ResourceNotFoundException;
 import com.tfgbackend.model.Exercise;
 import com.tfgbackend.model.ExerciseFiles;
 import com.tfgbackend.model.Solution;
 import com.tfgbackend.model.User;
-import com.tfgbackend.model.enumerators.StatusExercise;
+import com.tfgbackend.model.enumerator.StatusExercise;
 import com.tfgbackend.service.ExerciseFilesService;
 import com.tfgbackend.service.ExerciseService;
 import com.tfgbackend.service.SolutionService;

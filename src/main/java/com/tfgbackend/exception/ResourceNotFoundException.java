@@ -1,4 +1,4 @@
-package com.tfgbackend.exceptions;
+package com.tfgbackend.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;

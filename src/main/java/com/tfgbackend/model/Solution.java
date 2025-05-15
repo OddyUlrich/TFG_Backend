@@ -1,6 +1,6 @@
 package com.tfgbackend.model;
 
-import com.tfgbackend.model.enumerators.StatusExercise;
+import com.tfgbackend.model.enumerator.StatusExercise;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.data.annotation.Id;

@@ -1,6 +1,6 @@
 package com.tfgbackend.dto;
 
-import com.tfgbackend.model.enumerators.StatusExercise;
+import com.tfgbackend.model.enumerator.StatusExercise;
 import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDateTime;

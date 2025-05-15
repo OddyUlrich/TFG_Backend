@@ -1,4 +1,4 @@
-package com.tfgbackend.repositories;
+package com.tfgbackend.repository;
 
 import com.tfgbackend.dto.ExerciseFileDTO;
 import com.tfgbackend.model.ExerciseFiles;

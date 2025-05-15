@@ -1,4 +1,4 @@
-package com.tfgbackend.filters;
+package com.tfgbackend.filter;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;

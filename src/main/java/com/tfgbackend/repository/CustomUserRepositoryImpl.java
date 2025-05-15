@@ -1,4 +1,4 @@
-package com.tfgbackend.repositories;
+package com.tfgbackend.repository;
 
 import com.tfgbackend.model.User;
 import org.bson.types.ObjectId;

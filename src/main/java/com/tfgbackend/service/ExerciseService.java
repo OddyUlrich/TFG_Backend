@@ -1,10 +1,10 @@
 package com.tfgbackend.service;
 
 import com.tfgbackend.dto.ExerciseDTO;
-import com.tfgbackend.exceptions.ResourceNotFoundException;
+import com.tfgbackend.exception.ResourceNotFoundException;
 import com.tfgbackend.model.Exercise;
 import com.tfgbackend.model.User;
-import com.tfgbackend.repositories.ExerciseRepository;
+import com.tfgbackend.repository.ExerciseRepository;
 import com.tfgbackend.dto.ExerciseHomeDTO;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;

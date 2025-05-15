@@ -1,11 +1,11 @@
 package com.tfgbackend.service;
 
 import com.tfgbackend.dto.UserDTO;
-import com.tfgbackend.exceptions.ResourceNotFoundException;
+import com.tfgbackend.exception.ResourceNotFoundException;
 import com.tfgbackend.forms.SignUpForm;
 import com.tfgbackend.model.User;
-import com.tfgbackend.model.enumerators.Rol;
-import com.tfgbackend.repositories.UserRepository;
+import com.tfgbackend.model.enumerator.Rol;
+import com.tfgbackend.repository.UserRepository;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;

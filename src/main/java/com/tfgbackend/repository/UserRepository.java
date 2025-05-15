@@ -1,4 +1,4 @@
-package com.tfgbackend.repositories;
+package com.tfgbackend.repository;
 
 import com.tfgbackend.dto.UserDTO;
 import com.tfgbackend.model.User;

@@ -1,7 +1,7 @@
 package com.tfgbackend.dto;
 
 import com.tfgbackend.model.Tag;
-import com.tfgbackend.model.enumerators.StatusExercise;
+import com.tfgbackend.model.enumerator.StatusExercise;
 
 import java.time.LocalDateTime;
 import java.util.List;

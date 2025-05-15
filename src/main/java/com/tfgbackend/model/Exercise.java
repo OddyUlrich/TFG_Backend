@@ -1,6 +1,6 @@
 package com.tfgbackend.model;
 
-import com.tfgbackend.annotations.IsTeacher;
+import com.tfgbackend.annotation.IsTeacher;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

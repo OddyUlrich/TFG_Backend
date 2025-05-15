@@ -1,6 +1,6 @@
 package com.tfgbackend.dto;
 
-import com.tfgbackend.model.enumerators.Rol;
+import com.tfgbackend.model.enumerator.Rol;
 
 import java.time.LocalDateTime;
 import java.util.List;

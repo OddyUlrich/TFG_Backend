@@ -1,4 +1,4 @@
-package com.tfgbackend.repositories;
+package com.tfgbackend.repository;
 
 import com.tfgbackend.model.Tag;
 import org.springframework.data.mongodb.repository.MongoRepository;

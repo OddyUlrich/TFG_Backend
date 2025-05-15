@@ -1,10 +1,11 @@
-package com.tfgbackend.controllers;
+package com.tfgbackend.controller;
 
 import com.tfgbackend.dto.*;
-import com.tfgbackend.exceptions.ResourceNotFoundException;
+import com.tfgbackend.exception.ResourceNotFoundException;
 import com.tfgbackend.service.ExerciseFilesService;
 import com.tfgbackend.service.ExerciseService;
 import com.tfgbackend.service.SolutionService;
+import com.tfgbackend.service.wrapper.TemplateAndSolutionFiles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -54,15 +55,23 @@ public class ExerciseController {
         try {
             if (auth != null && auth.isAuthenticated()) {
                 String email = auth.getName();
-                List<ExerciseFileDTO> exerciseFiles = exerciseFilesService.exerciseFilesAndSolutionByIdAndStudent(exerciseId, email);
+                List<ExerciseFileDTO> allExerciseAndLastSolutionFiles = exerciseFilesService.exerciseFilesAndSolutionByIdAndStudent(exerciseId, email);
 
-                List<ExerciseFileDTO> filesForDisplay = exerciseFilesService.filterFilesForDisplay(exerciseFiles);
-                List<ExerciseFileDTO> templateFiles = exerciseFilesService.filterTemplateFiles(exerciseFiles);
+                //All the files that the code editor could use (exercise's template files and user's solution files)
+                TemplateAndSolutionFiles filteredFiles = exerciseFilesService.filterFiles(allExerciseAndLastSolutionFiles);
+
+                //All basic information about the other solutions of this user to allow him/her to change to it
                 List<SolutionDTO> solutions = solutionService.allSolutionsByExerciseIdAndStudent(exerciseId, email);
-                String currentSolution = exerciseFilesService.obtainSolutionFromExerciseFiles(exerciseFiles);
+
+                //ID for the last updated solution (Probably the last one he/she worked on)
+                String currentSolution = exerciseFilesService.obtainSolutionFromExerciseFiles(allExerciseAndLastSolutionFiles);
+
+                //All necessary information about the exercise the user is currently working on
                 ExerciseDTO exercise = exerciseService.findExerciseForEditorById(exerciseId);
 
-                ExerciseEditorDataDTO data = new ExerciseEditorDataDTO(filesForDisplay, templateFiles, solutions, currentSolution, exercise);
+                //DTO for the frontend with all files and information needed
+                ExerciseEditorDataDTO data = new ExerciseEditorDataDTO(filteredFiles.getFilesForDisplay(), filteredFiles.getTemplateFiles(), solutions, currentSolution, exercise);
+
                 return ResponseEntity.status(HttpStatus.OK).body(data);
             } else {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();

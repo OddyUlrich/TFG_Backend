@@ -1,12 +1,10 @@
 package com.tfgbackend.service;
 
-import com.mongodb.lang.NonNull;
 import com.tfgbackend.dto.SolutionDTO;
-import com.tfgbackend.exceptions.ResourceNotFoundException;
-import com.tfgbackend.model.Exercise;
+import com.tfgbackend.exception.ResourceNotFoundException;
 import com.tfgbackend.model.Solution;
 import com.tfgbackend.model.User;
-import com.tfgbackend.repositories.SolutionRepository;
+import com.tfgbackend.repository.SolutionRepository;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;

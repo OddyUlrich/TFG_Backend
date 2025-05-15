@@ -1,4 +1,4 @@
-package com.tfgbackend.model.enumerators;
+package com.tfgbackend.model.enumerator;
 
 public enum Rol {
     ADMIN, TEACHER, STUDENT

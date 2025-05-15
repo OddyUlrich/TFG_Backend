@@ -1,9 +1,9 @@
 package com.tfgbackend;
 
 import com.tfgbackend.model.*;
-import com.tfgbackend.model.enumerators.Rol;
-import com.tfgbackend.model.enumerators.StatusExercise;
-import com.tfgbackend.repositories.*;
+import com.tfgbackend.model.enumerator.Rol;
+import com.tfgbackend.model.enumerator.StatusExercise;
+import com.tfgbackend.repository.*;
 import com.tfgbackend.service.ExerciseService;
 import com.tfgbackend.dto.ExerciseHomeDTO;
 import jakarta.validation.ConstraintViolation;

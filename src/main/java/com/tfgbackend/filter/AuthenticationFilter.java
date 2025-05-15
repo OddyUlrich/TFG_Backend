@@ -1,9 +1,7 @@
-package com.tfgbackend.filters;
+package com.tfgbackend.filter;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.jsonwebtoken.JwtBuilder;
-import io.jsonwebtoken.Jwts;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -19,7 +17,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import java.io.IOException;
 import java.security.Key;
 import java.time.Duration;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
