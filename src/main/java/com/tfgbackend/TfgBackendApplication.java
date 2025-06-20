@@ -1,5 +1,6 @@
 package com.tfgbackend;
 
+import com.github.javaparser.ast.CompilationUnit;
 import com.tfgbackend.model.*;
 import com.tfgbackend.model.enumerator.Rol;
 import com.tfgbackend.model.enumerator.StatusExercise;
@@ -22,6 +23,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
+import java.time.Month;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
@@ -111,18 +113,28 @@ public class TfgBackendApplication implements CommandLineRunner {
         ebr.save(bateria2);
         ebr.save(bateria3);
 
-        Exercise ejercicio1 = new Exercise(exerciseId1.toString(), "Ejercicio 1", "", List.of(), "", List.of(herencia, getter), bateria1, profesor, LocalDateTime.now());
-        Exercise ejercicio3 = new Exercise(exerciseId3.toString(), "Ejercicio 3", "", List.of(), "", List.of(herencia, getter), bateria1, profesor, LocalDateTime.now());
-        Exercise ejercicio4 = new Exercise(exerciseId4.toString(), "Ejercicio 4", "", List.of(), "", List.of(herencia, getter), bateria1, profesor, LocalDateTime.now());
-        Exercise ejercicio5 = new Exercise(exerciseId5.toString(), "Ejercicio 5", "", List.of(), "", List.of(herencia, getter), bateria1, profesor, LocalDateTime.now());
-
-        Exercise ejercicio6 = new Exercise(exerciseId6.toString(), "Ejercicio 6", "", List.of(), "", List.of(herencia, getter), bateria2, profesor, LocalDateTime.now());
-        Exercise ejercicio7 = new Exercise(exerciseId7.toString(), "Ejercicio 7", "", List.of(), "", List.of(herencia, getter), bateria2, profesor, LocalDateTime.now());
-        Exercise ejercicio8 = new Exercise(exerciseId8.toString(), "Ejercicio 8", "", List.of(), "", List.of(herencia, getter), bateria2, profesor, LocalDateTime.now());
-        Exercise ejercicio9 = new Exercise(exerciseId9.toString(), "Ejercicio 9", "", List.of(), "", List.of(herencia, getter), bateria2, profesor, LocalDateTime.now());
-        Exercise ejercicio10 = new Exercise(exerciseId10.toString(), "Ejercicio 10", "", List.of(), "", List.of(herencia, getter), bateria3, profesor, LocalDateTime.now());
-        Exercise ejercicio11 = new Exercise(exerciseId11.toString(), "Ejercicio 11", "", List.of(), "", List.of(herencia, getter), bateria3, profesor, LocalDateTime.now());
-        Exercise ejercicio2 = new Exercise(exerciseId2.toString(), "Ejercicio 2", "", List.of(), "", List.of(herencia, getter), bateria2, profesor, LocalDateTime.now());
+        Exercise ejercicio1 = new Exercise(exerciseId1.toString(), "Ejercicio 1", "", List.of(), "", List.of(herencia, getter), bateria1, profesor, LocalDateTime.of(2015,
+                Month.JULY, 29, 19, 30, 40));
+        Exercise ejercicio3 = new Exercise(exerciseId3.toString(), "Ejercicio 3", "", List.of(), "", List.of(herencia, getter), bateria1, profesor, LocalDateTime.of(2015,
+                Month.JULY, 29, 19, 30, 40));
+        Exercise ejercicio4 = new Exercise(exerciseId4.toString(), "Ejercicio 4", "", List.of(), "", List.of(herencia, getter), bateria1, profesor, LocalDateTime.of(2015,
+                Month.JULY, 29, 19, 30, 40));
+        Exercise ejercicio5 = new Exercise(exerciseId5.toString(), "Ejercicio 5", "", List.of(), "", List.of(herencia, getter), bateria1, profesor, LocalDateTime.of(2025,
+                Month.MAY, 28, 22, 49, 1));
+        Exercise ejercicio6 = new Exercise(exerciseId6.toString(), "Ejercicio 6", "", List.of(), "", List.of(herencia, getter), bateria2, profesor, LocalDateTime.of(2015,
+                Month.JULY, 29, 19, 30, 40));
+        Exercise ejercicio7 = new Exercise(exerciseId7.toString(), "Ejercicio 7", "", List.of(), "", List.of(herencia, getter), bateria2, profesor, LocalDateTime.of(2015,
+                Month.JULY, 29, 19, 30, 40));
+        Exercise ejercicio8 = new Exercise(exerciseId8.toString(), "Ejercicio 8", "", List.of(), "", List.of(herencia, getter), bateria2, profesor, LocalDateTime.of(2015,
+                Month.JULY, 29, 19, 30, 40));
+        Exercise ejercicio9 = new Exercise(exerciseId9.toString(), "Ejercicio 9", "", List.of(), "", List.of(herencia, getter), bateria2, profesor, LocalDateTime.of(2015,
+                Month.JULY, 29, 19, 30, 40));
+        Exercise ejercicio10 = new Exercise(exerciseId10.toString(), "Ejercicio 10", "", List.of(), "", List.of(herencia, getter), bateria3, profesor, LocalDateTime.of(2015,
+                Month.JULY, 29, 19, 30, 40));
+        Exercise ejercicio11 = new Exercise(exerciseId11.toString(), "Ejercicio 11", "", List.of(), "", List.of(herencia, getter), bateria3, profesor, LocalDateTime.of(2015,
+                Month.JULY, 29, 19, 30, 40));
+        Exercise ejercicio2 = new Exercise(exerciseId2.toString(), "Ejercicio 2", "", List.of(), "", List.of(herencia, getter), bateria2, profesor, LocalDateTime.of(2015,
+                Month.JULY, 29, 19, 30, 40));
 
         er.save(ejercicio1);
         er.save(ejercicio2);
@@ -192,6 +204,8 @@ public class TfgBackendApplication implements CommandLineRunner {
                 }
             });
         }
+
+        CompilationUnit compilationUnit = new CompilationUnit();
 
 //        File archivo = new File("E:/Escritorio/Proyectos/");
 //        ExerciseFiles nuevoArchivo = new ExerciseFiles(null, archivo.getName(), archivo.getPath(), Files.readAllBytes(archivo.toPath()), ejercicio1);

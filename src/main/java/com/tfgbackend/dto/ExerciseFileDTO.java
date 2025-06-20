@@ -1,11 +1,8 @@
 package com.tfgbackend.dto;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.tfgbackend.model.EditableMethod;
 
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 public class ExerciseFileDTO {
@@ -13,12 +10,12 @@ public class ExerciseFileDTO {
     private String id;
     private String name;
     private String path;
-    private String content;
+    private String text;
     private String idFromSolution;
     private List<EditableMethod> editableMethods; //Este campo ya nos permite saber si este archivo es editable por el alumno o no
 
     @JsonIgnore
-    private byte[] contentBinary;
+    private byte[] binaryText;
 
     public ExerciseFileDTO() {
     }
@@ -47,20 +44,20 @@ public class ExerciseFileDTO {
         this.path = path;
     }
 
-    public String getContent() {
-        return content;
+    public byte[] getBinaryText() {
+        return binaryText;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setBinaryText(byte[] binaryText) {
+        this.binaryText = binaryText;
     }
 
-    public byte[] getContentBinary() {
-        return contentBinary;
+    public String getText() {
+        return text;
     }
 
-    public void setContentBinary(byte[] contentBinary) {
-        this.contentBinary = contentBinary;
+    public void setText(String text) {
+        this.text = text;
     }
 
     public String getIdFromSolution() {

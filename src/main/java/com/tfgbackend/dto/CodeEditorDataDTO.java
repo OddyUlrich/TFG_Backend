@@ -2,7 +2,7 @@ package com.tfgbackend.dto;
 
 import java.util.List;
 
-public class ExerciseEditorDataDTO {
+public class CodeEditorDataDTO {
 
     private List<ExerciseFileDTO> filesForDisplay;
     private List<ExerciseFileDTO> freshFiles;
@@ -10,7 +10,7 @@ public class ExerciseEditorDataDTO {
     private String currentSolution;
     private ExerciseDTO exercise;
 
-    public ExerciseEditorDataDTO(List<ExerciseFileDTO> filesForDisplay, List<ExerciseFileDTO> freshFiles, List<SolutionDTO> exerciseSolutions, String currentSolution, ExerciseDTO exercise) {
+    public CodeEditorDataDTO(List<ExerciseFileDTO> filesForDisplay, List<ExerciseFileDTO> freshFiles, List<SolutionDTO> exerciseSolutions, String currentSolution, ExerciseDTO exercise) {
         this.filesForDisplay = filesForDisplay;
         this.freshFiles = freshFiles;
         this.exerciseSolutions = exerciseSolutions;

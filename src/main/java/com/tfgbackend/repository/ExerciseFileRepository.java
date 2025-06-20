@@ -86,7 +86,7 @@ public interface ExerciseFileRepository extends MongoRepository<ExerciseFiles, L
             "      id: '$resultFromMainPipeline._id'," +
             "      name: '$resultFromMainPipeline.name'," +
             "      path: '$resultFromMainPipeline.path'," +
-            "      content: '$resultFromMainPipeline.content'," +
+            "      binaryText: '$resultFromMainPipeline.binaryText'," +
             "      exercise:" +
             "        '$resultFromMainPipeline.exercise'," +
             "      solution: {" +
@@ -148,13 +148,37 @@ public interface ExerciseFileRepository extends MongoRepository<ExerciseFiles, L
             "      id: 1," +
             "      name: 1," +
             "      path: 1," +
-            "      contentBinary: '$content'," +
+            "      binaryText: 1," +
             "      idFromSolution: '$solution._id'," +
             "      editableMethods: 1," +
             "    }" +
             "  }"
 })
     Optional<List<ExerciseFileDTO>> exerciseFilesAndSolutionByIdAndStudent(ObjectId studentId, ObjectId exerciseId);
+
+    @Aggregation(pipeline = {
+            "{ $match: {" +
+                    "  $and: [" +
+                    "    {" +
+                    "      $expr: {" +
+                    "        $eq: [" +
+                    "          '$exercise.$id', ?0" +
+                    "        ]" +
+                    "      }" +
+                    "    }," +
+                    "    {" +
+                    "      $and: [" +
+                    "        {" +
+                    "          solution: {" +
+                    "            $exists: false" +
+                    "          }" +
+                    "        }" +
+                    "      ]" +
+                    "    }" +
+                    "  ]" +
+                    "} }"
+    })
+    Optional<List<ExerciseFileDTO>> templateFilesByExerciseId(ObjectId exerciseId);
 
     @Aggregation(pipeline = {
             "{$match: {" +

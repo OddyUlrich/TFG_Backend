@@ -75,7 +75,7 @@ public class SolutionController {
                 status = HttpStatus.OK;
 
             } catch (ResourceNotFoundException e) {
-                System.out.println("Solution not found, not updated");
+                System.out.println("Solution not found with that ID, not updated");
                 status = HttpStatus.NOT_FOUND;
                 return ResponseEntity.status(status).build();
             }
@@ -84,10 +84,10 @@ public class SolutionController {
         for (ExerciseFileDTO file : filesForDisplay) {
             ExerciseFiles fileInDatabase = exerciseFilesService.findByNameAndSolutionId(file.getName(), solution.getId());
             if (fileInDatabase != null) {
-                fileInDatabase.setContent(file.getContent().getBytes(StandardCharsets.UTF_8));
+                fileInDatabase.setBinaryText(file.getText().getBytes(StandardCharsets.UTF_8));
                 exerciseFilesService.saveFile(fileInDatabase);
             } else {
-                exerciseFilesService.saveFile(new ExerciseFiles(file.getName(), file.getPath(), file.getContent().getBytes(StandardCharsets.UTF_8), exercise, solution, file.getEditableMethods()));
+                exerciseFilesService.saveFile(new ExerciseFiles(file.getName(), file.getPath(), file.getText().getBytes(StandardCharsets.UTF_8), exercise, solution, file.getEditableMethods()));
             }
         }
 

@@ -32,14 +32,14 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         this.key = key;
     }
 
-    // Método que tenta autenticar ao usuario a partir da chamada HTTP
+    // Funcion que tenta autenticar ao usuario a partir da chamada HTTP
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         try {
             // Obtemos o obxecto JSON do body da request HTTP
             JsonNode credentials = new ObjectMapper().readValue(request.getInputStream(), JsonNode.class);
 
-            remember = (credentials.get("remember") != null) ? credentials.get("remember").booleanValue() : false;
+            remember = credentials.get("remember") != null && credentials.get("remember").booleanValue();
 
             // Tentamos autenticarnos coas credenciais proporcionadas
             return manager.authenticate(
@@ -53,13 +53,13 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         }
     }
 
-    // Método que se chama cando a autenticación do metodo anterior é satisfactoria
+    // funcion que se chama cando a autenticación do metodo anterior é satisfactoria
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException {
 
         Duration rememberDuration;
 
-        // If the user checked "remember me" we extend the duration of the token for 30 days
+        // If the user checked "remember me", we extend the duration of the token for 30 days
         if (remember){
             rememberDuration = Duration.ofDays(30);
         }else{

@@ -50,10 +50,13 @@ public class ExerciseController {
     }
 
     @GetMapping(value = "/{exerciseId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ExerciseEditorDataDTO> getExercise(@PathVariable String exerciseId, Authentication auth) {
+    public ResponseEntity<CodeEditorDataDTO> getExercise(@PathVariable String exerciseId, Authentication auth) {
 
         try {
             if (auth != null && auth.isAuthenticated()) {
+
+                System.out.println("UNA VEZ");
+
                 String email = auth.getName();
                 List<ExerciseFileDTO> allExerciseAndLastSolutionFiles = exerciseFilesService.exerciseFilesAndSolutionByIdAndStudent(exerciseId, email);
 
@@ -70,12 +73,36 @@ public class ExerciseController {
                 ExerciseDTO exercise = exerciseService.findExerciseForEditorById(exerciseId);
 
                 //DTO for the frontend with all files and information needed
-                ExerciseEditorDataDTO data = new ExerciseEditorDataDTO(filteredFiles.getFilesForDisplay(), filteredFiles.getTemplateFiles(), solutions, currentSolution, exercise);
+                CodeEditorDataDTO data = new CodeEditorDataDTO(filteredFiles.getFilesForDisplay(), filteredFiles.getTemplateFiles(), solutions, currentSolution, exercise);
 
                 return ResponseEntity.status(HttpStatus.OK).body(data);
             } else {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
             }
+        } catch (ResourceNotFoundException e) {
+            System.out.println(e.getMessage());
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
+        }
+    }
+
+    @GetMapping(value = "/edit/{exerciseId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ExerciseTemplateFilesDTO> editExercise(@PathVariable String exerciseId, Authentication auth) {
+        try {
+            if (auth != null && auth.isAuthenticated()) {
+
+                System.out.println("UNA VEZ");
+
+                ExerciseDTO exercise = exerciseService.findExerciseForEditorById(exerciseId);
+                List<ExerciseFileDTO> allExerciseAndLastSolutionFiles = exerciseFilesService.templateFilesByExerciseId(exerciseId);
+
+                ExerciseTemplateFilesDTO data =  new ExerciseTemplateFilesDTO(exercise, allExerciseAndLastSolutionFiles);
+
+                return ResponseEntity.status(HttpStatus.OK).body(data);
+
+            }else {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            }
+
         } catch (ResourceNotFoundException e) {
             System.out.println(e.getMessage());
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);

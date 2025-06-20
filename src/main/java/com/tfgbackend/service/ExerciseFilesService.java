@@ -36,9 +36,20 @@ public class ExerciseFilesService {
     public List<ExerciseFileDTO> exerciseFilesAndSolutionByIdAndStudent(String exerciseId, String email){
         User user = us.getUser(email);
 
-        List<ExerciseFileDTO> list = efr.exerciseFilesAndSolutionByIdAndStudent(new ObjectId(exerciseId), new ObjectId(user.getId())).orElseThrow(() -> new ResourceNotFoundException("Files about exercise could not be obtained"));
+        List<ExerciseFileDTO> list = efr.exerciseFilesAndSolutionByIdAndStudent(new ObjectId(exerciseId), new ObjectId(user.getId())).orElseThrow(() -> new ResourceNotFoundException("Files about this exercise could not be obtained"));
         for (ExerciseFileDTO file : list){
-            file.setContent(new String(file.getContentBinary(), StandardCharsets.UTF_8));
+            file.setText(new String(file.getBinaryText(), StandardCharsets.UTF_8));
+        }
+
+        return list;
+    }
+
+    public List<ExerciseFileDTO> templateFilesByExerciseId(String exerciseId){
+
+        List<ExerciseFileDTO> list = efr.templateFilesByExerciseId(new ObjectId(exerciseId)).orElseThrow(() -> new ResourceNotFoundException("Template files about this exercise could not be obtained"));
+
+        for (ExerciseFileDTO file : list){
+            file.setText(new String(file.getBinaryText(), StandardCharsets.UTF_8));
         }
 
         return list;

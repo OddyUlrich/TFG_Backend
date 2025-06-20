@@ -17,7 +17,7 @@ public class ExerciseFiles {
     private String id;
     private @NotBlank String name;
     private @NotBlank String path;
-    private @NotBlank byte[] content;
+    private @NotBlank byte[] binaryText;
 
     @DBRef(lazy = true)
     private @NotNull @Valid Exercise exercise;
@@ -26,10 +26,10 @@ public class ExerciseFiles {
 
     private List<EditableMethod> editableMethods;
 
-    public ExerciseFiles(String name, String path, byte[] content, Exercise exercise, Solution solution, List<EditableMethod> editableMethods) {
+    public ExerciseFiles(String name, String path, byte[] binaryText, Exercise exercise, Solution solution, List<EditableMethod> editableMethods) {
         this.name = name;
         this.path = path;
-        this.content = content;
+        this.binaryText = binaryText;
         this.exercise = exercise;
         this.solution = solution;
         this.editableMethods = editableMethods;
@@ -59,12 +59,12 @@ public class ExerciseFiles {
         this.path = path;
     }
 
-    public byte[] getContent() {
-        return content;
+    public byte[] getBinaryText() {
+        return binaryText;
     }
 
-    public void setContent(byte[] content) {
-        this.content = content;
+    public void setBinaryText(byte[] binaryText) {
+        this.binaryText = binaryText;
     }
 
     public Exercise getExercise() {
