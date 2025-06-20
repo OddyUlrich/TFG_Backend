@@ -55,8 +55,6 @@ public class ExerciseController {
         try {
             if (auth != null && auth.isAuthenticated()) {
 
-                System.out.println("UNA VEZ");
-
                 String email = auth.getName();
                 List<ExerciseFileDTO> allExerciseAndLastSolutionFiles = exerciseFilesService.exerciseFilesAndSolutionByIdAndStudent(exerciseId, email);
 
@@ -89,8 +87,6 @@ public class ExerciseController {
     public ResponseEntity<ExerciseTemplateFilesDTO> editExercise(@PathVariable String exerciseId, Authentication auth) {
         try {
             if (auth != null && auth.isAuthenticated()) {
-
-                System.out.println("UNA VEZ");
 
                 ExerciseDTO exercise = exerciseService.findExerciseForEditorById(exerciseId);
                 List<ExerciseFileDTO> allExerciseAndLastSolutionFiles = exerciseFilesService.templateFilesByExerciseId(exerciseId);
