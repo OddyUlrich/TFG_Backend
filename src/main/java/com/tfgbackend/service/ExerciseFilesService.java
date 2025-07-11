@@ -33,10 +33,10 @@ public class ExerciseFilesService {
         return this.efr.findByNameAndSolutionId(name, new ObjectId(solutionId));
     }
 
-    public List<ExerciseFileDTO> exerciseFilesAndSolutionByIdAndStudent(String exerciseId, String email){
+    public List<ExerciseFileDTO> exerciseFilesAndLastSolutionByIdAndStudent(String exerciseId, String email){
         User user = us.getUser(email);
 
-        List<ExerciseFileDTO> list = efr.exerciseFilesAndSolutionByIdAndStudent(new ObjectId(exerciseId), new ObjectId(user.getId())).orElseThrow(() -> new ResourceNotFoundException("Files about this exercise could not be obtained"));
+        List<ExerciseFileDTO> list = efr.exerciseFilesAndLastSolutionByIdAndStudent(new ObjectId(exerciseId), new ObjectId(user.getId())).orElseThrow(() -> new ResourceNotFoundException("Files about this exercise could not be obtained"));
         for (ExerciseFileDTO file : list){
             file.setText(new String(file.getBinaryText(), StandardCharsets.UTF_8));
         }

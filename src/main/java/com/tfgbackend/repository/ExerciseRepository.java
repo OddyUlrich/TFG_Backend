@@ -81,7 +81,7 @@ public interface ExerciseRepository extends MongoRepository<Exercise, Long> {
                     "'statusSolution': '$latestSolution.status'} }",
 
     })
-    Optional<List<ExerciseHomeDTO>> allExercisesWithSolutionByUserId(ObjectId studentId);
+    Optional<List<ExerciseHomeDTO>> allExercisesWithLastSolutionsByUserId(ObjectId studentId);
 
     @Aggregation(pipeline = {
             "{$match: {'_id': ?0}}",

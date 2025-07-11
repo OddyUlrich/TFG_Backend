@@ -219,10 +219,10 @@ public class TfgBackendApplication implements CommandLineRunner {
         Set<ConstraintViolation<Exercise>> violaciones = validator.validate(ejercicio1);
         System.out.println("Violaciones: " + violaciones.size() + ", texto: " + violaciones);
 
-        List<ExerciseHomeDTO> lista = es.allExercisesWithSolutionByUserId("estudiante@hotmail.com");
+        List<ExerciseHomeDTO> lista = es.allExercisesWithLastSolutionsByUserId("estudiante@hotmail.com");
 
         for (ExerciseHomeDTO e : lista) {
-            System.out.println("ATIENDE: EjercicioSolution: " + e.getName() + " Numero de errores:" + e.getNumberErrorsSolution());
+            System.out.println("ATIENDE: EjercicioSolution: " + e.getName() + " PORQUE: " + e.getStatusSolution()  + " Numero de errores:" + e.getNumberErrorsSolution());
         }
 
         /*DBREF -> Ejercicio.Bateria ----> lazy = true ----> NO SE PUEDE GUARDAR EJERCICIO

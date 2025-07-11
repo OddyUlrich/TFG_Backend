@@ -13,6 +13,29 @@ import java.util.Optional;
 @Repository
 public interface ExerciseFileRepository extends MongoRepository<ExerciseFiles, Long> {
 
+
+    /*
+    - xplicación: Son los ficheros de la ultima solucion y templates del ejercicio.
+
+    · Primero buscamos los ficheros relativos a un ejercicio concreto que pasamos por argumento
+	· Luego hacemos un lookup para traer la información de las soluciones si las hay
+	· Repetimos para, aquellos que tienen información de una solución, traigan a su vez la información del estudiante de dicha solución
+
+	· Los arrays que traen siempre los pasamos a objetos con unwind y mantenemos los nulos y los empty (porque los templates nos interesan también)
+	· Ahora buscamos las soluciones del alumno concreto y mantenemos los que no tienen solución como tal (vacíos mantenidos antes, los templates)
+
+	· Hacemos 2 pipelines con facet:
+
+        - Una para mantener lo de ahora Root
+		- Otra para calcular el máximo valor de solution.updateTimestap, sabiendo así la última solución
+
+	· Unwind para sacar las 2 pipelines de los arrays y pasarlos a objetos
+	· Con project sacamos de ambos lo que nos interesa, uniendo el lastUpdate del máximo valor (última solución)
+	· Si además solution no es un objeto lo convertimos a null para saber que es template fácilmente
+	· Ahora solo dejamos aquellos que tengan la solución más reciente (últimos archivos de la última solución) y los nulos (templates)
+    · Por último ordenamos la información y dejamos solo la información deseada
+
+    */
     @Aggregation(pipeline = {
             "{$match: { $expr: {$eq: ['$exercise.$id',?0]}}}",
 
@@ -154,7 +177,7 @@ public interface ExerciseFileRepository extends MongoRepository<ExerciseFiles, L
             "    }" +
             "  }"
 })
-    Optional<List<ExerciseFileDTO>> exerciseFilesAndSolutionByIdAndStudent(ObjectId studentId, ObjectId exerciseId);
+    Optional<List<ExerciseFileDTO>> exerciseFilesAndLastSolutionByIdAndStudent(ObjectId studentId, ObjectId exerciseId);
 
     @Aggregation(pipeline = {
             "{ $match: {" +

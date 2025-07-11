@@ -24,9 +24,9 @@ public class ExerciseService {
         this.us = us;
     }
 
-    public List<ExerciseHomeDTO> allExercisesWithSolutionByUserId(String email){
+    public List<ExerciseHomeDTO> allExercisesWithLastSolutionsByUserId(String email){
         User user = us.getUser(email);
-        return er.allExercisesWithSolutionByUserId(new ObjectId(user.getId())).orElseThrow(() -> new ResourceNotFoundException("Data could not be obtained"));
+        return er.allExercisesWithLastSolutionsByUserId(new ObjectId(user.getId())).orElseThrow(() -> new ResourceNotFoundException("Data could not be obtained"));
     }
 
     public Exercise findExerciseById(String exerciseId){

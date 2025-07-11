@@ -38,7 +38,7 @@ public class ExerciseController {
         try {
             if (auth != null && auth.isAuthenticated()) {
                 String email = auth.getName();
-                List<ExerciseHomeDTO> lista = exerciseService.allExercisesWithSolutionByUserId(email);
+                List<ExerciseHomeDTO> lista = exerciseService.allExercisesWithLastSolutionsByUserId(email);
                 return ResponseEntity.status(HttpStatus.OK).body(lista);
             } else {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
@@ -56,16 +56,16 @@ public class ExerciseController {
             if (auth != null && auth.isAuthenticated()) {
 
                 String email = auth.getName();
-                List<ExerciseFileDTO> allExerciseAndLastSolutionFiles = exerciseFilesService.exerciseFilesAndSolutionByIdAndStudent(exerciseId, email);
+                List<ExerciseFileDTO> allExerciseFilesAndLastSolution = exerciseFilesService.exerciseFilesAndLastSolutionByIdAndStudent(exerciseId, email);
 
                 //All the files that the code editor could use (exercise's template files and user's solution files)
-                TemplateAndSolutionFiles filteredFiles = exerciseFilesService.filterFiles(allExerciseAndLastSolutionFiles);
+                TemplateAndSolutionFiles filteredFiles = exerciseFilesService.filterFiles(allExerciseFilesAndLastSolution);
 
                 //All basic information about the other solutions of this user to allow him/her to change to it
                 List<SolutionDTO> solutions = solutionService.allSolutionsByExerciseIdAndStudent(exerciseId, email);
 
                 //ID for the last updated solution (Probably the last one he/she worked on)
-                String currentSolution = exerciseFilesService.obtainSolutionFromExerciseFiles(allExerciseAndLastSolutionFiles);
+                String currentSolution = exerciseFilesService.obtainSolutionFromExerciseFiles(allExerciseFilesAndLastSolution);
 
                 //All necessary information about the exercise the user is currently working on
                 ExerciseDTO exercise = exerciseService.findExerciseForEditorById(exerciseId);
