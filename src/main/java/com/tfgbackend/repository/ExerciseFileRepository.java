@@ -15,7 +15,7 @@ public interface ExerciseFileRepository extends MongoRepository<ExerciseFiles, L
 
 
     /*
-    - xplicación: Son los ficheros de la ultima solucion y templates del ejercicio.
+    - Explicación: Son los ficheros de la ultima solucion y templates del ejercicio.
 
     · Primero buscamos los ficheros relativos a un ejercicio concreto que pasamos por argumento
 	· Luego hacemos un lookup para traer la información de las soluciones si las hay

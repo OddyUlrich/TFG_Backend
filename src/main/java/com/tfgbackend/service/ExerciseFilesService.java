@@ -56,7 +56,7 @@ public class ExerciseFilesService {
     }
 
     /*
-    From a list of files we take, on the one hand, the files to be shown to the student (display) and, on the other
+    From a list of files we take, on one hand, the files to be shown to the student (display) and, on the other
     hand, we take advantage of this to separate the template files in a single loop
      */
     public TemplateAndSolutionFiles filterFiles(List<ExerciseFileDTO> exerciseFiles){

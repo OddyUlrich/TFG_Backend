@@ -2,9 +2,9 @@ package com.tfgbackend.controller;
 
 import com.tfgbackend.dto.*;
 import com.tfgbackend.exception.ResourceNotFoundException;
-import com.tfgbackend.service.ExerciseFilesService;
-import com.tfgbackend.service.ExerciseService;
-import com.tfgbackend.service.SolutionService;
+import com.tfgbackend.model.ExerciseBattery;
+import com.tfgbackend.model.Tag;
+import com.tfgbackend.service.*;
 import com.tfgbackend.service.wrapper.TemplateAndSolutionFiles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,6 +14,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -24,12 +25,16 @@ public class ExerciseController {
     private final ExerciseService exerciseService;
     private final ExerciseFilesService exerciseFilesService;
     private final SolutionService solutionService;
+    private final ExerciseBatteryService exerciseBatteryService;
+    private final TagService tagService;
 
     @Autowired
-    public ExerciseController(ExerciseService exerciseService, ExerciseFilesService exerciseFilesService, SolutionService solutionService) {
+    public ExerciseController(ExerciseService exerciseService, ExerciseFilesService exerciseFilesService, SolutionService solutionService, ExerciseBatteryService exerciseBatteryService, TagService tagService) {
         this.exerciseService = exerciseService;
         this.exerciseFilesService = exerciseFilesService;
         this.solutionService = solutionService;
+        this.exerciseBatteryService = exerciseBatteryService;
+        this.tagService = tagService;
     }
 
     @GetMapping
@@ -64,7 +69,7 @@ public class ExerciseController {
                 //All basic information about the other solutions of this user to allow him/her to change to it
                 List<SolutionDTO> solutions = solutionService.allSolutionsByExerciseIdAndStudent(exerciseId, email);
 
-                //ID for the last updated solution (Probably the last one he/she worked on)
+                //ID for the last updated solution (Probably the last one they worked on)
                 String currentSolution = exerciseFilesService.obtainSolutionFromExerciseFiles(allExerciseFilesAndLastSolution);
 
                 //All necessary information about the exercise the user is currently working on
@@ -84,14 +89,16 @@ public class ExerciseController {
     }
 
     @GetMapping(value = "/edit/{exerciseId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ExerciseTemplateFilesDTO> editExercise(@PathVariable String exerciseId, Authentication auth) {
+    public ResponseEntity<ExerciseTemplateDataDTO> editExercise(@PathVariable String exerciseId, Authentication auth) {
         try {
             if (auth != null && auth.isAuthenticated()) {
 
                 ExerciseDTO exercise = exerciseService.findExerciseForEditorById(exerciseId);
-                List<ExerciseFileDTO> allExerciseAndLastSolutionFiles = exerciseFilesService.templateFilesByExerciseId(exerciseId);
+                List<ExerciseFileDTO> allTemplateFiles = exerciseFilesService.templateFilesByExerciseId(exerciseId);
+                List<ExerciseBattery> allExerciseBatteries = exerciseBatteryService.findAll();
+                List<Tag> allTags = tagService.findAll();
 
-                ExerciseTemplateFilesDTO data =  new ExerciseTemplateFilesDTO(exercise, allExerciseAndLastSolutionFiles);
+                ExerciseTemplateDataDTO data =  new ExerciseTemplateDataDTO(exercise, allTemplateFiles, allExerciseBatteries, allTags);
 
                 return ResponseEntity.status(HttpStatus.OK).body(data);
 

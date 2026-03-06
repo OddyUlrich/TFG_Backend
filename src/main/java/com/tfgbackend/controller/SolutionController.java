@@ -42,7 +42,9 @@ public class SolutionController {
         this.userService = userService;
     }
 
-    @PutMapping(value = "/save", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+
+    //TODO ¿Esto debería de ser @Transactional para que se haga todo de una, no vaya a ser que guardemos una nueva solucion y luego los archivos fallen al guardarse y quede la solución sin nada. Ademas avisamos al frontend de ello?
+    @PostMapping(value = "/save", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Solution> save(@RequestBody SolutionCreationDTO data, Authentication auth) {
 
         List<ExerciseFileDTO> filesForDisplay = data.getFilesForDisplay();
@@ -81,6 +83,10 @@ public class SolutionController {
             }
         }
 
+        /* While trying to save the new solution files we should check first if there is already a solution file in
+        the database. If it exists already we use the data it already has except for the new text. If not, we create
+        a new file with a solution field filled
+        * */
         for (ExerciseFileDTO file : filesForDisplay) {
             ExerciseFiles fileInDatabase = exerciseFilesService.findByNameAndSolutionId(file.getName(), solution.getId());
             if (fileInDatabase != null) {

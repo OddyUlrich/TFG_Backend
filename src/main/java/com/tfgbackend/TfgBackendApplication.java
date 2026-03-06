@@ -68,9 +68,16 @@ public class TfgBackendApplication implements CommandLineRunner {
         efr.deleteAll();
         solutionRepository.deleteAll();
 
-        ObjectId batteryId1 = new ObjectId("635981f6e40f61599e000068");
-        ObjectId batteryId2 = new ObjectId("635981f6e40f61599a000068");
-        ObjectId batteryId3 = new ObjectId("635981f6e40f61599a000067");
+        ObjectId batteryId1 = new ObjectId("635981f6e40f61599a000061");
+        ObjectId batteryId2 = new ObjectId("635981f6e40f61599a000062");
+        ObjectId batteryId3 = new ObjectId("635981f6e40f61599a000063");
+        ObjectId batteryId4 = new ObjectId("635981f6e40f61599a000064");
+        ObjectId batteryId5 = new ObjectId("635981f6e40f61599a000065");
+        ObjectId batteryId6 = new ObjectId("635981f6e40f61599a000066");
+        ObjectId batteryId7 = new ObjectId("635981f6e40f61599a000067");
+        ObjectId batteryId8 = new ObjectId("635981f6e40f61599a000068");
+        ObjectId batteryId9 = new ObjectId("635981f6e40f61599a000069");
+
         ObjectId exerciseId1 = new ObjectId("635981f6e40a61599e000060");
         ObjectId exerciseId2 = new ObjectId("635981f6e40a61599e000061");
         ObjectId exerciseId3 = new ObjectId("635981f6e40a61599e000062");
@@ -82,6 +89,8 @@ public class TfgBackendApplication implements CommandLineRunner {
         ObjectId exerciseId9 = new ObjectId("635981f6e40a61599e000069");
         ObjectId exerciseId10 = new ObjectId("635981f6e40a61599e000070");
         ObjectId exerciseId11 = new ObjectId("635981f6e40a61599e000071");
+        ObjectId exerciseId12 = new ObjectId("635981f6e40a61599e000072");
+        ObjectId exerciseId13 = new ObjectId("635981f6e40a61599e000073");
 
         ObjectId profesorId = new ObjectId("635981f6e40b61599e000064");
         ObjectId estudianteID = new ObjectId("635981f6e40c61599e000064");
@@ -89,6 +98,15 @@ public class TfgBackendApplication implements CommandLineRunner {
 
         ObjectId tag1ID = new ObjectId();
         ObjectId tag2ID = new ObjectId();
+        ObjectId tag3ID = new ObjectId();
+        ObjectId tag4ID = new ObjectId();
+        ObjectId tag5ID = new ObjectId();
+        ObjectId tag6ID = new ObjectId();
+        ObjectId tag7ID = new ObjectId();
+        ObjectId tag8ID = new ObjectId();
+        ObjectId tag9ID = new ObjectId();
+        ObjectId tag10ID = new ObjectId();
+
 
         User profesor = new User(profesorId.toString(), "profesor", bcrypt.encode("password"), "profesor@hotmail.com", LocalDateTime.now(), List.of(Rol.TEACHER), List.of());
         User estudiante = new User(estudianteID.toString(), "estudiante", bcrypt.encode("password"), "estudiante@hotmail.com", LocalDateTime.now(), List.of(Rol.STUDENT), List.of());
@@ -101,40 +119,65 @@ public class TfgBackendApplication implements CommandLineRunner {
 
         Tag herencia = new Tag(tag1ID.toString(), "Herencia");
         Tag getter = new Tag(tag2ID.toString(), "Getter");
+        Tag setter = new Tag(tag3ID.toString(), "Setter");
+        Tag poliformismo = new Tag(tag4ID.toString(), "Poliformismo");
+        Tag clases = new Tag(tag5ID.toString(), "Clases");
+        Tag bucles  = new Tag(tag6ID.toString(), "Bucles");
+        Tag recursividad = new Tag(tag7ID.toString(), "Recursividad");
+        Tag exepciones = new Tag(tag8ID.toString(), "Excepciones");
+        Tag operadores = new Tag(tag9ID.toString(), "Operadores");
+        Tag interfaces = new Tag(tag10ID.toString(), "Interfaces");
 
         tr.save(herencia);
         tr.save(getter);
+        tr.save(setter);
+        tr.save(poliformismo);
+        tr.save(clases);
+        tr.save(bucles);
+        tr.save(recursividad);
+        tr.save(exepciones);
+        tr.save(operadores);
+        tr.save(interfaces);
+
 
         ExerciseBattery bateria1 = new ExerciseBattery(batteryId1, "Bateria de Herencia");
         ExerciseBattery bateria2 = new ExerciseBattery(batteryId2, "Bateria de Poliformismo");
-        ExerciseBattery bateria3 = new ExerciseBattery(batteryId3, "Bateria de Ejemplo");
+        ExerciseBattery bateria3 = new ExerciseBattery(batteryId3, "Bateria de Clases");
+        ExerciseBattery bateria4 = new ExerciseBattery(batteryId4, "Bateria de Encapsulación");
+        ExerciseBattery bateria5 = new ExerciseBattery(batteryId5, "Bateria de Abstracción");
+        ExerciseBattery bateria6 = new ExerciseBattery(batteryId6, "Bateria de Interfaces");
+        ExerciseBattery bateria7 = new ExerciseBattery(batteryId7, "Bateria de Ejemplo 1");
+        ExerciseBattery bateria8 = new ExerciseBattery(batteryId8, "Bateria de Ejemplo 2");
+        ExerciseBattery bateria9 = new ExerciseBattery(batteryId9, "Bateria de Ejemplo 3");
 
         ebr.save(bateria1);
         ebr.save(bateria2);
         ebr.save(bateria3);
+        ebr.save(bateria4);
+        ebr.save(bateria5);
+        ebr.save(bateria6);
+        ebr.save(bateria7);
+        ebr.save(bateria8);
+        ebr.save(bateria9);
 
-        Exercise ejercicio1 = new Exercise(exerciseId1.toString(), "Ejercicio 1", "", List.of(), "", List.of(herencia, getter), bateria1, profesor, LocalDateTime.of(2015,
-                Month.JULY, 29, 19, 30, 40));
+
+        Exercise ejercicio1 = new Exercise(exerciseId1.toString(), "Ejercicio 1", "", List.of(), "", List.of(herencia, getter), bateria1, profesor, LocalDateTime.now());
         Exercise ejercicio3 = new Exercise(exerciseId3.toString(), "Ejercicio 3", "", List.of(), "", List.of(herencia, getter), bateria1, profesor, LocalDateTime.of(2015,
-                Month.JULY, 29, 19, 30, 40));
-        Exercise ejercicio4 = new Exercise(exerciseId4.toString(), "Ejercicio 4", "", List.of(), "", List.of(herencia, getter), bateria1, profesor, LocalDateTime.of(2015,
-                Month.JULY, 29, 19, 30, 40));
+                Month.MAY, 29, 19, 30, 40));
+        Exercise ejercicio4 = new Exercise(exerciseId4.toString(), "Ejercicio 4", "", List.of(), "", List.of(herencia, getter), bateria1, profesor, LocalDateTime.now());
         Exercise ejercicio5 = new Exercise(exerciseId5.toString(), "Ejercicio 5", "", List.of(), "", List.of(herencia, getter), bateria1, profesor, LocalDateTime.of(2025,
-                Month.MAY, 28, 22, 49, 1));
+                Month.MAY, 29, 22, 49, 1));
         Exercise ejercicio6 = new Exercise(exerciseId6.toString(), "Ejercicio 6", "", List.of(), "", List.of(herencia, getter), bateria2, profesor, LocalDateTime.of(2015,
-                Month.JULY, 29, 19, 30, 40));
-        Exercise ejercicio7 = new Exercise(exerciseId7.toString(), "Ejercicio 7", "", List.of(), "", List.of(herencia, getter), bateria2, profesor, LocalDateTime.of(2015,
-                Month.JULY, 29, 19, 30, 40));
-        Exercise ejercicio8 = new Exercise(exerciseId8.toString(), "Ejercicio 8", "", List.of(), "", List.of(herencia, getter), bateria2, profesor, LocalDateTime.of(2015,
-                Month.JULY, 29, 19, 30, 40));
-        Exercise ejercicio9 = new Exercise(exerciseId9.toString(), "Ejercicio 9", "", List.of(), "", List.of(herencia, getter), bateria2, profesor, LocalDateTime.of(2015,
-                Month.JULY, 29, 19, 30, 40));
-        Exercise ejercicio10 = new Exercise(exerciseId10.toString(), "Ejercicio 10", "", List.of(), "", List.of(herencia, getter), bateria3, profesor, LocalDateTime.of(2015,
-                Month.JULY, 29, 19, 30, 40));
+                Month.MAY, 29, 19, 30, 40));
+        Exercise ejercicio7 = new Exercise(exerciseId7.toString(), "Ejercicio 7", "", List.of(), "", List.of(herencia, getter), bateria4, profesor, LocalDateTime.of(2015,
+                Month.MAY, 29, 19, 30, 40));
+        Exercise ejercicio8 = new Exercise(exerciseId8.toString(), "Ejercicio 8", "", List.of(), "", List.of(herencia, getter), bateria2, profesor, LocalDateTime.now());
+        Exercise ejercicio9 = new Exercise(exerciseId9.toString(), "Ejercicio 9", "", List.of(), "", List.of(herencia, getter), bateria2, profesor, LocalDateTime.now());
+        Exercise ejercicio10 = new Exercise(exerciseId10.toString(), "Ejercicio 10", "", List.of(), "", List.of(herencia, getter), bateria3, profesor, LocalDateTime.now());
         Exercise ejercicio11 = new Exercise(exerciseId11.toString(), "Ejercicio 11", "", List.of(), "", List.of(herencia, getter), bateria3, profesor, LocalDateTime.of(2015,
-                Month.JULY, 29, 19, 30, 40));
+                Month.MAY, 29, 19, 30, 40));
         Exercise ejercicio2 = new Exercise(exerciseId2.toString(), "Ejercicio 2", "", List.of(), "", List.of(herencia, getter), bateria2, profesor, LocalDateTime.of(2015,
-                Month.JULY, 29, 19, 30, 40));
+                Month.MAY, 29, 19, 30, 40));
 
         er.save(ejercicio1);
         er.save(ejercicio2);
@@ -193,7 +236,7 @@ public class TfgBackendApplication implements CommandLineRunner {
                             case "Solucion_alumno2.java" ->
                                     new ExerciseFiles(archivo.getName(), archivo.getPath().replace("\\","/"), Files.readAllBytes(archivo.toPath()), ejercicio1, solucion7, List.of(metodosEjercicio1));
                             case "Otro_ejercicio.java" ->
-                                    new ExerciseFiles(archivo.getName(), archivo.getPath().replace("\\","/"), Files.readAllBytes(archivo.toPath()), ejercicio4, solucion8, List.of(metodosEjercicio1));
+                                    new ExerciseFiles(archivo.getName(), archivo.getPath().replace("\\","/"), Files.readAllBytes(archivo.toPath()), ejercicio2, solucion8, List.of(metodosEjercicio1));
                             default ->
                                     new ExerciseFiles(archivo.getName(), archivo.getPath().replace("\\","/"), Files.readAllBytes(archivo.toPath()), ejercicio1, null, null);
                         };
@@ -222,7 +265,7 @@ public class TfgBackendApplication implements CommandLineRunner {
         List<ExerciseHomeDTO> lista = es.allExercisesWithLastSolutionsByUserId("estudiante@hotmail.com");
 
         for (ExerciseHomeDTO e : lista) {
-            System.out.println("ATIENDE: EjercicioSolution: " + e.getName() + " PORQUE: " + e.getStatusSolution()  + " Numero de errores:" + e.getNumberErrorsSolution());
+            System.out.println("ATIENDE: EjercicioSolution: " + e.getName() + " Status: " + e.getStatusSolution()  + " Numero de errores:" + e.getNumberErrorsSolution());
         }
 
         /*DBREF -> Ejercicio.Bateria ----> lazy = true ----> NO SE PUEDE GUARDAR EJERCICIO
