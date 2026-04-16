@@ -14,7 +14,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -95,10 +94,30 @@ public class ExerciseController {
 
                 ExerciseDTO exercise = exerciseService.findExerciseForEditorById(exerciseId);
                 List<ExerciseFileDTO> allTemplateFiles = exerciseFilesService.templateFilesByExerciseId(exerciseId);
+
+                ExerciseTemplateDataDTO data =  new ExerciseTemplateDataDTO(exercise, allTemplateFiles);
+
+                return ResponseEntity.status(HttpStatus.OK).body(data);
+
+            }else {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            }
+
+        } catch (ResourceNotFoundException e) {
+            System.out.println(e.getMessage());
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
+        }
+    }
+
+    @GetMapping(value = "/commonData", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ExerciseCommonDataDTO> newExercise(Authentication auth) {
+        try {
+            if (auth != null && auth.isAuthenticated()) {
+
                 List<ExerciseBattery> allExerciseBatteries = exerciseBatteryService.findAll();
                 List<Tag> allTags = tagService.findAll();
 
-                ExerciseTemplateDataDTO data =  new ExerciseTemplateDataDTO(exercise, allTemplateFiles, allExerciseBatteries, allTags);
+                ExerciseCommonDataDTO data =  new ExerciseCommonDataDTO(allExerciseBatteries, allTags);
 
                 return ResponseEntity.status(HttpStatus.OK).body(data);
 

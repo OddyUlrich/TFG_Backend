@@ -12,11 +12,9 @@ public class ExerciseTemplateDataDTO {
     List<ExerciseBattery> batteries;
     List<Tag> tags;
 
-    public ExerciseTemplateDataDTO(ExerciseDTO exercise, List<ExerciseFileDTO> files, List<ExerciseBattery> batteries, List<Tag> tags) {
+    public ExerciseTemplateDataDTO(ExerciseDTO exercise, List<ExerciseFileDTO> files) {
         this.exercise = exercise;
         this.files = files;
-        this.batteries = batteries;
-        this.tags = tags;
     }
 
     public ExerciseDTO getExercise() {
