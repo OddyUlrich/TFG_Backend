@@ -1,7 +1,6 @@
 package com.tfgbackend.controller;
 
-import com.tfgbackend.dto.ExerciseFileDTO;
-import com.tfgbackend.dto.SolutionCreationDTO;
+import com.tfgbackend.dto.*;
 import com.tfgbackend.exception.ResourceNotFoundException;
 import com.tfgbackend.model.Exercise;
 import com.tfgbackend.model.ExerciseFiles;
@@ -12,12 +11,14 @@ import com.tfgbackend.service.ExerciseFilesService;
 import com.tfgbackend.service.ExerciseService;
 import com.tfgbackend.service.SolutionService;
 import com.tfgbackend.service.UserService;
+import com.tfgbackend.service.wrapper.TemplateAndSolutionFiles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
@@ -25,7 +26,7 @@ import java.util.List;
 
 @RestController
 
-@RequestMapping("/solutions")
+@RequestMapping("/exercises/{exerciseId}/solutions")
 
 public class SolutionController {
 
@@ -44,8 +45,8 @@ public class SolutionController {
 
 
     //TODO ¿Esto debería de ser @Transactional para que se haga todo de una, no vaya a ser que guardemos una nueva solucion y luego los archivos fallen al guardarse y quede la solución sin nada. Ademas avisamos al frontend de ello?
-    @PostMapping(value = "/save", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Solution> save(@RequestBody SolutionCreationDTO data, Authentication auth) {
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Solution> saveSolution(@RequestBody SolutionCreationDTO data, Authentication auth) {
 
         List<ExerciseFileDTO> filesForDisplay = data.getFilesForDisplay();
         String exerciseId = data.getExerciseId();
@@ -100,6 +101,39 @@ public class SolutionController {
         System.out.println("Solution saved with ID: " + solution.getId());
 
         return ResponseEntity.status(status).body(solution);
+    }
 
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<CodeEditorDataDTO> getSolution(@PathVariable String exerciseId, Authentication auth) {
+
+        try {
+            if (auth != null && auth.isAuthenticated()) {
+
+                String email = auth.getName();
+                List<ExerciseFileDTO> allExerciseFilesAndLastSolution = exerciseFilesService.exerciseFilesAndLastSolutionByIdAndStudent(exerciseId, email);
+
+                //All the files that the code editor could use (exercise's template files and user's solution files)
+                TemplateAndSolutionFiles filteredFiles = exerciseFilesService.filterFiles(allExerciseFilesAndLastSolution);
+
+                //All basic information about the other solutions of this user to allow him/her to change to it
+                List<SolutionDTO> solutions = solutionService.allSolutionsByExerciseIdAndStudent(exerciseId, email);
+
+                //ID for the last updated solution (Probably the last one they worked on)
+                String currentSolution = exerciseFilesService.obtainSolutionFromExerciseFiles(allExerciseFilesAndLastSolution);
+
+                //All necessary information about the exercise the user is currently working on
+                ExerciseDTO exercise = exerciseService.findExerciseForEditorById(exerciseId);
+
+                //DTO for the frontend with all files and information needed
+                CodeEditorDataDTO data = new CodeEditorDataDTO(filteredFiles.getFilesForDisplay(), filteredFiles.getTemplateFiles(), solutions, currentSolution, exercise);
+
+                return ResponseEntity.status(HttpStatus.OK).body(data);
+            } else {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            }
+        } catch (ResourceNotFoundException e) {
+            System.out.println(e.getMessage());
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
+        }
     }
 }
