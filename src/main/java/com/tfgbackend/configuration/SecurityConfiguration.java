@@ -2,6 +2,7 @@ package com.tfgbackend.configuration;
 
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
@@ -49,6 +50,9 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests().requestMatchers("/login", "/signup", "/error", "/users/check").permitAll()
                 // Calquera outra peticion necesita, minimo, el rol de usuario
                 .anyRequest().authenticated()
+                .and()
+                .exceptionHandling().authenticationEntryPoint((request, response, authException) -> response.setStatus(HttpServletResponse.SC_UNAUTHORIZED))
+                .accessDeniedHandler((request, response, accessDeniedException) -> response.setStatus(HttpServletResponse.SC_FORBIDDEN))
                 .and()
                 // Engadimos os nosos filtros á cadea de filtros das chamadas
                 .apply(new CustomConfigurer(tokenSignKey()))

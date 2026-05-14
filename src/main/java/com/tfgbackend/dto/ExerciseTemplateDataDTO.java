@@ -9,8 +9,6 @@ public class ExerciseTemplateDataDTO {
 
     ExerciseDTO exercise;
     List<ExerciseFileDTO>  files;
-    List<ExerciseBattery> batteries;
-    List<Tag> tags;
 
     public ExerciseTemplateDataDTO(ExerciseDTO exercise, List<ExerciseFileDTO> files) {
         this.exercise = exercise;
@@ -31,21 +29,5 @@ public class ExerciseTemplateDataDTO {
 
     public void setFiles(List<ExerciseFileDTO> files) {
         this.files = files;
-    }
-
-    public List<ExerciseBattery> getBatteries() {
-        return batteries;
-    }
-
-    public void setBatteries(List<ExerciseBattery> batteries) {
-        this.batteries = batteries;
-    }
-
-    public List<Tag> getTags() {
-        return tags;
-    }
-
-    public void setTags(List<Tag> tags) {
-        this.tags = tags;
     }
 }

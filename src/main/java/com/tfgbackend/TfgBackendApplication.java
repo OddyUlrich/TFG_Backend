@@ -140,15 +140,15 @@ public class TfgBackendApplication implements CommandLineRunner {
         tr.save(interfaces);
 
 
-        ExerciseBattery bateria1 = new ExerciseBattery(batteryId1, "Bateria de Herencia");
-        ExerciseBattery bateria2 = new ExerciseBattery(batteryId2, "Bateria de Poliformismo");
-        ExerciseBattery bateria3 = new ExerciseBattery(batteryId3, "Bateria de Clases");
-        ExerciseBattery bateria4 = new ExerciseBattery(batteryId4, "Bateria de Encapsulación");
-        ExerciseBattery bateria5 = new ExerciseBattery(batteryId5, "Bateria de Abstracción");
-        ExerciseBattery bateria6 = new ExerciseBattery(batteryId6, "Bateria de Interfaces");
-        ExerciseBattery bateria7 = new ExerciseBattery(batteryId7, "Bateria de Ejemplo 1");
-        ExerciseBattery bateria8 = new ExerciseBattery(batteryId8, "Bateria de Ejemplo 2");
-        ExerciseBattery bateria9 = new ExerciseBattery(batteryId9, "Bateria de Ejemplo 3");
+        ExerciseBattery bateria1 = new ExerciseBattery(batteryId1.toString(), "Bateria de Herencia");
+        ExerciseBattery bateria2 = new ExerciseBattery(batteryId2.toString(), "Bateria de Poliformismo");
+        ExerciseBattery bateria3 = new ExerciseBattery(batteryId3.toString(), "Bateria de Clases");
+        ExerciseBattery bateria4 = new ExerciseBattery(batteryId4.toString(), "Bateria de Encapsulación");
+        ExerciseBattery bateria5 = new ExerciseBattery(batteryId5.toString(), "Bateria de Abstracción");
+        ExerciseBattery bateria6 = new ExerciseBattery(batteryId6.toString(), "Bateria de Interfaces");
+        ExerciseBattery bateria7 = new ExerciseBattery(batteryId7.toString(), "Bateria de Ejemplo 1");
+        ExerciseBattery bateria8 = new ExerciseBattery(batteryId8.toString(), "Bateria de Ejemplo 2");
+        ExerciseBattery bateria9 = new ExerciseBattery(batteryId9.toString(), "Bateria de Ejemplo 3");
 
         ebr.save(bateria1);
         ebr.save(bateria2);

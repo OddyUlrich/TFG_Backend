@@ -33,15 +33,19 @@ public class AuthorizationFilter extends BasicAuthenticationFilter {
         try{
             Cookie[] cookies = request.getCookies();
             if (cookies == null) {
+                SecurityContextHolder.clearContext();
                 chain.doFilter(request, response);
                 return;
             }
+
+            boolean authenticated = false;
 
             // Find the cookie with the cookie name for the JWT token
             for (Cookie cookie : cookies) {
                 if (!cookie.getName().equals("Authentication")) {
                     continue;
                 }
+
                 // No caso de que o token sexa un JWT, comprobamos que sexa valido
                 UsernamePasswordAuthenticationToken authentication = getAuthentication(cookie.getValue());
 
@@ -49,14 +53,19 @@ public class AuthorizationFilter extends BasicAuthenticationFilter {
                 // nos nosos servizos
                 SecurityContextHolder.getContext().setAuthentication(authentication);
 
+                authenticated = true;
                 break;
+            }
+
+            if (!authenticated) {
+                SecurityContextHolder.clearContext();
             }
 
             chain.doFilter(request, response);
 
         } catch(ExpiredJwtException e){
-            // Se se sobrepasou a duración do token devolvemos un erro 419.
-            response.setStatus(419);
+            SecurityContextHolder.clearContext();
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         }
     }
 
