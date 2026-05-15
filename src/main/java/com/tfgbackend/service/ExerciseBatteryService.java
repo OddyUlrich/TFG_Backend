@@ -13,12 +13,19 @@ public class ExerciseBatteryService {
     private final ExerciseBatteryRepository ebr;
 
     @Autowired
-    public ExerciseBatteryService(ExerciseBatteryRepository ebr){
+    public ExerciseBatteryService(ExerciseBatteryRepository ebr) {
         this.ebr = ebr;
     }
 
-    public List<ExerciseBattery> findAll(){
+    public List<ExerciseBattery> findAll() {
         return this.ebr.findAll();
     }
 
+    public ExerciseBattery findBatteryByName(String batteryName) {
+        return ebr.findByName(batteryName);
+    }
+
+    public void saveBattery(ExerciseBattery battery){
+        ebr.save(battery);
+    }
 }

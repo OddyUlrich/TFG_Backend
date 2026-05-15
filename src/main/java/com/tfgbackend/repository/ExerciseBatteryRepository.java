@@ -10,4 +10,6 @@ import java.util.List;
 public interface ExerciseBatteryRepository extends MongoRepository<ExerciseBattery, Long> {
 
     List<ExerciseBattery> findAll();
+
+    ExerciseBattery findByName(String name);
 }

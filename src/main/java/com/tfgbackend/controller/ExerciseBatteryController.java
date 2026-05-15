@@ -1,16 +1,16 @@
 package com.tfgbackend.controller;
 
+import com.tfgbackend.dto.SolutionCreationDTO;
 import com.tfgbackend.exception.ResourceNotFoundException;
 import com.tfgbackend.model.ExerciseBattery;
+import com.tfgbackend.model.Solution;
 import com.tfgbackend.service.ExerciseBatteryService;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
@@ -29,21 +29,35 @@ public class ExerciseBatteryController {
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<ExerciseBattery>> allExerciseBatteries(Authentication auth) {
 
-        try {
-            if (auth != null && auth.isAuthenticated()) {
-                List<ExerciseBattery> allExerciseBatteries = exerciseBatteryService.findAll();
+        if (auth != null && auth.isAuthenticated()) {
+            List<ExerciseBattery> allExerciseBatteries = exerciseBatteryService.findAll();
 
-                return ResponseEntity.status(HttpStatus.OK).body(allExerciseBatteries);
-            }else {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            return ResponseEntity.status(HttpStatus.OK).body(allExerciseBatteries);
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+    }
+
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ExerciseBattery> saveBattery(@RequestBody ExerciseBattery data, Authentication auth) {
+
+        String batteryName = data.getName();
+
+        if (auth != null && auth.isAuthenticated()) {
+
+            ExerciseBattery batteryInDatabase = exerciseBatteryService.findBatteryByName(batteryName);
+
+            if (batteryInDatabase != null) {
+                throw new ResponseStatusException(HttpStatus.CONFLICT);
             }
 
-        } catch (ResourceNotFoundException e) {
-            System.out.println(e.getMessage());
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
+            ExerciseBattery newBattery = new ExerciseBattery(batteryName);
+            exerciseBatteryService.saveBattery(newBattery);
+
+            return ResponseEntity.status(HttpStatus.CREATED).body(newBattery);
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
-
-
     }
 
 }
