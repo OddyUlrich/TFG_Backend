@@ -1,9 +1,6 @@
 package com.tfgbackend.controller;
 
-import com.tfgbackend.dto.SolutionCreationDTO;
-import com.tfgbackend.exception.ResourceNotFoundException;
 import com.tfgbackend.model.ExerciseBattery;
-import com.tfgbackend.model.Solution;
 import com.tfgbackend.service.ExerciseBatteryService;
 
 import org.springframework.http.HttpStatus;

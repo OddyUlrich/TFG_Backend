@@ -1,7 +1,6 @@
 package com.tfgbackend.model;
 
 import jakarta.validation.constraints.NotBlank;
-import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -12,6 +11,8 @@ public class ExerciseBattery {
     private String id;
     @Indexed(unique = true)
     private @NotBlank String name;
+
+    public ExerciseBattery() { }
 
     public ExerciseBattery(String id, String name) {
         this.id = id;

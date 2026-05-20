@@ -20,4 +20,10 @@ public class TagService {
     public List<Tag> findAll(){
         return this.tr.findAll();
     }
+
+    public Tag findByNAme(String tagName){
+        return tr.findByName(tagName);
+    }
+
+    public void saveTag (Tag tag){tr.save(tag);}
 }

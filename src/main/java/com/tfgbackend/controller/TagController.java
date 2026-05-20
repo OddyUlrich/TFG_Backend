@@ -7,9 +7,7 @@ import com.tfgbackend.service.TagService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
@@ -40,6 +38,28 @@ public class TagController {
         } catch (ResourceNotFoundException e) {
             System.out.println(e.getMessage());
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
+        }
+    }
+
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Tag> saveBattery(@RequestBody Tag data, Authentication auth) {
+
+        String tagName = data.name();
+
+        if (auth != null && auth.isAuthenticated()) {
+
+            Tag tagInDatabase = tagService.findByNAme(tagName);
+
+            if (tagInDatabase != null) {
+                throw new ResponseStatusException(HttpStatus.CONFLICT);
+            }
+
+            Tag newTag = new Tag(tagName);
+            tagService.saveTag(newTag);
+
+            return ResponseEntity.status(HttpStatus.CREATED).body(newTag);
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
     }
 }

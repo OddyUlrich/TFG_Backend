@@ -11,4 +11,5 @@ public interface TagRepository extends MongoRepository<Tag, Long> {
 
     List<Tag> findAll();
 
+    Tag findByName(String tagName);
 }
