@@ -8,7 +8,7 @@ import java.util.List;
 public class ExerciseTemplateDataDTO {
 
     ExerciseDTO exercise;
-    List<ExerciseFileDTO>  files;
+    List<ExerciseFileDTO> files;
 
     public ExerciseTemplateDataDTO(ExerciseDTO exercise, List<ExerciseFileDTO> files) {
         this.exercise = exercise;

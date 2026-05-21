@@ -2,6 +2,7 @@ package com.tfgbackend.controller;
 
 import com.tfgbackend.dto.*;
 import com.tfgbackend.exception.ResourceNotFoundException;
+import com.tfgbackend.model.Tag;
 import com.tfgbackend.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -67,13 +68,17 @@ public class ExerciseController {
     }
 
     @PostMapping(value = "/{exerciseId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ExerciseTemplateDataDTO> newExercise(@PathVariable String exerciseId, Authentication auth) {
+    public ResponseEntity<ExerciseTemplateDataDTO> newExercise(@RequestBody ExerciseTemplateDataDTO data, Authentication auth) {
+
+        System.out.println(data);
 
         return null;
     }
 
     @PatchMapping(value = "/{exerciseId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ExerciseTemplateDataDTO> editExercise(@PathVariable String exerciseId, Authentication auth) {
+    public ResponseEntity<ExerciseTemplateDataDTO> editExercise(@RequestBody ExerciseTemplateDataDTO data, Authentication auth) {
+
+        System.out.println(data);
 
         return null;
     }

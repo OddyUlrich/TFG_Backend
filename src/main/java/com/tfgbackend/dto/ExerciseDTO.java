@@ -1,5 +1,6 @@
 package com.tfgbackend.dto;
 
+import com.tfgbackend.model.Rule;
 import com.tfgbackend.model.Tag;
 import java.util.List;
 
@@ -8,13 +9,13 @@ public class ExerciseDTO {
     private String id;
     private String name;
     private String statement;
-    private List<String> rules;
+    private List<Rule> rules;
     private String successCondition;
     private List<Tag> tags;
     private String idFromBattery;
     private String nameFromBattery;
 
-    public ExerciseDTO(String id, String name, String statement, List<String> rules, String successCondition, List<Tag> tags, String idFromBattery, String nameFromBattery) {
+    public ExerciseDTO(String id, String name, String statement, List<Rule> rules, String successCondition, List<Tag> tags, String idFromBattery, String nameFromBattery) {
         this.id = id;
         this.name = name;
         this.statement = statement;
@@ -49,11 +50,11 @@ public class ExerciseDTO {
         this.statement = statement;
     }
 
-    public List<String> getRules() {
+    public List<Rule> getRules() {
         return rules;
     }
 
-    public void setRules(List<String> rules) {
+    public void setRules(List<Rule> rules) {
         this.rules = rules;
     }
 
