@@ -15,14 +15,13 @@ public class ExerciseDTO {
     private String idFromBattery;
     private String nameFromBattery;
 
-    public ExerciseDTO(String id, String name, String statement, List<Rule> rules, String successCondition, List<Tag> tags, String idFromBattery, String nameFromBattery) {
+    public ExerciseDTO(String id, String name, String statement, List<Rule> rules, String successCondition, List<Tag> tags, String nameFromBattery) {
         this.id = id;
         this.name = name;
         this.statement = statement;
         this.rules = rules;
         this.successCondition = successCondition;
         this.tags = tags;
-        this.idFromBattery = idFromBattery;
         this.nameFromBattery = nameFromBattery;
     }
 
