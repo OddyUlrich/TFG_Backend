@@ -21,9 +21,13 @@ public class TagService {
         return this.tr.findAll();
     }
 
-    public Tag findByNAme(String tagName){
+    public Tag findByName(String tagName){
         return tr.findByName(tagName);
     }
 
     public void saveTag (Tag tag){tr.save(tag);}
+
+    public List<Tag> findByNameIn (List<String> tagNames){
+        return tr.findByNameIn(tagNames);
+    }
 }

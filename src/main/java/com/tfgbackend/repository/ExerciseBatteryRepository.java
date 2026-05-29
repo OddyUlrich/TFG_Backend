@@ -5,11 +5,12 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ExerciseBatteryRepository extends MongoRepository<ExerciseBattery, Long> {
 
     List<ExerciseBattery> findAll();
 
-    ExerciseBattery findByName(String name);
+    Optional<ExerciseBattery> findByName(String name);
 }

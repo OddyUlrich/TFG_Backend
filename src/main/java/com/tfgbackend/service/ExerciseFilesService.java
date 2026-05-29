@@ -34,7 +34,7 @@ public class ExerciseFilesService {
     }
 
     public List<ExerciseFileDTO> exerciseFilesAndLastSolutionByIdAndStudent(String exerciseId, String email){
-        User user = us.getUser(email);
+        User user = us.getUserByEmail(email);
 
         List<ExerciseFileDTO> list = efr.exerciseFilesAndLastSolutionByIdAndStudent(new ObjectId(exerciseId), new ObjectId(user.getId())).orElseThrow(() -> new ResourceNotFoundException("Files about this exercise could not be obtained"));
         for (ExerciseFileDTO file : list){

@@ -57,7 +57,7 @@ public class UserService {
         }
     }
 
-    public User getUser(String email) throws ResourceNotFoundException {
+    public User getUserByEmail(String email) throws ResourceNotFoundException {
         return ur.findUserByEmail(email).orElseThrow(() -> new ResourceNotFoundException("User does not exist with that email"));
     }
 

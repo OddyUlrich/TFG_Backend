@@ -1,5 +1,6 @@
 package com.tfgbackend.service;
 
+import com.tfgbackend.exception.ResourceNotFoundException;
 import com.tfgbackend.model.ExerciseBattery;
 import com.tfgbackend.repository.ExerciseBatteryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,7 @@ public class ExerciseBatteryService {
     }
 
     public ExerciseBattery findBatteryByName(String batteryName) {
-        return ebr.findByName(batteryName);
+        return ebr.findByName(batteryName).orElseThrow(() -> new ResourceNotFoundException("Battery not found"));
     }
 
     public void saveBattery(ExerciseBattery battery){

@@ -3,11 +3,13 @@ package com.tfgbackend.model;
 public class EditableMethod {
 
     private String name;
-    private int line;
+    private int startLine;
+    private int endLine;
 
-    public EditableMethod(String name, int line) {
+    public EditableMethod(String name, int startLine, int endLine) {
         this.name = name;
-        this.line = line;
+        this.startLine = startLine;
+        this.endLine = endLine;
     }
 
     public String getName() {
@@ -18,11 +20,19 @@ public class EditableMethod {
         this.name = name;
     }
 
-    public int getLine() {
-        return line;
+    public int getStartLine() {
+        return startLine;
     }
 
-    public void setLine(int line) {
-        this.line = line;
+    public void setStartLine(int startLine) {
+        this.startLine = startLine;
+    }
+
+    public int getEndLine() {
+        return endLine;
+    }
+
+    public void setEndLine(int endLine) {
+        this.endLine = endLine;
     }
 }

@@ -48,7 +48,7 @@ public class TagController {
 
         if (auth != null && auth.isAuthenticated()) {
 
-            Tag tagInDatabase = tagService.findByNAme(tagName);
+            Tag tagInDatabase = tagService.findByName(tagName);
 
             if (tagInDatabase != null) {
                 throw new ResponseStatusException(HttpStatus.CONFLICT);

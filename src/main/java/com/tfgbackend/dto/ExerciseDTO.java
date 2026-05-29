@@ -11,18 +11,17 @@ public class ExerciseDTO {
     private String statement;
     private List<Rule> rules;
     private String successCondition;
-    private List<Tag> tags;
-    private String idFromBattery;
+    private List<String> tags;
     private String nameFromBattery;
 
-    public ExerciseDTO(String id, String name, String statement, List<Rule> rules, String successCondition, List<Tag> tags, String nameFromBattery) {
+    public ExerciseDTO(String id, String name, String statement, List<Rule> rules, String successCondition, List<String> tags, String nameFromBattery) {
         this.id = id;
         this.name = name;
         this.statement = statement;
-        this.rules = rules;
-        this.successCondition = successCondition;
-        this.tags = tags;
         this.nameFromBattery = nameFromBattery;
+        this.rules = rules;
+        this.tags = tags;
+        this.successCondition = successCondition;
     }
 
     public String getId() {
@@ -65,20 +64,12 @@ public class ExerciseDTO {
         this.successCondition = successCondition;
     }
 
-    public List<Tag> getTags() {
+    public List<String> getTags() {
         return tags;
     }
 
-    public void setTags(List<Tag> tags) {
+    public void setTags(List<String> tags) {
         this.tags = tags;
-    }
-
-    public String getIdFromBattery() {
-        return idFromBattery;
-    }
-
-    public void setIdFromBattery(String idFromBattery) {
-        this.idFromBattery = idFromBattery;
     }
 
     public String getNameFromBattery() {

@@ -19,24 +19,24 @@ public class Exercise {
     private String id;
     private @NotBlank String name;
     private /*@NotBlank*/ String statement;
-    private /*@NotEmpty*/ List<String> rules;
-    private /*@NotBlank*/ String successCondition;
-    @DBRef
-    private List<Tag> tags;
     @DBRef(lazy = true)
     private /*@NotNull*/ @Valid ExerciseBattery exerciseBattery;
+    private /*@NotEmpty*/ List<Rule> rules;
+    @DBRef
+    private List<Tag> tags;
+    private /*@NotBlank*/ String successCondition;
     @DBRef(lazy = true)
     private @NotNull @IsTeacher @Valid User teacher;
     private @NotNull LocalDateTime creationTimestamp;
 
-    public Exercise(String id, String name, String statement, List<String> rules, String successCondition, List<Tag> tags, ExerciseBattery exerciseBattery, User teacher, LocalDateTime creationTimestamp) {
+    public Exercise(String id, String name, String statement, ExerciseBattery exerciseBattery, List<Rule> rules, List<Tag> tags, String successCondition,  User teacher, LocalDateTime creationTimestamp) {
         this.id = id;
         this.name = name;
         this.statement = statement;
-        this.rules = rules;
-        this.successCondition = successCondition;
-        this.tags = tags;
         this.exerciseBattery = exerciseBattery;
+        this.rules = rules;
+        this.tags = tags;
+        this.successCondition = successCondition;
         this.teacher = teacher;
         this.creationTimestamp = creationTimestamp;
     }
@@ -65,11 +65,11 @@ public class Exercise {
         this.statement = statement;
     }
 
-    public List<String> getRules() {
+    public List<Rule> getRules() {
         return rules;
     }
 
-    public void setRules(List<String> rules) {
+    public void setRules(List<Rule> rules) {
         this.rules = rules;
     }
 

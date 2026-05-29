@@ -2,7 +2,7 @@ package com.tfgbackend.controller;
 
 import com.tfgbackend.dto.*;
 import com.tfgbackend.exception.ResourceNotFoundException;
-import com.tfgbackend.model.Tag;
+import com.tfgbackend.model.Exercise;
 import com.tfgbackend.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -53,11 +53,11 @@ public class ExerciseController {
                 ExerciseDTO exercise = exerciseService.findExerciseForEditorById(exerciseId);
                 List<ExerciseFileDTO> allTemplateFiles = exerciseFilesService.templateFilesByExerciseId(exerciseId);
 
-                ExerciseTemplateDataDTO data =  new ExerciseTemplateDataDTO(exercise, allTemplateFiles);
+                ExerciseTemplateDataDTO data = new ExerciseTemplateDataDTO(exercise, allTemplateFiles);
 
                 return ResponseEntity.status(HttpStatus.OK).body(data);
 
-            }else {
+            } else {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
             }
 
@@ -67,12 +67,19 @@ public class ExerciseController {
         }
     }
 
-    @PostMapping(value = "/{exerciseId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<ExerciseTemplateDataDTO> newExercise(@RequestBody ExerciseTemplateDataDTO data, Authentication auth) {
 
-        System.out.println(data);
+        if (auth == null || !auth.isAuthenticated()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
 
-        return null;
+        ExerciseDTO exerciseDTO = data.getExercise();
+        List<ExerciseFileDTO> templateFiles = data.getFiles();
+
+        Exercise newExercise = exerciseService.createFromDTO(exerciseDTO, auth.getName());
+
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PatchMapping(value = "/{exerciseId}", produces = MediaType.APPLICATION_JSON_VALUE)

@@ -3,6 +3,7 @@ package com.tfgbackend.repository;
 import com.tfgbackend.dto.ExerciseDTO;
 import com.tfgbackend.model.Exercise;
 import com.tfgbackend.dto.ExerciseHomeDTO;
+import com.tfgbackend.model.ExerciseBattery;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.repository.Aggregation;
 import org.springframework.data.mongodb.repository.MongoRepository;
@@ -113,6 +114,8 @@ public interface ExerciseRepository extends MongoRepository<Exercise, Long> {
     Optional<ExerciseDTO> findExerciseForEditorById(ObjectId id);
 
     Optional<Exercise> findExerciseById(String id);
+
+    boolean existsByNameAndExerciseBattery(String name, ExerciseBattery exerciseBattery);
 }
 
 

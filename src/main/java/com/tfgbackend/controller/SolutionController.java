@@ -53,7 +53,7 @@ public class SolutionController {
         String solutionId = data.getSolutionId();
         String email = auth.getName();
 
-        User user = userService.getUser(email);
+        User user = userService.getUserByEmail(email);
         Exercise exercise = exerciseService.findExerciseById(exerciseId);
 
         Solution solution;

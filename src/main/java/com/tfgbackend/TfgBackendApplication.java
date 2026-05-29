@@ -24,6 +24,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.Month;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
@@ -161,22 +162,22 @@ public class TfgBackendApplication implements CommandLineRunner {
         ebr.save(bateria9);
 
 
-        Exercise ejercicio1 = new Exercise(exerciseId1.toString(), "Ejercicio 1", "", List.of(), "", List.of(herencia, getter), bateria1, profesor, LocalDateTime.now());
-        Exercise ejercicio3 = new Exercise(exerciseId3.toString(), "Ejercicio 3", "", List.of(), "", List.of(herencia, getter), bateria1, profesor, LocalDateTime.of(2015,
+        Exercise ejercicio1 = new Exercise(exerciseId1.toString(), "Ejercicio 1", "", bateria1, Collections.emptyList(), List.of(herencia, getter), "", profesor, LocalDateTime.now());
+        Exercise ejercicio3 = new Exercise(exerciseId3.toString(), "Ejercicio 3", "", bateria1, Collections.emptyList(), List.of(herencia, getter), "", profesor, LocalDateTime.of(2015,
                 Month.MAY, 29, 19, 30, 40));
-        Exercise ejercicio4 = new Exercise(exerciseId4.toString(), "Ejercicio 4", "", List.of(), "", List.of(herencia, getter), bateria1, profesor, LocalDateTime.now());
-        Exercise ejercicio5 = new Exercise(exerciseId5.toString(), "Ejercicio 5", "", List.of(), "", List.of(herencia, getter), bateria1, profesor, LocalDateTime.of(2025,
+        Exercise ejercicio4 = new Exercise(exerciseId4.toString(), "Ejercicio 4", "", bateria1, Collections.emptyList(), List.of(herencia, getter), "", profesor, LocalDateTime.now());
+        Exercise ejercicio5 = new Exercise(exerciseId5.toString(), "Ejercicio 5", "", bateria1, Collections.emptyList(), List.of(herencia, getter), "", profesor, LocalDateTime.of(2025,
                 Month.MAY, 29, 22, 49, 1));
-        Exercise ejercicio6 = new Exercise(exerciseId6.toString(), "Ejercicio 6", "", List.of(), "", List.of(herencia, getter), bateria2, profesor, LocalDateTime.of(2015,
+        Exercise ejercicio6 = new Exercise(exerciseId6.toString(), "Ejercicio 6", "", bateria2, Collections.emptyList(), List.of(herencia, getter), "", profesor, LocalDateTime.of(2015,
                 Month.MAY, 29, 19, 30, 40));
-        Exercise ejercicio7 = new Exercise(exerciseId7.toString(), "Ejercicio 7", "", List.of(), "", List.of(herencia, getter), bateria4, profesor, LocalDateTime.of(2015,
+        Exercise ejercicio7 = new Exercise(exerciseId7.toString(), "Ejercicio 7", "", bateria4, Collections.emptyList(), List.of(herencia, getter), "", profesor, LocalDateTime.of(2015,
                 Month.MAY, 29, 19, 30, 40));
-        Exercise ejercicio8 = new Exercise(exerciseId8.toString(), "Ejercicio 8", "", List.of(), "", List.of(herencia, getter), bateria2, profesor, LocalDateTime.now());
-        Exercise ejercicio9 = new Exercise(exerciseId9.toString(), "Ejercicio 9", "", List.of(), "", List.of(herencia, getter), bateria2, profesor, LocalDateTime.now());
-        Exercise ejercicio10 = new Exercise(exerciseId10.toString(), "Ejercicio 10", "", List.of(), "", List.of(herencia, getter), bateria3, profesor, LocalDateTime.now());
-        Exercise ejercicio11 = new Exercise(exerciseId11.toString(), "Ejercicio 11", "", List.of(), "", List.of(herencia, getter), bateria3, profesor, LocalDateTime.of(2015,
+        Exercise ejercicio8 = new Exercise(exerciseId8.toString(), "Ejercicio 8", "", bateria2, Collections.emptyList(), List.of(herencia, getter), "", profesor, LocalDateTime.now());
+        Exercise ejercicio9 = new Exercise(exerciseId9.toString(), "Ejercicio 9", "", bateria2, Collections.emptyList(), List.of(herencia, getter), "", profesor, LocalDateTime.now());
+        Exercise ejercicio10 = new Exercise(exerciseId10.toString(), "Ejercicio 10", "", bateria3, Collections.emptyList(), List.of(herencia, getter), "", profesor, LocalDateTime.now());
+        Exercise ejercicio11 = new Exercise(exerciseId11.toString(), "Ejercicio 11", "", bateria3, Collections.emptyList(), List.of(herencia, getter), "", profesor, LocalDateTime.of(2015,
                 Month.MAY, 29, 19, 30, 40));
-        Exercise ejercicio2 = new Exercise(exerciseId2.toString(), "Ejercicio 2", "", List.of(), "", List.of(herencia, getter), bateria2, profesor, LocalDateTime.of(2015,
+        Exercise ejercicio2 = new Exercise(exerciseId2.toString(), "Ejercicio 2", "", bateria2, Collections.emptyList(), List.of(herencia, getter), "", profesor, LocalDateTime.of(2015,
                 Month.MAY, 29, 19, 30, 40));
 
         er.save(ejercicio1);
@@ -220,7 +221,7 @@ public class TfgBackendApplication implements CommandLineRunner {
         solutionRepository.save(solucion7);
         solutionRepository.save(solucion8);
 
-        EditableMethod metodosEjercicio1 = new EditableMethod("Pepe", 18);
+        EditableMethod metodosEjercicio1 = new EditableMethod("Pepe", -1, -1);
 
         //FILES
         try (Stream<Path> filePathStream = Files.walk(Paths.get("E:/Escritorio/A"))) {

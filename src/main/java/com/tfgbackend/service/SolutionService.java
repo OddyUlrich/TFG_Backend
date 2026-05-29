@@ -24,7 +24,7 @@ public class SolutionService {
     }
 
     public List<SolutionDTO> allSolutionsByExerciseIdAndStudent(String exerciseId, String email){
-        User user = us.getUser(email);
+        User user = us.getUserByEmail(email);
         return sr.allSolutionsByExerciseIdAndStudent(new ObjectId(exerciseId), new ObjectId(user.getId())).orElseThrow(() -> new ResourceNotFoundException("Solutions about exercise could not be obtained"));
     }
 
