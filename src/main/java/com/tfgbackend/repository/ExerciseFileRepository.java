@@ -1,7 +1,7 @@
 package com.tfgbackend.repository;
 
 import com.tfgbackend.dto.ExerciseFileDTO;
-import com.tfgbackend.model.ExerciseFiles;
+import com.tfgbackend.model.ExerciseFile;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.repository.Aggregation;
 import org.springframework.data.mongodb.repository.MongoRepository;
@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface ExerciseFileRepository extends MongoRepository<ExerciseFiles, Long> {
+public interface ExerciseFileRepository extends MongoRepository<ExerciseFile, Long> {
 
 
     /*
@@ -214,5 +214,5 @@ public interface ExerciseFileRepository extends MongoRepository<ExerciseFiles, L
                     "]" +
                     "}}",
     })
-    ExerciseFiles findByNameAndSolutionId(String name, ObjectId solutionId);
+    ExerciseFile findByNameAndSolutionId(String name, ObjectId solutionId);
 }

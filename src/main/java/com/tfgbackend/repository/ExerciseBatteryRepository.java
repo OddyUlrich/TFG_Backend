@@ -12,5 +12,5 @@ public interface ExerciseBatteryRepository extends MongoRepository<ExerciseBatte
 
     List<ExerciseBattery> findAll();
 
-    Optional<ExerciseBattery> findByName(String name);
+    ExerciseBattery findByName(String name);
 }

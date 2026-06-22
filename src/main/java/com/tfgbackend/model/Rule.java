@@ -1,16 +1,15 @@
 package com.tfgbackend.model;
 
-import jakarta.validation.constraints.NotBlank;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+import dev.langchain4j.model.output.structured.Description;
 
-@Document
 public record Rule(
-        @Id
-        String id,
-        @NotBlank
-        String name,
-        @NotBlank
-        String type) {
+        @Description("A brief and concise description of the rule students must follow when completing the exercise")
+        String description
+) {
+
+        @Override
+        public String toString() {
+                return description;
+        }
 
 }

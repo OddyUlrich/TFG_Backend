@@ -5,7 +5,6 @@ import com.tfgbackend.model.Exercise;
 import com.tfgbackend.model.ExerciseBattery;
 import com.tfgbackend.model.Tag;
 import com.tfgbackend.model.User;
-
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -23,12 +22,11 @@ public class ExerciseMapper {
                 dto.getName(),
                 dto.getStatement(),
                 battery,
-                dto.getRules(),
+                dto.getRequiredRules(),
+                dto.getForbiddenRules(),
                 tags,
-                dto.getSuccessCondition(),
                 teacher,
                 creationDate
-
         );
     }
 }

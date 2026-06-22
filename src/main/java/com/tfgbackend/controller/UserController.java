@@ -27,13 +27,11 @@ import static com.tfgbackend.configuration.Util.successfulCookieAuthentication;
 public class UserController {
 
     private final UserService userService;
-    private final ExerciseService exerciseService;
     private final Key key;
 
     @Autowired
-    public UserController(UserService userService, ExerciseService exerciseService, Key key) {
+    public UserController(UserService userService, Key key) {
         this.userService = userService;
-        this.exerciseService = exerciseService;
         this.key = key;
     }
 
@@ -88,29 +86,5 @@ public class UserController {
         }
 
         return ResponseEntity.ok().build();
-    }
-
-    @PatchMapping("/users/favorites/{exerciseId}")
-    public ResponseEntity<User> changeFavorite(@PathVariable String exerciseId, Authentication auth) {
-
-        try {
-            if (auth != null && auth.isAuthenticated()) {
-                //Obtenemos el email del usuario que realiza la peticion
-                String email = auth.getName();
-
-                //Comprobamos si el ejercicio existe buscando por su ID
-                Exercise exercise = exerciseService.findExerciseById(exerciseId);
-
-                //Con el email del usuario y el ID del ejercicio procedemos a agregar o quitar el ejercicio de favoritos
-                userService.updateUserFavorites(email, exercise.getId());
-                return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
-            } else {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-            }
-
-        } catch (ResourceNotFoundException e) {
-            System.out.println(e.getMessage());
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
-        }
     }
 }

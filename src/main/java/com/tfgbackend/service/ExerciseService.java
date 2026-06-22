@@ -3,10 +3,7 @@ package com.tfgbackend.service;
 import com.tfgbackend.dto.ExerciseDTO;
 import com.tfgbackend.exception.ResourceNotFoundException;
 import com.tfgbackend.mappers.ExerciseMapper;
-import com.tfgbackend.model.Exercise;
-import com.tfgbackend.model.ExerciseBattery;
-import com.tfgbackend.model.Tag;
-import com.tfgbackend.model.User;
+import com.tfgbackend.model.*;
 import com.tfgbackend.repository.ExerciseRepository;
 import com.tfgbackend.dto.ExerciseHomeDTO;
 import org.bson.types.ObjectId;
@@ -16,7 +13,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class ExerciseService {
@@ -50,14 +49,17 @@ public class ExerciseService {
     public Exercise createFromDTO(ExerciseDTO exerciseDTO, String teacherEmail){
 
         ExerciseBattery battery = ebs.findBatteryByName(exerciseDTO.getNameFromBattery());
+        if (battery == null) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You have not selected an exercise battery or it does not exist");
         validateUniqueExercise(exerciseDTO.getName(), battery);
 
+        //TODO COMPROBAR QUE SEA TEACHER
         User teacher = us.getUserByEmail(teacherEmail);
         List<Tag> tags = ts.findByNameIn(exerciseDTO.getTags());
 
         Exercise exercise = ExerciseMapper.toEntity(exerciseDTO, battery, tags, teacher, LocalDateTime.now());
 
         return er.save(exercise);
+
     }
 
     private void validateUniqueExercise(String name, ExerciseBattery battery) {

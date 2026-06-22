@@ -23,7 +23,7 @@ public class ExerciseBatteryService {
     }
 
     public ExerciseBattery findBatteryByName(String batteryName) {
-        return ebr.findByName(batteryName).orElseThrow(() -> new ResourceNotFoundException("Battery not found"));
+        return ebr.findByName(batteryName);
     }
 
     public void saveBattery(ExerciseBattery battery){

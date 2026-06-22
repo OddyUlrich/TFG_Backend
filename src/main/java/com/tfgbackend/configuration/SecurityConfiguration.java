@@ -1,5 +1,7 @@
 package com.tfgbackend.configuration;
 
+import com.tfgbackend.filter.LoginFilter;
+import com.tfgbackend.filter.AuthenticationFilter;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.HttpServletResponse;
@@ -15,11 +17,13 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
@@ -43,22 +47,35 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http, AuthenticationManager authManager) throws Exception {
 
-        http.cors().and().csrf().disable()
-                // Indicamos que por defecto permitimos o acceso a login por parte de calqueira
-                .authorizeHttpRequests().requestMatchers("/login", "/signup", "/error", "/users/check").permitAll()
+        LoginFilter authFilter = new LoginFilter(authManager, tokenSignKey());
+
+        http
+            .cors(cors -> {})
+            .csrf(AbstractHttpConfigurer::disable)
+            // Indicamos que por defecto permitimos o acceso a login por parte de calqueira
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers("/login", "/signup", "/error", "/users/check").permitAll()
                 // Calquera outra peticion necesita, minimo, el rol de usuario
                 .anyRequest().authenticated()
-                .and()
-                .exceptionHandling().authenticationEntryPoint((request, response, authException) -> response.setStatus(HttpServletResponse.SC_UNAUTHORIZED))
-                .accessDeniedHandler((request, response, accessDeniedException) -> response.setStatus(HttpServletResponse.SC_FORBIDDEN))
-                .and()
-                // Engadimos os nosos filtros á cadea de filtros das chamadas
-                .apply(new CustomConfigurer(tokenSignKey()))
-                .and()
-                // Especificamos que queremos sesións sen estado (REST é, por definición, sen estado)
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+            )
+            .exceptionHandling(ex -> ex.
+                authenticationEntryPoint((request, response, authException) ->
+                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED)
+                )
+                .accessDeniedHandler((request, response, accessDeniedException) ->
+                    response.setStatus(HttpServletResponse.SC_FORBIDDEN)
+                )
+            )
+            // Especificamos que queremos sesións sen estado (REST é, por definición, sen estado)
+            .sessionManagement(session -> session
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            )
+            // Engadimos os nosos filtros á cadea de filtros das chamadas
+            .addFilter(authFilter)
+            .addFilterBefore(new AuthenticationFilter(tokenSignKey()), UsernamePasswordAuthenticationFilter.class);
+
         return http.build();
     }
 

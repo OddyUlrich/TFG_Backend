@@ -6,7 +6,6 @@ import com.tfgbackend.forms.SignUpForm;
 import com.tfgbackend.model.User;
 import com.tfgbackend.model.enumerator.Rol;
 import com.tfgbackend.repository.UserRepository;
-import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -40,21 +39,6 @@ public class UserService {
         User finalUser = new User(null, userData.getUsername(), encoder.encode(userData.getPassword()), userData.getEmail(), LocalDateTime.now(), List.of(Rol.STUDENT), List.of());
         return ur.insert(finalUser);
 
-    }
-
-    public void updateUserFavorites(String email, String exerciseId) throws ResourceNotFoundException {
-        User updateUser = ur.findUserByEmail(email).orElseThrow(() -> new ResourceNotFoundException("User does not exist with that ID"));
-
-        List<ObjectId> favoriteList = updateUser.getFavoriteExercises();
-        ObjectId exerciseObjectId = new ObjectId(exerciseId);
-
-        if (favoriteList.contains(exerciseObjectId)) {
-            favoriteList.remove(exerciseObjectId);
-            ur.updateUserFavorites(updateUser.getId(), favoriteList);
-        } else {
-            favoriteList.add(exerciseObjectId);
-            ur.updateUserFavorites(updateUser.getId(), favoriteList);
-        }
     }
 
     public User getUserByEmail(String email) throws ResourceNotFoundException {

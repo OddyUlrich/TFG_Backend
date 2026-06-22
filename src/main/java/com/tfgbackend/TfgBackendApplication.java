@@ -1,6 +1,6 @@
 package com.tfgbackend;
 
-import com.github.javaparser.ast.CompilationUnit;
+import com.tfgbackend.llm.RuleProcessorAiService;
 import com.tfgbackend.model.*;
 import com.tfgbackend.model.enumerator.Rol;
 import com.tfgbackend.model.enumerator.StatusExercise;
@@ -39,20 +39,22 @@ public class TfgBackendApplication implements CommandLineRunner {
     private final ExerciseService es;
     private final ExerciseBatteryRepository ebr;
     private final TagRepository tr;
-    private final SolutionRepository solutionRepository;
+    private final SolutionRepository sr;
     private final ExerciseFileRepository efr;
 
     private final BCryptPasswordEncoder bcrypt = new BCryptPasswordEncoder();
+    private final RuleProcessorAiService ruleProcessorAiService;
 
     @Autowired
-    public TfgBackendApplication(UserRepository ur, ExerciseRepository er, ExerciseBatteryRepository ebr, ExerciseService es, SolutionRepository solutionRepository, TagRepository tr, ExerciseFileRepository efr) {
+    public TfgBackendApplication(UserRepository ur, ExerciseRepository er, ExerciseBatteryRepository ebr, ExerciseService es, SolutionRepository sr, TagRepository tr, ExerciseFileRepository efr, RuleProcessorAiService ruleProcessorAiService) {
         this.ur = ur;
         this.er = er;
         this.es = es;
         this.ebr = ebr;
         this.tr = tr;
-        this.solutionRepository = solutionRepository;
+        this.sr = sr;
         this.efr = efr;
+        this.ruleProcessorAiService = ruleProcessorAiService;
     }
 
     public static void main(String[] args) {
@@ -67,7 +69,7 @@ public class TfgBackendApplication implements CommandLineRunner {
         er.deleteAll();
         ebr.deleteAll();
         efr.deleteAll();
-        solutionRepository.deleteAll();
+        sr.deleteAll();
 
         ObjectId batteryId1 = new ObjectId("635981f6e40f61599a000061");
         ObjectId batteryId2 = new ObjectId("635981f6e40f61599a000062");
@@ -140,7 +142,6 @@ public class TfgBackendApplication implements CommandLineRunner {
         tr.save(operadores);
         tr.save(interfaces);
 
-
         ExerciseBattery bateria1 = new ExerciseBattery(batteryId1.toString(), "Bateria de Herencia");
         ExerciseBattery bateria2 = new ExerciseBattery(batteryId2.toString(), "Bateria de Poliformismo");
         ExerciseBattery bateria3 = new ExerciseBattery(batteryId3.toString(), "Bateria de Clases");
@@ -161,23 +162,22 @@ public class TfgBackendApplication implements CommandLineRunner {
         ebr.save(bateria8);
         ebr.save(bateria9);
 
-
-        Exercise ejercicio1 = new Exercise(exerciseId1.toString(), "Ejercicio 1", "", bateria1, Collections.emptyList(), List.of(herencia, getter), "", profesor, LocalDateTime.now());
-        Exercise ejercicio3 = new Exercise(exerciseId3.toString(), "Ejercicio 3", "", bateria1, Collections.emptyList(), List.of(herencia, getter), "", profesor, LocalDateTime.of(2015,
+        Exercise ejercicio1 = new Exercise(exerciseId1.toString(), "Ejercicio 1", "", bateria1, Collections.emptyList(), Collections.emptyList(), List.of(herencia, getter), profesor, LocalDateTime.now());
+        Exercise ejercicio3 = new Exercise(exerciseId3.toString(), "Ejercicio 3", "", bateria1, Collections.emptyList(), Collections.emptyList(), List.of(herencia, getter), profesor, LocalDateTime.of(2015,
                 Month.MAY, 29, 19, 30, 40));
-        Exercise ejercicio4 = new Exercise(exerciseId4.toString(), "Ejercicio 4", "", bateria1, Collections.emptyList(), List.of(herencia, getter), "", profesor, LocalDateTime.now());
-        Exercise ejercicio5 = new Exercise(exerciseId5.toString(), "Ejercicio 5", "", bateria1, Collections.emptyList(), List.of(herencia, getter), "", profesor, LocalDateTime.of(2025,
+        Exercise ejercicio4 = new Exercise(exerciseId4.toString(), "Ejercicio 4", "", bateria1, Collections.emptyList(), Collections.emptyList(), List.of(herencia, getter), profesor, LocalDateTime.now());
+        Exercise ejercicio5 = new Exercise(exerciseId5.toString(), "Ejercicio 5", "", bateria1, Collections.emptyList(), Collections.emptyList(), List.of(herencia, getter), profesor, LocalDateTime.of(2025,
                 Month.MAY, 29, 22, 49, 1));
-        Exercise ejercicio6 = new Exercise(exerciseId6.toString(), "Ejercicio 6", "", bateria2, Collections.emptyList(), List.of(herencia, getter), "", profesor, LocalDateTime.of(2015,
+        Exercise ejercicio6 = new Exercise(exerciseId6.toString(), "Ejercicio 6", "", bateria2, Collections.emptyList(), Collections.emptyList(), List.of(herencia, getter), profesor, LocalDateTime.of(2015,
                 Month.MAY, 29, 19, 30, 40));
-        Exercise ejercicio7 = new Exercise(exerciseId7.toString(), "Ejercicio 7", "", bateria4, Collections.emptyList(), List.of(herencia, getter), "", profesor, LocalDateTime.of(2015,
+        Exercise ejercicio7 = new Exercise(exerciseId7.toString(), "Ejercicio 7", "", bateria4, Collections.emptyList(), Collections.emptyList(), List.of(herencia, getter), profesor, LocalDateTime.of(2015,
                 Month.MAY, 29, 19, 30, 40));
-        Exercise ejercicio8 = new Exercise(exerciseId8.toString(), "Ejercicio 8", "", bateria2, Collections.emptyList(), List.of(herencia, getter), "", profesor, LocalDateTime.now());
-        Exercise ejercicio9 = new Exercise(exerciseId9.toString(), "Ejercicio 9", "", bateria2, Collections.emptyList(), List.of(herencia, getter), "", profesor, LocalDateTime.now());
-        Exercise ejercicio10 = new Exercise(exerciseId10.toString(), "Ejercicio 10", "", bateria3, Collections.emptyList(), List.of(herencia, getter), "", profesor, LocalDateTime.now());
-        Exercise ejercicio11 = new Exercise(exerciseId11.toString(), "Ejercicio 11", "", bateria3, Collections.emptyList(), List.of(herencia, getter), "", profesor, LocalDateTime.of(2015,
+        Exercise ejercicio8 = new Exercise(exerciseId8.toString(), "Ejercicio 8", "", bateria2, Collections.emptyList(), Collections.emptyList(), List.of(herencia, getter), profesor, LocalDateTime.now());
+        Exercise ejercicio9 = new Exercise(exerciseId9.toString(), "Ejercicio 9", "", bateria2, Collections.emptyList(), Collections.emptyList(), List.of(herencia, getter), profesor, LocalDateTime.now());
+        Exercise ejercicio10 = new Exercise(exerciseId10.toString(), "Ejercicio 10", "", bateria3, Collections.emptyList(), Collections.emptyList(), List.of(herencia, getter), profesor, LocalDateTime.now());
+        Exercise ejercicio11 = new Exercise(exerciseId11.toString(), "Ejercicio 11", "", bateria3, Collections.emptyList(), Collections.emptyList(), List.of(herencia, getter), profesor, LocalDateTime.of(2015,
                 Month.MAY, 29, 19, 30, 40));
-        Exercise ejercicio2 = new Exercise(exerciseId2.toString(), "Ejercicio 2", "", bateria2, Collections.emptyList(), List.of(herencia, getter), "", profesor, LocalDateTime.of(2015,
+        Exercise ejercicio2 = new Exercise(exerciseId2.toString(), "Ejercicio 2", "", bateria2, Collections.emptyList(), Collections.emptyList(), List.of(herencia, getter), profesor, LocalDateTime.of(2015,
                 Month.MAY, 29, 19, 30, 40));
 
         er.save(ejercicio1);
@@ -212,14 +212,14 @@ public class TfgBackendApplication implements CommandLineRunner {
         sleep(5);
         Solution solucion8 = new Solution(LocalDateTime.now(), "intento_2_4", StatusExercise.COMPLETED, estudiante2, ejercicio2, 2);
 
-        solutionRepository.save(solucion);
-        solutionRepository.save(solucion2);
-        solutionRepository.save(solucion3);
-        solutionRepository.save(solucion4);
-        solutionRepository.save(solucion5);
-        solutionRepository.save(solucion6);
-        solutionRepository.save(solucion7);
-        solutionRepository.save(solucion8);
+        sr.save(solucion);
+        sr.save(solucion2);
+        sr.save(solucion3);
+        sr.save(solucion4);
+        sr.save(solucion5);
+        sr.save(solucion6);
+        sr.save(solucion7);
+        sr.save(solucion8);
 
         EditableMethod metodosEjercicio1 = new EditableMethod("Pepe", -1, -1);
 
@@ -229,17 +229,17 @@ public class TfgBackendApplication implements CommandLineRunner {
                 if (Files.isRegularFile(filePath)) {
                     File archivo = new File(String.valueOf(filePath));
                     try {
-                        ExerciseFiles nuevoArchivo = switch (archivo.getName()) {
+                        ExerciseFile nuevoArchivo = switch (archivo.getName()) {
                             case "Solucion_alumno.java" ->
-                                    new ExerciseFiles(archivo.getName(), archivo.getPath().replace("\\","/"), Files.readAllBytes(archivo.toPath()), ejercicio1, solucion, List.of(metodosEjercicio1));
+                                    new ExerciseFile(archivo.getName(), archivo.getPath().replace("\\","/"), Files.readAllBytes(archivo.toPath()), ejercicio1, solucion, List.of(metodosEjercicio1));
                             case "Solucion2_alumno.java" ->
-                                    new ExerciseFiles(archivo.getName(), archivo.getPath().replace("\\","/"), Files.readAllBytes(archivo.toPath()), ejercicio1, solucion2, List.of(metodosEjercicio1));
+                                    new ExerciseFile(archivo.getName(), archivo.getPath().replace("\\","/"), Files.readAllBytes(archivo.toPath()), ejercicio1, solucion2, List.of(metodosEjercicio1));
                             case "Solucion_alumno2.java" ->
-                                    new ExerciseFiles(archivo.getName(), archivo.getPath().replace("\\","/"), Files.readAllBytes(archivo.toPath()), ejercicio1, solucion7, List.of(metodosEjercicio1));
+                                    new ExerciseFile(archivo.getName(), archivo.getPath().replace("\\","/"), Files.readAllBytes(archivo.toPath()), ejercicio1, solucion7, List.of(metodosEjercicio1));
                             case "Otro_ejercicio.java" ->
-                                    new ExerciseFiles(archivo.getName(), archivo.getPath().replace("\\","/"), Files.readAllBytes(archivo.toPath()), ejercicio2, solucion8, List.of(metodosEjercicio1));
+                                    new ExerciseFile(archivo.getName(), archivo.getPath().replace("\\","/"), Files.readAllBytes(archivo.toPath()), ejercicio2, solucion8, List.of(metodosEjercicio1));
                             default ->
-                                    new ExerciseFiles(archivo.getName(), archivo.getPath().replace("\\","/"), Files.readAllBytes(archivo.toPath()), ejercicio1, null, null);
+                                    new ExerciseFile(archivo.getName(), archivo.getPath().replace("\\","/"), Files.readAllBytes(archivo.toPath()), ejercicio1, null, null);
                         };
                         efr.save(nuevoArchivo);
                     } catch (IOException e) {
@@ -249,15 +249,12 @@ public class TfgBackendApplication implements CommandLineRunner {
             });
         }
 
-        CompilationUnit compilationUnit = new CompilationUnit();
-
 //        File archivo = new File("E:/Escritorio/Proyectos/");
 //        ExerciseFiles nuevoArchivo = new ExerciseFiles(null, archivo.getName(), archivo.getPath(), Files.readAllBytes(archivo.toPath()), ejercicio1);
 //
 //        efr.save(nuevoArchivo);
 
 //        System.out.println("AQUI: " + new String(nuevoArchivo.getContent(), StandardCharsets.UTF_8));
-
 
         Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
         Set<ConstraintViolation<Exercise>> violaciones = validator.validate(ejercicio1);
@@ -273,12 +270,26 @@ public class TfgBackendApplication implements CommandLineRunner {
          * Ref.Manual -> Ejercicio.linkBateria -> EJERCICO SE GUARDA -------> EjercicioBateriaDTO -----> NO SE PUEDE GUARDAR*/
 
         // fetch all customers
-        System.out.println("\nCustomers found with findAll():");
+        /*System.out.println("\nCustomers found with findAll():");
         System.out.println("-------------------------------");
         for (User user : ur.findAll()) {
             System.out.println(user);
         }
         System.out.println();
+
+
+        System.out.println("-------------------------------");
+        // Llamada directa a Gemini. Devuelve el DTO automáticamente mapeado
+        Result<ProcessedRulesDTO> result = ruleProcessorAiService.parseRules("""
+                Quiero que utilicen un iterator para evitar errores de eliminación en una variable ArrayList llamada "aviones". Deben multiplicar "aviones" por "numero de viajes" para obtener 30 en "vuelosTotales. No quiero que bajo ningún concepto hagan bucles infinitos ni que tengan bucles anidados ni nada que supere O(n)"
+                """);
+
+        //ProcessedRulesDTO dto = result.content();
+        List<Rule> requiredRules = result.content().requiredRules();
+        List<Rule> forbiddenRules = result.content().forbiddenRules();
+
+        System.out.println("Reglas requeridas: " + requiredRules);
+        System.out.println("Reglas prohibidas: " + forbiddenRules);*/
 
     }
 }

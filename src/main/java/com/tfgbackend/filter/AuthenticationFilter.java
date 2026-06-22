@@ -1,83 +1,93 @@
 package com.tfgbackend.filter;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jwts;
 import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.core.authority.AuthorityUtils;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.security.Key;
-import java.time.Duration;
 import java.util.List;
-import java.util.stream.Collectors;
 
-import static com.tfgbackend.configuration.Util.successfulCookieAuthentication;
-
-public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
-    private final AuthenticationManager manager;
+public class AuthenticationFilter extends OncePerRequestFilter {
     private final Key key;
-    private boolean remember;
 
-    public AuthenticationFilter(AuthenticationManager manager, Key key){
-        this.manager = manager;
+    public AuthenticationFilter(Key key){
         this.key = key;
     }
 
-    // Funcion que tenta autenticar ao usuario a partir da chamada HTTP
+    // Método a executar cando se comproba o control de acceso
     @Override
-    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
-        try {
-            // Obtemos o obxecto JSON do body da request HTTP
-            JsonNode credentials = new ObjectMapper().readValue(request.getInputStream(), JsonNode.class);
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
+        try{
+            Cookie[] cookies = request.getCookies();
+            if (cookies == null) {
+                SecurityContextHolder.clearContext();
+                chain.doFilter(request, response);
+                return;
+            }
 
-            remember = credentials.get("remember") != null && credentials.get("remember").booleanValue();
+            boolean authenticated = false;
 
-            // Tentamos autenticarnos coas credenciais proporcionadas
-            return manager.authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            credentials.get("email").textValue(),
-                            credentials.get("password").textValue()
-                    )
-            );
-        }catch (IOException ex){
-            throw new RuntimeException(ex);
+            // Find the cookie with the cookie name for the JWT token
+            for (Cookie cookie : cookies) {
+                if (!cookie.getName().equals("Authentication")) {
+                    continue;
+                }
+
+                // No caso de que o token sexa un JWT, comprobamos que sexa valido
+                UsernamePasswordAuthenticationToken authentication = getAuthentication(cookie.getValue());
+
+                // Se o token era válido, establecemolo no contexto de seguridade de Spring para poder empregalo
+                // nos nosos servizos
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+
+                authenticated = true;
+                break;
+            }
+
+            if (!authenticated) {
+                SecurityContextHolder.clearContext();
+            }
+
+            chain.doFilter(request, response);
+
+        } catch(ExpiredJwtException e){
+            SecurityContextHolder.clearContext();
+            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         }
     }
 
-    // funcion que se chama cando a autenticación do metodo anterior é satisfactoria
-    @Override
-    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException {
+    private UsernamePasswordAuthenticationToken getAuthentication(String token) throws ExpiredJwtException {
+        // Creamos un parser para o token coa clave de firmado da nosa aplicación
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                // Parseamos o corpo do token
+                .parseClaimsJws(token)
+                .getBody();
 
-        Duration rememberDuration;
+        // Obtemos o nome do propietario do token
+        String user = claims.getSubject();
 
-        // If the user checked "remember me", we extend the duration of the token for 30 days
-        if (remember){
-            rememberDuration = Duration.ofDays(30);
-        }else{
-            rememberDuration = Duration.ofDays(0);
-        }
+        // Obtemos o listado de roles do usuario
+        List<GrantedAuthority> authorities = AuthorityUtils.commaSeparatedStringToAuthorityList(claims.get("roles").toString());
 
-        // Obtemos a lista de roles asignados ao usuario e concatenamolso nun string separado por comas
-        List<String> authorities = authResult.getAuthorities()
-                .stream()
-                .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.toList());
-
-        //Obtemos o nome de usuario que fixo login
-        String username = ((User)authResult.getPrincipal()).getUsername();
-
-        Cookie jwtTokenCookie = successfulCookieAuthentication(authorities, rememberDuration, username, key);
-        response.addCookie(jwtTokenCookie);
-
+        // Devolvemos o token interno de Spring, que será engadido no contexto.
+        return new UsernamePasswordAuthenticationToken(
+                user,
+                null,
+                authorities
+        );
     }
 
 }

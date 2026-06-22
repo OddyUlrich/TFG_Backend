@@ -9,19 +9,19 @@ public class ExerciseDTO {
     private String id;
     private String name;
     private String statement;
-    private List<Rule> rules;
-    private String successCondition;
+    private List<Rule> requiredRules;
+    private List<Rule> forbiddenRules;
     private List<String> tags;
     private String nameFromBattery;
 
-    public ExerciseDTO(String id, String name, String statement, List<Rule> rules, String successCondition, List<String> tags, String nameFromBattery) {
+    public ExerciseDTO(String id, String name, String statement, String nameFromBattery, List<Rule> requiredRules, List<Rule> forbiddenRules, List<String> tags) {
         this.id = id;
         this.name = name;
         this.statement = statement;
         this.nameFromBattery = nameFromBattery;
-        this.rules = rules;
+        this.requiredRules = requiredRules;
+        this.forbiddenRules = forbiddenRules;
         this.tags = tags;
-        this.successCondition = successCondition;
     }
 
     public String getId() {
@@ -48,20 +48,20 @@ public class ExerciseDTO {
         this.statement = statement;
     }
 
-    public List<Rule> getRules() {
-        return rules;
+    public List<Rule> getRequiredRules() {
+        return requiredRules;
     }
 
-    public void setRules(List<Rule> rules) {
-        this.rules = rules;
+    public void setRequiredRules(List<Rule> requiredRules) {
+        this.requiredRules = requiredRules;
     }
 
-    public String getSuccessCondition() {
-        return successCondition;
+    public List<Rule> getForbiddenRules() {
+        return forbiddenRules;
     }
 
-    public void setSuccessCondition(String successCondition) {
-        this.successCondition = successCondition;
+    public void setForbiddenRules(List<Rule> forbiddenRules) {
+        this.forbiddenRules = forbiddenRules;
     }
 
     public List<String> getTags() {

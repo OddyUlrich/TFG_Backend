@@ -20,6 +20,17 @@ public class ExerciseFileDTO {
     public ExerciseFileDTO() {
     }
 
+    public ExerciseFileDTO(String id, String name, String path, String text, String idFromSolution, List<EditableMethod> editableMethods, byte[] binaryText) {
+        this.id = id;
+        this.name = name;
+        this.path = path;
+        this.text = text;
+        this.idFromSolution = idFromSolution;
+        this.editableMethods = editableMethods;
+        this.binaryText = binaryText;
+    }
+
+
     public String getId() {
         return id;
     }

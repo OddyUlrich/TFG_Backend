@@ -3,7 +3,7 @@ package com.tfgbackend.controller;
 import com.tfgbackend.dto.*;
 import com.tfgbackend.exception.ResourceNotFoundException;
 import com.tfgbackend.model.Exercise;
-import com.tfgbackend.model.ExerciseFiles;
+import com.tfgbackend.model.ExerciseFile;
 import com.tfgbackend.model.Solution;
 import com.tfgbackend.model.User;
 import com.tfgbackend.model.enumerator.StatusExercise;
@@ -89,12 +89,12 @@ public class SolutionController {
         a new file with a solution field filled
         * */
         for (ExerciseFileDTO file : filesForDisplay) {
-            ExerciseFiles fileInDatabase = exerciseFilesService.findByNameAndSolutionId(file.getName(), solution.getId());
+            ExerciseFile fileInDatabase = exerciseFilesService.findByNameAndSolutionId(file.getName(), solution.getId());
             if (fileInDatabase != null) {
                 fileInDatabase.setBinaryText(file.getText().getBytes(StandardCharsets.UTF_8));
                 exerciseFilesService.saveFile(fileInDatabase);
             } else {
-                exerciseFilesService.saveFile(new ExerciseFiles(file.getName(), file.getPath(), file.getText().getBytes(StandardCharsets.UTF_8), exercise, solution, file.getEditableMethods()));
+                exerciseFilesService.saveFile(new ExerciseFile(file.getName(), file.getPath(), file.getText().getBytes(StandardCharsets.UTF_8), exercise, solution, file.getEditableMethods()));
             }
         }
 

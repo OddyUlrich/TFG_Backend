@@ -18,25 +18,25 @@ public class Exercise {
     @Id
     private String id;
     private @NotBlank String name;
-    private /*@NotBlank*/ String statement;
+    private String statement;
     @DBRef(lazy = true)
-    private /*@NotNull*/ @Valid ExerciseBattery exerciseBattery;
-    private /*@NotEmpty*/ List<Rule> rules;
+    private @Valid ExerciseBattery exerciseBattery;
+    private List<Rule> forbiddenRules;
+    private List<Rule> requiredRules;
     @DBRef
     private List<Tag> tags;
-    private /*@NotBlank*/ String successCondition;
     @DBRef(lazy = true)
     private @NotNull @IsTeacher @Valid User teacher;
     private @NotNull LocalDateTime creationTimestamp;
 
-    public Exercise(String id, String name, String statement, ExerciseBattery exerciseBattery, List<Rule> rules, List<Tag> tags, String successCondition,  User teacher, LocalDateTime creationTimestamp) {
+    public Exercise(String id, String name, String statement, ExerciseBattery exerciseBattery, List<Rule> requiredRules, List<Rule> forbiddenRules, List<Tag> tags, User teacher, LocalDateTime creationTimestamp) {
         this.id = id;
         this.name = name;
         this.statement = statement;
         this.exerciseBattery = exerciseBattery;
-        this.rules = rules;
+        this.requiredRules = requiredRules;
+        this.forbiddenRules = forbiddenRules;
         this.tags = tags;
-        this.successCondition = successCondition;
         this.teacher = teacher;
         this.creationTimestamp = creationTimestamp;
     }
@@ -65,20 +65,20 @@ public class Exercise {
         this.statement = statement;
     }
 
-    public List<Rule> getRules() {
-        return rules;
+    public List<Rule> getForbiddenRules() {
+        return forbiddenRules;
     }
 
-    public void setRules(List<Rule> rules) {
-        this.rules = rules;
+    public void setForbiddenRules(List<Rule> forbiddenRules) {
+        this.forbiddenRules = forbiddenRules;
     }
 
-    public String getSuccessCondition() {
-        return successCondition;
+    public List<Rule> getRequiredRules() {
+        return requiredRules;
     }
 
-    public void setSuccessCondition(String successCondition) {
-        this.successCondition = successCondition;
+    public void setRequiredRules(List<Rule> requiredRules) {
+        this.requiredRules = requiredRules;
     }
 
     public List<Tag> getTags() {

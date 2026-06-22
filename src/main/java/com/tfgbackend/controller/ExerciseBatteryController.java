@@ -26,13 +26,14 @@ public class ExerciseBatteryController {
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<ExerciseBattery>> allExerciseBatteries(Authentication auth) {
 
-        if (auth != null && auth.isAuthenticated()) {
-            List<ExerciseBattery> allExerciseBatteries = exerciseBatteryService.findAll();
-
-            return ResponseEntity.status(HttpStatus.OK).body(allExerciseBatteries);
-        } else {
+        if (auth == null || !auth.isAuthenticated()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
+
+        List<ExerciseBattery> allExerciseBatteries = exerciseBatteryService.findAll();
+
+        return ResponseEntity.status(HttpStatus.OK).body(allExerciseBatteries);
+
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)

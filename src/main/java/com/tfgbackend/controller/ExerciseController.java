@@ -1,9 +1,15 @@
 package com.tfgbackend.controller;
 
+import com.tfgbackend.llm.RuleProcessorAiService;
 import com.tfgbackend.dto.*;
 import com.tfgbackend.exception.ResourceNotFoundException;
 import com.tfgbackend.model.Exercise;
+import com.tfgbackend.model.ExerciseFile;
+import com.tfgbackend.model.Rule;
 import com.tfgbackend.service.*;
+import dev.langchain4j.exception.HttpException;
+import dev.langchain4j.exception.InternalServerException;
+import dev.langchain4j.service.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -12,6 +18,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -21,11 +28,13 @@ public class ExerciseController {
 
     private final ExerciseService exerciseService;
     private final ExerciseFilesService exerciseFilesService;
+    private final RuleProcessorAiService ruleProcessorAiService;
 
     @Autowired
-    public ExerciseController(ExerciseService exerciseService, ExerciseFilesService exerciseFilesService) {
+    public ExerciseController(ExerciseService exerciseService, ExerciseFilesService exerciseFilesService, RuleProcessorAiService ruleProcessorAiService) {
         this.exerciseService = exerciseService;
         this.exerciseFilesService = exerciseFilesService;
+        this.ruleProcessorAiService = ruleProcessorAiService;
     }
 
     @GetMapping
@@ -75,11 +84,16 @@ public class ExerciseController {
         }
 
         ExerciseDTO exerciseDTO = data.getExercise();
-        List<ExerciseFileDTO> templateFiles = data.getFiles();
+        List<ExerciseFileDTO> templateFilesDTO = data.getFiles();
 
         Exercise newExercise = exerciseService.createFromDTO(exerciseDTO, auth.getName());
+        List<ExerciseFile> newTemplateFiles = exerciseFilesService.saveTemplateFiles(templateFilesDTO, newExercise);
 
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        //TODO guardar los ficheros -> ¿transaccional guardando todos a la vez?
+
+        ExerciseTemplateDataDTO newData = new ExerciseTemplateDataDTO(newExercise, newTemplateFiles);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(newData);
     }
 
     @PatchMapping(value = "/{exerciseId}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -88,5 +102,32 @@ public class ExerciseController {
         System.out.println(data);
 
         return null;
+    }
+
+    @PostMapping(value = "/rules", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ProcessedRulesResponse> processingRules(@RequestBody String rules, Authentication auth) {
+
+        try {
+
+            if (auth == null || !auth.isAuthenticated()) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            }
+
+            Result<ProcessedRulesDTO> result = ruleProcessorAiService.parseRules(rules);
+
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new ProcessedRulesResponse(
+                            result.content().requiredRules(),
+                            result.content().forbiddenRules(),
+                            null)
+                    );
+        }catch (InternalServerException e){
+            return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE)
+                    .body(new ProcessedRulesResponse(
+                            List.of(),
+                            List.of(),
+                            "Esta IA no está temporalmente disponible"
+                    ));
+        }
     }
 }
