@@ -4,6 +4,7 @@ import com.tfgbackend.dto.SolutionDTO;
 import com.tfgbackend.exception.ResourceNotFoundException;
 import com.tfgbackend.model.Solution;
 import com.tfgbackend.model.User;
+import com.tfgbackend.model.enumerator.StatusExercise;
 import com.tfgbackend.repository.SolutionRepository;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,26 @@ public class SolutionService {
 
     public void saveSolution(Solution solution){
         sr.save(solution);
+    }
+
+    public Solution getLatestSolution(List<Solution> solutions) {
+
+        if (solutions == null || solutions.isEmpty()) {
+            return null;
+        }
+
+        return solutions.stream()
+                .max((a, b) -> {
+
+                    // 1. COMPLETED tiene prioridad
+                    if (a.getStatus() == StatusExercise.COMPLETED && b.getStatus() != StatusExercise.COMPLETED) return 1;
+                    if (b.getStatus() == StatusExercise.COMPLETED && a.getStatus() != StatusExercise.COMPLETED) return -1;
+
+                    // 2. si ambos son COMPLETED o ambos no:
+                    return a.getUpdateTimestamp()
+                            .compareTo(b.getUpdateTimestamp());
+                })
+                .orElse(null);
     }
 
 }

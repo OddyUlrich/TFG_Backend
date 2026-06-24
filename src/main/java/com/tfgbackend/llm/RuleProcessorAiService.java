@@ -26,6 +26,7 @@ public interface RuleProcessorAiService {
         5. Clarity: Keep descriptions clear, objective, and directly testable by an automated code analyzer.
         6. Empty Categories: If the text does not contain any forbidden or required rules, leave that list completely empty.
         7. If a rule is not explicitly or implicitly mentioned in the teacher's text, DO NOT include it.
+        8. Do not repeat rules.
         """)
     @UserMessage("""
         Analyze the following text from the teacher and extract the rules:

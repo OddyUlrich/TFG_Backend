@@ -38,12 +38,16 @@ public class ExerciseController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ExerciseHomeDTO>> allExercises(Authentication auth) {
+    public ResponseEntity<List<ExerciseHomeDTO>> allExercises(
+            @RequestParam(required = false) String exerciseName,
+            @RequestParam(required = false) String batteryName,
+            @RequestParam(required = false) List<String> tags,
+            Authentication auth) {
 
         try {
             if (auth != null && auth.isAuthenticated()) {
                 String email = auth.getName();
-                List<ExerciseHomeDTO> lista = exerciseService.allExercisesWithLastSolutionsByUserId(email);
+                List<ExerciseHomeDTO> lista = exerciseService.allExercisesWithLastSolutionsByUserId(email, exerciseName, batteryName, tags);
                 return ResponseEntity.status(HttpStatus.OK).body(lista);
             } else {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();

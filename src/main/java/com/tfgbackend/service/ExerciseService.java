@@ -1,7 +1,9 @@
 package com.tfgbackend.service;
 
 import com.tfgbackend.dto.ExerciseDTO;
+import com.tfgbackend.dto.ExerciseHomeMongoDTO;
 import com.tfgbackend.exception.ResourceNotFoundException;
+import com.tfgbackend.mappers.ExerciseHomeDTOMapper;
 import com.tfgbackend.mappers.ExerciseMapper;
 import com.tfgbackend.model.*;
 import com.tfgbackend.repository.ExerciseRepository;
@@ -13,9 +15,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @Service
 public class ExerciseService {
@@ -24,18 +25,20 @@ public class ExerciseService {
     private final UserService us;
     private final ExerciseBatteryService ebs;
     private final TagService ts;
+    private final SolutionService ss;
 
     @Autowired
-    public ExerciseService(ExerciseRepository er, UserService us, ExerciseBatteryService ebs, TagService ts) {
+    public ExerciseService(ExerciseRepository er, UserService us, ExerciseBatteryService ebs, TagService ts, SolutionService ss) {
         this.er = er;
         this.us = us;
         this.ebs = ebs;
         this.ts = ts;
+        this.ss = ss;
     }
 
-    public List<ExerciseHomeDTO> allExercisesWithLastSolutionsByUserId(String email){
+    public List<ExerciseHomeDTO> allExercisesWithLastSolutionsByUserId(String email, String exerciseName, String batteryName, List<String> tags) {
         User user = us.getUserByEmail(email);
-        return er.allExercisesWithLastSolutionsByUserId(new ObjectId(user.getId())).orElseThrow(() -> new ResourceNotFoundException("Data could not be obtained"));
+        return obtainHomeDTOLatestSolution(er.allExercisesWithFilters(new ObjectId(user.getId()), exerciseName, batteryName, tags));
     }
 
     public Exercise findExerciseById(String exerciseId){
@@ -66,6 +69,18 @@ public class ExerciseService {
         if (er.existsByNameAndExerciseBattery(name, battery)) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "An exercise with the same name and battery already exists");
         }
+    }
+
+    private List<ExerciseHomeDTO> obtainHomeDTOLatestSolution(List<ExerciseHomeMongoDTO> dtoList) {
+        List<ExerciseHomeDTO> newList = new ArrayList<>();
+
+        for (ExerciseHomeMongoDTO dto : dtoList) {
+            Solution bestSolution = ss.getLatestSolution(dto.getSolutions());
+            ExerciseHomeDTO newExercise = ExerciseHomeDTOMapper.toEntity(dto, bestSolution);
+            newList.add(newExercise);
+        }
+
+        return newList;
     }
 
 }

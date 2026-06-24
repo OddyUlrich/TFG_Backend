@@ -25,6 +25,7 @@ public class CustomUserRepositoryImpl implements CustomUserRepository{
         this.operations = operations;
     }
 
+    @Override
     public void updateUserFavorites(String userId, List<ObjectId> favoriteList){
 
         Query query = new Query().addCriteria(Criteria.where("_id").is(userId));
