@@ -7,7 +7,6 @@ import com.tfgbackend.model.Exercise;
 import com.tfgbackend.model.ExerciseFile;
 import com.tfgbackend.model.Rule;
 import com.tfgbackend.service.*;
-import dev.langchain4j.exception.HttpException;
 import dev.langchain4j.exception.InternalServerException;
 import dev.langchain4j.service.Result;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +17,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -109,7 +107,7 @@ public class ExerciseController {
     }
 
     @PostMapping(value = "/rules", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ProcessedRulesResponse> processingRules(@RequestBody String rules, Authentication auth) {
+    public ResponseEntity<ProcessedRulesResponse> processingRules(@RequestBody String rulesText, Authentication auth) {
 
         try {
 
@@ -117,18 +115,17 @@ public class ExerciseController {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
             }
 
-            Result<ProcessedRulesDTO> result = ruleProcessorAiService.parseRules(rules);
+            Result<List<Rule>> result = ruleProcessorAiService.parseRules(rulesText);
 
             return ResponseEntity.status(HttpStatus.OK).body(
                     new ProcessedRulesResponse(
-                            result.content().requiredRules(),
-                            result.content().forbiddenRules(),
+                            result.content().stream().toList(),
                             null)
-                    );
+            );
+
         }catch (InternalServerException e){
             return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE)
                     .body(new ProcessedRulesResponse(
-                            List.of(),
                             List.of(),
                             "Esta IA no está temporalmente disponible"
                     ));

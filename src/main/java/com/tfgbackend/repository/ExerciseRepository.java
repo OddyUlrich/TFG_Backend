@@ -32,8 +32,7 @@ public interface ExerciseRepository extends MongoRepository<Exercise, Long>, Cus
                     "   _id: 1," +
                     "   name: 1," +
                     "   statement: 1," +
-                    "   requiredRules: 1," +
-                    "   forbiddenRules: 1," +
+                    "   rules: 1," +
                     "   successConditions: 1," +
                     "   tags: 1," +
                     "   idFromBattery: '$exerciseBattery._id'," +

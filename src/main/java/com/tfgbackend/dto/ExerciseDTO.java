@@ -9,18 +9,16 @@ public class ExerciseDTO {
     private String id;
     private String name;
     private String statement;
-    private List<Rule> requiredRules;
-    private List<Rule> forbiddenRules;
+    private List<Rule> rules;
     private List<String> tags;
     private String nameFromBattery;
 
-    public ExerciseDTO(String id, String name, String statement, String nameFromBattery, List<Rule> requiredRules, List<Rule> forbiddenRules, List<String> tags) {
+    public ExerciseDTO(String id, String name, String statement, String nameFromBattery, List<Rule> rules, List<String> tags) {
         this.id = id;
         this.name = name;
         this.statement = statement;
         this.nameFromBattery = nameFromBattery;
-        this.requiredRules = requiredRules;
-        this.forbiddenRules = forbiddenRules;
+        this.rules = rules;
         this.tags = tags;
     }
 
@@ -48,21 +46,9 @@ public class ExerciseDTO {
         this.statement = statement;
     }
 
-    public List<Rule> getRequiredRules() {
-        return requiredRules;
-    }
+    public List<Rule> getRules() {return rules;}
 
-    public void setRequiredRules(List<Rule> requiredRules) {
-        this.requiredRules = requiredRules;
-    }
-
-    public List<Rule> getForbiddenRules() {
-        return forbiddenRules;
-    }
-
-    public void setForbiddenRules(List<Rule> forbiddenRules) {
-        this.forbiddenRules = forbiddenRules;
-    }
+    public void setRules(List<Rule> rules) {this.rules = rules;}
 
     public List<String> getTags() {
         return tags;

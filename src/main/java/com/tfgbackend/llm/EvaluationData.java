@@ -8,8 +8,7 @@ import java.util.List;
 public record EvaluationData (
 
     String exerciseStatement,
-    List<Rule> forbiddenRules,
-    List<Rule> requiredRules,
+    List<Rule> rules,
     List<ExerciseFileDTO> exerciseFiles
 ){
 

@@ -24,11 +24,9 @@ public interface CorrectorAiService {
     @UserMessage("""
         These are the files for the assignment to be evaluated: {{files}}
         These are the names of the methods, along with the names of the files they are located in, that the student can edit: {{methods}}
-        These are the rules specifying what students must do or add: {{required}}
-        These are the rules specifying which methods, variables, or concepts are strictly prohibited for the student: {{forbidden}}
+        These are the rules specifying what students must do or which methods, variables, or concepts are strictly prohibited: {{rules}}
         """)
     EvaluationResponse evaluate(@V("files") List<ExerciseFileDTO> files,
                                 @V("methods")List<EditableMethod> methods,
-                                @V("required") List<Rule> required,
-                                @V("forbidden") List<Rule> forbidden);
+                                @V("rules") List<Rule> rules);
 }

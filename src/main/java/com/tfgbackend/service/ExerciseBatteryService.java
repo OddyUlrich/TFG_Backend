@@ -1,6 +1,5 @@
 package com.tfgbackend.service;
 
-import com.tfgbackend.exception.ResourceNotFoundException;
 import com.tfgbackend.model.ExerciseBattery;
 import com.tfgbackend.repository.ExerciseBatteryRepository;
 import org.springframework.beans.factory.annotation.Autowired;

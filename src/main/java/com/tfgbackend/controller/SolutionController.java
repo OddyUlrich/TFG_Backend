@@ -43,6 +43,40 @@ public class SolutionController {
         this.userService = userService;
     }
 
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<CodeEditorDataDTO> getSolution(@PathVariable String exerciseId, Authentication auth) {
+
+        try {
+            if (auth != null && auth.isAuthenticated()) {
+
+                String email = auth.getName();
+                List<ExerciseFileDTO> allExerciseFilesAndLastSolution = exerciseFilesService.exerciseFilesAndLastSolutionByIdAndStudent(exerciseId, email);
+
+                //All the files that the code editor could use (exercise's template files and user's solution files)
+                TemplateAndSolutionFiles filteredFiles = exerciseFilesService.filterFiles(allExerciseFilesAndLastSolution);
+
+                //All basic information about the other solutions of this user to allow him/her to change to it
+                List<SolutionDTO> solutions = solutionService.allSolutionsByExerciseIdAndStudent(exerciseId, email);
+
+                //ID for the last updated solution (Probably the last one they worked on)
+                String currentSolution = exerciseFilesService.obtainSolutionFromExerciseFiles(allExerciseFilesAndLastSolution);
+
+                //All necessary information about the exercise the user is currently working on
+                ExerciseDTO exercise = exerciseService.findExerciseForEditorById(exerciseId);
+
+                //DTO for the frontend with all files and information needed
+                CodeEditorDataDTO data = new CodeEditorDataDTO(filteredFiles.getFilesForDisplay(), filteredFiles.getTemplateFiles(), solutions, currentSolution, exercise);
+
+                return ResponseEntity.status(HttpStatus.OK).body(data);
+            } else {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            }
+        } catch (ResourceNotFoundException e) {
+            System.out.println(e.getMessage());
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
+        }
+    }
+
 
     //TODO ¿Esto debería de ser @Transactional para que se haga todo de una, no vaya a ser que guardemos una nueva solucion y luego los archivos fallen al guardarse y quede la solución sin nada. Ademas avisamos al frontend de ello?
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -101,39 +135,5 @@ public class SolutionController {
         System.out.println("Solution saved with ID: " + solution.getId());
 
         return ResponseEntity.status(status).body(solution);
-    }
-
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<CodeEditorDataDTO> getSolution(@PathVariable String exerciseId, Authentication auth) {
-
-        try {
-            if (auth != null && auth.isAuthenticated()) {
-
-                String email = auth.getName();
-                List<ExerciseFileDTO> allExerciseFilesAndLastSolution = exerciseFilesService.exerciseFilesAndLastSolutionByIdAndStudent(exerciseId, email);
-
-                //All the files that the code editor could use (exercise's template files and user's solution files)
-                TemplateAndSolutionFiles filteredFiles = exerciseFilesService.filterFiles(allExerciseFilesAndLastSolution);
-
-                //All basic information about the other solutions of this user to allow him/her to change to it
-                List<SolutionDTO> solutions = solutionService.allSolutionsByExerciseIdAndStudent(exerciseId, email);
-
-                //ID for the last updated solution (Probably the last one they worked on)
-                String currentSolution = exerciseFilesService.obtainSolutionFromExerciseFiles(allExerciseFilesAndLastSolution);
-
-                //All necessary information about the exercise the user is currently working on
-                ExerciseDTO exercise = exerciseService.findExerciseForEditorById(exerciseId);
-
-                //DTO for the frontend with all files and information needed
-                CodeEditorDataDTO data = new CodeEditorDataDTO(filteredFiles.getFilesForDisplay(), filteredFiles.getTemplateFiles(), solutions, currentSolution, exercise);
-
-                return ResponseEntity.status(HttpStatus.OK).body(data);
-            } else {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-            }
-        } catch (ResourceNotFoundException e) {
-            System.out.println(e.getMessage());
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, e.getMessage(), e);
-        }
     }
 }

@@ -22,8 +22,7 @@ public class ExerciseMapper {
                 dto.getName(),
                 dto.getStatement(),
                 battery,
-                dto.getRequiredRules(),
-                dto.getForbiddenRules(),
+                dto.getRules(),
                 tags,
                 teacher,
                 creationDate

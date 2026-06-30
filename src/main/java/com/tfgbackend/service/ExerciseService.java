@@ -26,14 +26,16 @@ public class ExerciseService {
     private final ExerciseBatteryService ebs;
     private final TagService ts;
     private final SolutionService ss;
+    private final RulesService rs;
 
     @Autowired
-    public ExerciseService(ExerciseRepository er, UserService us, ExerciseBatteryService ebs, TagService ts, SolutionService ss) {
+    public ExerciseService(ExerciseRepository er, UserService us, ExerciseBatteryService ebs, TagService ts, SolutionService ss, RulesService rs) {
         this.er = er;
         this.us = us;
         this.ebs = ebs;
         this.ts = ts;
         this.ss = ss;
+        this.rs = rs;
     }
 
     public List<ExerciseHomeDTO> allExercisesWithLastSolutionsByUserId(String email, String exerciseName, String batteryName, List<String> tags) {
@@ -60,6 +62,8 @@ public class ExerciseService {
         List<Tag> tags = ts.findByNameIn(exerciseDTO.getTags());
 
         Exercise exercise = ExerciseMapper.toEntity(exerciseDTO, battery, tags, teacher, LocalDateTime.now());
+
+        rs.saveRules(exercise.getRules());
 
         return er.save(exercise);
 
