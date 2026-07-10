@@ -10,10 +10,10 @@ public class ExerciseDTO {
     private String name;
     private String statement;
     private List<Rule> rules;
-    private List<String> tags;
+    private List<Tag> tags;
     private String nameFromBattery;
 
-    public ExerciseDTO(String id, String name, String statement, String nameFromBattery, List<Rule> rules, List<String> tags) {
+    public ExerciseDTO(String id, String name, String statement, String nameFromBattery, List<Rule> rules, List<Tag> tags) {
         this.id = id;
         this.name = name;
         this.statement = statement;
@@ -50,11 +50,11 @@ public class ExerciseDTO {
 
     public void setRules(List<Rule> rules) {this.rules = rules;}
 
-    public List<String> getTags() {
+    public List<Tag> getTags() {
         return tags;
     }
 
-    public void setTags(List<String> tags) {
+    public void setTags(List<Tag> tags) {
         this.tags = tags;
     }
 

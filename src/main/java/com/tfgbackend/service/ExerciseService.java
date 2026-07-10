@@ -52,24 +52,42 @@ public class ExerciseService {
     }
 
     public Exercise createFromDTO(ExerciseDTO exerciseDTO, String teacherEmail){
+        String name = exerciseDTO.getName();
+        ExerciseBattery battery = ebs.findBatteryByName(exerciseDTO.getNameFromBattery());
+        validateUniqueExercise(name, battery);
 
+        return saveExercise(exerciseDTO, teacherEmail, battery);
+    }
+
+    public Exercise editFromDTO(ExerciseDTO exerciseDTO, String teacherEmail){
+        er.findExerciseById(exerciseDTO.getId()).orElseThrow(() -> new ResourceNotFoundException("Exercise does not exist with that ID"));
         ExerciseBattery battery = ebs.findBatteryByName(exerciseDTO.getNameFromBattery());
         if (battery == null) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You have not selected an exercise battery or it does not exist");
-        validateUniqueExercise(exerciseDTO.getName(), battery);
 
+        return saveExercise(exerciseDTO, teacherEmail, battery);
+    }
+
+    public Exercise saveExercise(ExerciseDTO exerciseDTO, String teacherEmail, ExerciseBattery battery){
         //TODO COMPROBAR QUE SEA TEACHER
         User teacher = us.getUserByEmail(teacherEmail);
-        List<Tag> tags = ts.findByNameIn(exerciseDTO.getTags());
+        if (teacher == null) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User creator does not exist");
 
-        Exercise exercise = ExerciseMapper.toEntity(exerciseDTO, battery, tags, teacher, LocalDateTime.now());
+        List<Tag> tags = ts.findByNameIn(exerciseDTO.getTags().stream().map(Tag::name).toList());
+        if (tags == null || tags.isEmpty()){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You must select at least one tag");
+        }
 
-        rs.saveRules(exercise.getRules());
+        Exercise newExercise = ExerciseMapper.toEntity(exerciseDTO, battery, tags, teacher, LocalDateTime.now());
 
-        return er.save(exercise);
+        //TODO MANDAR AL SERVICIO DE RULES PARA COMPROBAR QUE NO SE REPITAN, ES DECIR, CREAR NUEVAS O REUTILIZAR
+        newExercise.setRules(rs.saveRules(newExercise.getRules()));
 
+        return er.save(newExercise);
     }
 
     private void validateUniqueExercise(String name, ExerciseBattery battery) {
+        if (battery == null) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You have not selected an exercise battery or it does not exist");
+
         if (er.existsByNameAndExerciseBattery(name, battery)) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "An exercise with the same name and battery already exists");
         }

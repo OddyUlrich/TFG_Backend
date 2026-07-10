@@ -48,7 +48,7 @@ public class ExerciseFilesService {
     }
 
     public ExerciseFile findByNameAndSolutionId(String name, String solutionId) {
-        return this.efr.findByNameAndSolutionId(name, new ObjectId(solutionId));
+        return efr.findByNameAndSolutionId(name, new ObjectId(solutionId));
     }
 
     public List<ExerciseFileDTO> exerciseFilesAndLastSolutionByIdAndStudent(String exerciseId, String email) {
@@ -121,16 +121,16 @@ public class ExerciseFilesService {
         return null;
     }
 
-    public List<ExerciseFile> saveTemplateFiles(List<ExerciseFileDTO> exerciseFiles, Exercise exercise) {
+    //The boolean just indicates if they are the first files or there are already other ones related to the exercise
+    public List<ExerciseFile> saveTemplateFiles(List<ExerciseFileDTO> exerciseFiles, Exercise exercise, boolean firstFiles) {
 
+        if (!firstFiles){
+            efr.deleteExerciseFilesByExercise(exercise);
+        }
 
         List<ExerciseFile> newTemplateFiles = new ArrayList<>();
 
         for (ExerciseFileDTO fileDTO : exerciseFiles) {
-
-            fileDTO.getEditableMethods().forEach(editableMethod -> {
-                System.out.println("Manualmente:\nNombre: " + editableMethod.getName() + "\nStart:" + editableMethod.getStartLine() + "\nEnd: " + editableMethod.getEndLine());
-            });
 
             ParseResult<CompilationUnit> result = parser.parse(fileDTO.getText());
 

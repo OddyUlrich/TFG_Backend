@@ -22,7 +22,7 @@ public class ExerciseTemplateDataDTO {
     }
 
     public ExerciseTemplateDataDTO(Exercise exercise, List<ExerciseFile> files) {
-        ExerciseDTO exerciseDTO = new ExerciseDTO(exercise.getId(), exercise.getName(), exercise.getStatement(), exercise.getExerciseBattery().getName(), exercise.getRules(), exercise.getTags().stream().map(Tag::name).toList());
+        ExerciseDTO exerciseDTO = new ExerciseDTO(exercise.getId(), exercise.getName(), exercise.getStatement(), exercise.getExerciseBattery().getName(), exercise.getRules(), exercise.getTags());
         List<ExerciseFileDTO> exerciseFilesDTO = new ArrayList<>();
 
         for (ExerciseFile exerciseFile : files) {

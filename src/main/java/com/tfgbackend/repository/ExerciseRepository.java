@@ -27,6 +27,15 @@ public interface ExerciseRepository extends MongoRepository<Exercise, Long>, Cus
 
             "{$unwind: { path: '$exerciseBattery'}}",
 
+            "{$lookup:" +
+                "{" +
+                    "from: 'tags'," +
+                    "localField: 'tags.$id'," +
+                    "foreignField: '_id'," +
+                    "as: 'tags'," +
+                "}" +
+            "}",
+
             "{$project:" +
                     "{" +
                     "   _id: 1," +
@@ -34,7 +43,13 @@ public interface ExerciseRepository extends MongoRepository<Exercise, Long>, Cus
                     "   statement: 1," +
                     "   rules: 1," +
                     "   successConditions: 1," +
-                    "   tags: 1," +
+                    "   tags: { " +
+                            " $map: { " +
+                                " input: '$tags', " +
+                                " as: 'tag', " +
+                                " in: '$$tag.name', " +
+                            "}" +
+                        "}," +
                     "   idFromBattery: '$exerciseBattery._id'," +
                     "   nameFromBattery: '$exerciseBattery.name'" +
                     "}" +

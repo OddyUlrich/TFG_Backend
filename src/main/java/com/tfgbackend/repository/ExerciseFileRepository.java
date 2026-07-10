@@ -1,6 +1,7 @@
 package com.tfgbackend.repository;
 
 import com.tfgbackend.dto.ExerciseFileDTO;
+import com.tfgbackend.model.Exercise;
 import com.tfgbackend.model.ExerciseFile;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.repository.Aggregation;
@@ -215,4 +216,6 @@ public interface ExerciseFileRepository extends MongoRepository<ExerciseFile, Lo
                     "}}",
     })
     ExerciseFile findByNameAndSolutionId(String name, ObjectId solutionId);
+
+    void deleteExerciseFilesByExercise(Exercise exercise);
 }

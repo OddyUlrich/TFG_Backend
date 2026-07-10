@@ -41,12 +41,13 @@ public class TfgBackendApplication implements CommandLineRunner {
     private final TagRepository tr;
     private final SolutionRepository sr;
     private final ExerciseFileRepository efr;
+    private final RulesRepository rr;
 
     private final BCryptPasswordEncoder bcrypt = new BCryptPasswordEncoder();
     private final RuleProcessorAiService ruleProcessorAiService;
 
     @Autowired
-    public TfgBackendApplication(UserRepository ur, ExerciseRepository er, ExerciseBatteryRepository ebr, ExerciseService es, SolutionRepository sr, TagRepository tr, ExerciseFileRepository efr, RuleProcessorAiService ruleProcessorAiService) {
+    public TfgBackendApplication(UserRepository ur, ExerciseRepository er, ExerciseBatteryRepository ebr, ExerciseService es, SolutionRepository sr, TagRepository tr, ExerciseFileRepository efr, RulesRepository rr, RuleProcessorAiService ruleProcessorAiService) {
         this.ur = ur;
         this.er = er;
         this.es = es;
@@ -54,6 +55,7 @@ public class TfgBackendApplication implements CommandLineRunner {
         this.tr = tr;
         this.sr = sr;
         this.efr = efr;
+        this.rr = rr;
         this.ruleProcessorAiService = ruleProcessorAiService;
     }
 
@@ -70,6 +72,7 @@ public class TfgBackendApplication implements CommandLineRunner {
         ebr.deleteAll();
         efr.deleteAll();
         sr.deleteAll();
+        rr.deleteAll();
 
         ObjectId batteryId1 = new ObjectId("635981f6e40f61599a000061");
         ObjectId batteryId2 = new ObjectId("635981f6e40f61599a000062");

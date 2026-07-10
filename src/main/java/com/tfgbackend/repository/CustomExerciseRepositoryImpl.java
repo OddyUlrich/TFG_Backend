@@ -60,7 +60,7 @@ public class CustomExerciseRepositoryImpl implements CustomExerciseRepository{
                                         )
                                 )
                         ))
-                        .append("as", "solution")
+                        .append("as", "solutions")
         ));
 
         pipeline.add(context -> new Document("$lookup",
@@ -109,7 +109,7 @@ public class CustomExerciseRepositoryImpl implements CustomExerciseRepository{
         pipeline.add(Aggregation.project()
                 .andInclude("id", "name", "tags", "favorite", "creationTimestamp")
                 .and("exerciseBattery.name").as("batteryName")
-                .andInclude("solution")
+                .andInclude("solutions")
         );
 
         Aggregation aggregation = Aggregation.newAggregation(pipeline);

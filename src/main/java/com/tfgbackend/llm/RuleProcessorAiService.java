@@ -37,5 +37,5 @@ public interface RuleProcessorAiService {
         {{rawPrompt}}
         ---
         """)
-    Result<List<Rule>> parseRules(@V("rawPrompt") String rawPrompt);
+    Result<List<ParsedRule>> parseRules(@V("rawPrompt") String rawPrompt);
 }

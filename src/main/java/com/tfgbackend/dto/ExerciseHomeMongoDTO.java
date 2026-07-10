@@ -14,15 +14,16 @@ public class ExerciseHomeMongoDTO {
     private Boolean favorite;
     private String batteryName;
     private LocalDateTime creationTimestamp;
-    List<Solution> solutions;
+    private List<Solution> solutions;
 
-    public ExerciseHomeMongoDTO(String id, String name, List<Tag> tags, Boolean favorite, String batteryName, LocalDateTime creationTimestamp) {
+    public ExerciseHomeMongoDTO(String id, String name, List<Tag> tags, Boolean favorite, String batteryName, LocalDateTime creationTimestamp, List<Solution> solutions) {
         this.id = id;
         this.name = name;
         this.tags = tags;
         this.favorite = favorite;
         this.batteryName = batteryName;
         this.creationTimestamp = creationTimestamp;
+        this.solutions = solutions;
     }
 
     public String getId() {

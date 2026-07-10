@@ -21,6 +21,7 @@ public class Exercise {
     private String statement;
     @DBRef(lazy = true)
     private @Valid ExerciseBattery exerciseBattery;
+    @DBRef(lazy = true)
     private List<Rule> rules;
     @DBRef(lazy = true)
     private List<Tag> tags;

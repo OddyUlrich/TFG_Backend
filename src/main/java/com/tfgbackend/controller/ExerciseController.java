@@ -1,14 +1,10 @@
 package com.tfgbackend.controller;
 
-import com.tfgbackend.llm.RuleProcessorAiService;
 import com.tfgbackend.dto.*;
 import com.tfgbackend.exception.ResourceNotFoundException;
 import com.tfgbackend.model.Exercise;
 import com.tfgbackend.model.ExerciseFile;
-import com.tfgbackend.model.Rule;
 import com.tfgbackend.service.*;
-import dev.langchain4j.exception.InternalServerException;
-import dev.langchain4j.service.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -26,13 +22,11 @@ public class ExerciseController {
 
     private final ExerciseService exerciseService;
     private final ExerciseFilesService exerciseFilesService;
-    private final RuleProcessorAiService ruleProcessorAiService;
 
     @Autowired
-    public ExerciseController(ExerciseService exerciseService, ExerciseFilesService exerciseFilesService, RuleProcessorAiService ruleProcessorAiService) {
+    public ExerciseController(ExerciseService exerciseService, ExerciseFilesService exerciseFilesService) {
         this.exerciseService = exerciseService;
         this.exerciseFilesService = exerciseFilesService;
-        this.ruleProcessorAiService = ruleProcessorAiService;
     }
 
     @GetMapping
@@ -89,7 +83,7 @@ public class ExerciseController {
         List<ExerciseFileDTO> templateFilesDTO = data.getFiles();
 
         Exercise newExercise = exerciseService.createFromDTO(exerciseDTO, auth.getName());
-        List<ExerciseFile> newTemplateFiles = exerciseFilesService.saveTemplateFiles(templateFilesDTO, newExercise);
+        List<ExerciseFile> newTemplateFiles = exerciseFilesService.saveTemplateFiles(templateFilesDTO, newExercise, true);
 
         //TODO guardar los ficheros -> ¿transaccional guardando todos a la vez?
 
@@ -98,37 +92,31 @@ public class ExerciseController {
         return ResponseEntity.status(HttpStatus.CREATED).body(newData);
     }
 
-    @PatchMapping(value = "/{exerciseId}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ExerciseTemplateDataDTO> editExercise(@RequestBody ExerciseTemplateDataDTO data, Authentication auth) {
+    @PutMapping(value = "/{exerciseId}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ExerciseTemplateDataDTO> editExercise(@PathVariable String exerciseId, @RequestBody ExerciseTemplateDataDTO data, Authentication auth) {
 
-        System.out.println(data);
-
-        return null;
-    }
-
-    @PostMapping(value = "/rules", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<ProcessedRulesResponse> processingRules(@RequestBody String rulesText, Authentication auth) {
-
-        try {
-
-            if (auth == null || !auth.isAuthenticated()) {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-            }
-
-            Result<List<Rule>> result = ruleProcessorAiService.parseRules(rulesText);
-
-            return ResponseEntity.status(HttpStatus.OK).body(
-                    new ProcessedRulesResponse(
-                            result.content().stream().toList(),
-                            null)
-            );
-
-        }catch (InternalServerException e){
-            return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE)
-                    .body(new ProcessedRulesResponse(
-                            List.of(),
-                            "Esta IA no está temporalmente disponible"
-                    ));
+        if (auth == null || !auth.isAuthenticated()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
+
+        if (exerciseId == null || exerciseId.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "exerciseId is required");
+        }
+
+        ExerciseDTO exerciseDTO = data.getExercise();
+        List<ExerciseFileDTO> templateFilesDTO = data.getFiles();
+
+        if (!exerciseId.equals(exerciseDTO.getId())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ID from path variable and the ID from the exercise don't match");
+        }
+
+        Exercise newExercise = exerciseService.editFromDTO(exerciseDTO, auth.getName());
+        List<ExerciseFile> newTemplateFiles = exerciseFilesService.saveTemplateFiles(templateFilesDTO, newExercise, false);
+
+        //TODO guardar los ficheros -> ¿transaccional guardando todos a la vez?
+
+        ExerciseTemplateDataDTO newData = new ExerciseTemplateDataDTO(newExercise, newTemplateFiles);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(newData);
     }
 }
