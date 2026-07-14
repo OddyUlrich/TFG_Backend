@@ -8,7 +8,7 @@ import java.util.Collection;
 import java.util.List;
 
 @Repository
-public interface TagRepository extends MongoRepository<Tag, Long> {
+public interface TagRepository extends MongoRepository<Tag, String> {
 
     List<Tag> findAll();
 

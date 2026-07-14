@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface ExerciseFileRepository extends MongoRepository<ExerciseFile, Long> {
+public interface ExerciseFileRepository extends MongoRepository<ExerciseFile, String> {
 
 
     /*

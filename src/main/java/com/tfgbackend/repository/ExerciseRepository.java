@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface ExerciseRepository extends MongoRepository<Exercise, Long>, CustomExerciseRepository {
+public interface ExerciseRepository extends MongoRepository<Exercise, String>, CustomExerciseRepository {
 
     @Aggregation(pipeline = {
             "{$match: {'_id': ?0}}",

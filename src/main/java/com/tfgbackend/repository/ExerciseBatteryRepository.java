@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface ExerciseBatteryRepository extends MongoRepository<ExerciseBattery, Long> {
+public interface ExerciseBatteryRepository extends MongoRepository<ExerciseBattery, String> {
 
     List<ExerciseBattery> findAll();
 

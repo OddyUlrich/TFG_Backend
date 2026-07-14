@@ -38,8 +38,6 @@ public class RuleController {
             @RequestParam(required = false) String rulesFilter,
             Authentication auth) {
 
-        System.out.println("rulesFilter : " + rulesFilter);
-
         try {
             if (auth != null && auth.isAuthenticated()) {
                 List<RuleSearchDTO> lista = rulesService.searchByNameAndDescription(rulesFilter);
