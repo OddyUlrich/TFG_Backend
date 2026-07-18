@@ -36,7 +36,7 @@ public class CustomRuleRepositoryImpl implements CustomRuleRepository {
                 "exercise"
         ));
 
-        pipeline.add(Aggregation.unwind("exercise"));
+        pipeline.add(Aggregation.unwind("exercise", true));
 
         pipeline.add(Aggregation.lookup(
                 "exerciseBatteries",
@@ -45,7 +45,7 @@ public class CustomRuleRepositoryImpl implements CustomRuleRepository {
                 "exerciseBattery"
         ));
 
-        pipeline.add(Aggregation.unwind("exerciseBattery"));
+        pipeline.add(Aggregation.unwind("exerciseBattery", true));
 
         //FILTROS
         List<Criteria> criteriaList = new ArrayList<>();

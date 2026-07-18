@@ -151,7 +151,7 @@ public class ExerciseFilesService {
 
                 BlockStmt body = method.getBody().get();
                 if (body.getStatements().isEmpty()) {
-                    fileDTO.getEditableMethods().add(new EditableMethod(method.getName().asString(), startLine, endLine));
+                    fileDTO.getEditableMethods().add(new EditableMethod(method.getName().asString(), startLine+1, endLine-1));
                 }
 
             });

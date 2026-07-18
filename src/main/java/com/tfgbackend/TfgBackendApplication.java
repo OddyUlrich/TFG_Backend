@@ -44,10 +44,9 @@ public class TfgBackendApplication implements CommandLineRunner {
     private final RulesRepository rr;
 
     private final BCryptPasswordEncoder bcrypt = new BCryptPasswordEncoder();
-    private final RuleProcessorAiService ruleProcessorAiService;
 
     @Autowired
-    public TfgBackendApplication(UserRepository ur, ExerciseRepository er, ExerciseBatteryRepository ebr, ExerciseService es, SolutionRepository sr, TagRepository tr, ExerciseFileRepository efr, RulesRepository rr, RuleProcessorAiService ruleProcessorAiService) {
+    public TfgBackendApplication(UserRepository ur, ExerciseRepository er, ExerciseBatteryRepository ebr, ExerciseService es, SolutionRepository sr, TagRepository tr, ExerciseFileRepository efr, RulesRepository rr) {
         this.ur = ur;
         this.er = er;
         this.es = es;
@@ -56,7 +55,6 @@ public class TfgBackendApplication implements CommandLineRunner {
         this.sr = sr;
         this.efr = efr;
         this.rr = rr;
-        this.ruleProcessorAiService = ruleProcessorAiService;
     }
 
     public static void main(String[] args) {
@@ -117,7 +115,6 @@ public class TfgBackendApplication implements CommandLineRunner {
         User profesor = new User(profesorId.toString(), "profesor", bcrypt.encode("password"), "profesor@hotmail.com", LocalDateTime.now(), List.of(Rol.TEACHER), List.of());
         User estudiante = new User(estudianteID.toString(), "estudiante", bcrypt.encode("password"), "estudiante@hotmail.com", LocalDateTime.now(), List.of(Rol.STUDENT), List.of());
         User estudiante2 = new User(estudianteID2.toString(), "estudiante2", bcrypt.encode("password"), "estudiante2@hotmail.com", LocalDateTime.now(), List.of(Rol.STUDENT), List.of());
-        //TODO ACTUALIZAR LA LISTA DE ASIGNATURAS DEL ESTUDIANTE
 
         ur.save(estudiante);
         ur.save(estudiante2);
