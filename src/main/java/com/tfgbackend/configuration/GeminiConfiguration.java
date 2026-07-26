@@ -18,8 +18,6 @@ public class GeminiConfiguration {
                 .modelName("gemini-3.1-flash-lite")
                 .supportedCapabilities(RESPONSE_FORMAT_JSON_SCHEMA)
                 .timeout(java.time.Duration.ofMinutes(1))
-                .logRequests(true)
-                .logResponses(true)
                 .build();
     }
 }

@@ -8,9 +8,9 @@ public class CodeEditorDataDTO {
     private List<ExerciseFileDTO> freshFiles;
     private List<SolutionDTO> exerciseSolutions;
     private String currentSolution;
-    private ExerciseDTO exercise;
+    private ExerciseSimpleDTO exercise;
 
-    public CodeEditorDataDTO(List<ExerciseFileDTO> filesForDisplay, List<ExerciseFileDTO> freshFiles, List<SolutionDTO> exerciseSolutions, String currentSolution, ExerciseDTO exercise) {
+    public CodeEditorDataDTO(List<ExerciseFileDTO> filesForDisplay, List<ExerciseFileDTO> freshFiles, List<SolutionDTO> exerciseSolutions, String currentSolution, ExerciseSimpleDTO exercise) {
         this.filesForDisplay = filesForDisplay;
         this.freshFiles = freshFiles;
         this.exerciseSolutions = exerciseSolutions;
@@ -50,11 +50,11 @@ public class CodeEditorDataDTO {
         this.currentSolution = currentSolution;
     }
 
-    public ExerciseDTO getExercise() {
+    public ExerciseSimpleDTO getExercise() {
         return exercise;
     }
 
-    public void setExercise(ExerciseDTO exercise) {
+    public void setExercise(ExerciseSimpleDTO exercise) {
         this.exercise = exercise;
     }
 }

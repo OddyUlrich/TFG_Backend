@@ -1,6 +1,5 @@
 package com.tfgbackend.llm;
 
-import com.tfgbackend.model.Rule;
 import dev.langchain4j.service.Result;
 import dev.langchain4j.service.SystemMessage;
 import dev.langchain4j.service.UserMessage;

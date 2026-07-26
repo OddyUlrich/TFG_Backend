@@ -4,7 +4,7 @@ import com.tfgbackend.model.Rule;
 import com.tfgbackend.model.Tag;
 import java.util.List;
 
-public class ExerciseDTO {
+public class ExerciseSimpleDTO {
 
     private String id;
     private String name;
@@ -13,7 +13,7 @@ public class ExerciseDTO {
     private List<Tag> tags;
     private String nameFromBattery;
 
-    public ExerciseDTO(String id, String name, String statement, String nameFromBattery, List<Rule> rules, List<Tag> tags) {
+    public ExerciseSimpleDTO(String id, String name, String statement, String nameFromBattery, List<Rule> rules, List<Tag> tags) {
         this.id = id;
         this.name = name;
         this.statement = statement;

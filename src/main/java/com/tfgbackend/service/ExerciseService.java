@@ -1,6 +1,6 @@
 package com.tfgbackend.service;
 
-import com.tfgbackend.dto.ExerciseDTO;
+import com.tfgbackend.dto.ExerciseSimpleDTO;
 import com.tfgbackend.dto.ExerciseHomeMongoDTO;
 import com.tfgbackend.exception.ResourceNotFoundException;
 import com.tfgbackend.mappers.ExerciseHomeDTOMapper;
@@ -47,37 +47,37 @@ public class ExerciseService {
         return er.findExerciseById(exerciseId).orElseThrow(() -> new ResourceNotFoundException("Exercise does not exist with that ID"));
     }
 
-    public ExerciseDTO findExerciseForEditorById(String exerciseId){
+    public ExerciseSimpleDTO findExerciseForEditorById(String exerciseId){
         return er.findExerciseForEditorById(new ObjectId(exerciseId)).orElseThrow(() -> new ResourceNotFoundException("Exercise does not exist with that ID (Data for Editor)"));
     }
 
-    public Exercise createFromDTO(ExerciseDTO exerciseDTO, String teacherEmail){
-        String name = exerciseDTO.getName();
-        ExerciseBattery battery = ebs.findBatteryByName(exerciseDTO.getNameFromBattery());
+    public Exercise createFromDTO(ExerciseSimpleDTO exerciseSimpleDTO, String teacherEmail){
+        String name = exerciseSimpleDTO.getName();
+        ExerciseBattery battery = ebs.findBatteryByName(exerciseSimpleDTO.getNameFromBattery());
         validateUniqueExercise(name, battery);
 
-        return saveExercise(exerciseDTO, teacherEmail, battery);
+        return saveExercise(exerciseSimpleDTO, teacherEmail, battery);
     }
 
-    public Exercise editFromDTO(ExerciseDTO exerciseDTO, String teacherEmail){
-        er.findExerciseById(exerciseDTO.getId()).orElseThrow(() -> new ResourceNotFoundException("Exercise does not exist with that ID"));
-        ExerciseBattery battery = ebs.findBatteryByName(exerciseDTO.getNameFromBattery());
+    public Exercise editFromDTO(ExerciseSimpleDTO exerciseSimpleDTO, String teacherEmail){
+        er.findExerciseById(exerciseSimpleDTO.getId()).orElseThrow(() -> new ResourceNotFoundException("Exercise does not exist with that ID"));
+        ExerciseBattery battery = ebs.findBatteryByName(exerciseSimpleDTO.getNameFromBattery());
         if (battery == null) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You have not selected an exercise battery or it does not exist");
 
-        return saveExercise(exerciseDTO, teacherEmail, battery);
+        return saveExercise(exerciseSimpleDTO, teacherEmail, battery);
     }
 
-    public Exercise saveExercise(ExerciseDTO exerciseDTO, String teacherEmail, ExerciseBattery battery){
+    public Exercise saveExercise(ExerciseSimpleDTO exerciseSimpleDTO, String teacherEmail, ExerciseBattery battery){
         //TODO COMPROBAR QUE SEA TEACHER
         User teacher = us.getUserByEmail(teacherEmail);
         if (teacher == null) throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "User creator does not exist");
 
-        List<Tag> tags = ts.findByNameIn(exerciseDTO.getTags().stream().map(Tag::name).toList());
+        List<Tag> tags = ts.findByNameIn(exerciseSimpleDTO.getTags().stream().map(Tag::name).toList());
         if (tags == null || tags.isEmpty()){
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "You must select at least one tag");
         }
 
-        Exercise newExercise = ExerciseMapper.toEntity(exerciseDTO, battery, tags, teacher, LocalDateTime.now());
+        Exercise newExercise = ExerciseMapper.toEntity(exerciseSimpleDTO, battery, tags, teacher, LocalDateTime.now());
 
         //TODO MANDAR AL SERVICIO DE RULES PARA COMPROBAR QUE NO SE REPITAN, ES DECIR, CREAR NUEVAS O REUTILIZAR
         newExercise.setRules(rs.saveRules(newExercise.getRules()));

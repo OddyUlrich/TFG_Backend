@@ -221,7 +221,7 @@ public class TfgBackendApplication implements CommandLineRunner {
         sr.save(solucion7);
         sr.save(solucion8);
 
-        EditableMethod metodosEjercicio1 = new EditableMethod("Pepe", -1, -1);
+        EditableMethod metodosEjercicio1 = new EditableMethod("Pepe", 1, 1);
 
         //FILES
         try (Stream<Path> filePathStream = Files.walk(Paths.get("E:/Escritorio/A"))) {

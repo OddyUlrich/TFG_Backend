@@ -1,6 +1,6 @@
 package com.tfgbackend.repository;
 
-import com.tfgbackend.dto.ExerciseDTO;
+import com.tfgbackend.dto.ExerciseSimpleDTO;
 import com.tfgbackend.model.Exercise;
 import com.tfgbackend.model.ExerciseBattery;
 import org.bson.types.ObjectId;
@@ -55,7 +55,7 @@ public interface ExerciseRepository extends MongoRepository<Exercise, String>, C
                     "}" +
             "}"
     })
-    Optional<ExerciseDTO> findExerciseForEditorById(ObjectId id);
+    Optional<ExerciseSimpleDTO> findExerciseForEditorById(ObjectId id);
 
     Optional<Exercise> findExerciseById(String id);
 

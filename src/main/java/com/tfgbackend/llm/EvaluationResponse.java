@@ -6,6 +6,7 @@ import java.util.List;
 
 public record EvaluationResponse(
         ExerciseEvaluationStatus evaluationStatus,
+        String response,
         List<String> errors
 
 ) {

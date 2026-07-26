@@ -62,7 +62,7 @@ public class SolutionController {
                 String currentSolution = exerciseFilesService.obtainSolutionFromExerciseFiles(allExerciseFilesAndLastSolution);
 
                 //All necessary information about the exercise the user is currently working on
-                ExerciseDTO exercise = exerciseService.findExerciseForEditorById(exerciseId);
+                ExerciseSimpleDTO exercise = exerciseService.findExerciseForEditorById(exerciseId);
 
                 //DTO for the frontend with all files and information needed
                 CodeEditorDataDTO data = new CodeEditorDataDTO(filteredFiles.getFilesForDisplay(), filteredFiles.getTemplateFiles(), solutions, currentSolution, exercise);

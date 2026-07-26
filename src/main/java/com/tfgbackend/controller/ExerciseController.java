@@ -55,7 +55,7 @@ public class ExerciseController {
         try {
             if (auth != null && auth.isAuthenticated()) {
 
-                ExerciseDTO exercise = exerciseService.findExerciseForEditorById(exerciseId);
+                ExerciseSimpleDTO exercise = exerciseService.findExerciseForEditorById(exerciseId);
                 List<ExerciseFileDTO> allTemplateFiles = exerciseFilesService.templateFilesByExerciseId(exerciseId);
 
                 ExerciseTemplateDataDTO data = new ExerciseTemplateDataDTO(exercise, allTemplateFiles);
@@ -79,10 +79,10 @@ public class ExerciseController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
-        ExerciseDTO exerciseDTO = data.getExercise();
+        ExerciseSimpleDTO exerciseSimpleDTO = data.getExercise();
         List<ExerciseFileDTO> templateFilesDTO = data.getFiles();
 
-        Exercise newExercise = exerciseService.createFromDTO(exerciseDTO, auth.getName());
+        Exercise newExercise = exerciseService.createFromDTO(exerciseSimpleDTO, auth.getName());
         List<ExerciseFile> newTemplateFiles = exerciseFilesService.saveTemplateFiles(templateFilesDTO, newExercise, true);
 
         //TODO guardar los ficheros -> ¿transaccional guardando todos a la vez?
@@ -103,14 +103,14 @@ public class ExerciseController {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "exerciseId is required");
         }
 
-        ExerciseDTO exerciseDTO = data.getExercise();
+        ExerciseSimpleDTO exerciseSimpleDTO = data.getExercise();
         List<ExerciseFileDTO> templateFilesDTO = data.getFiles();
 
-        if (!exerciseId.equals(exerciseDTO.getId())) {
+        if (!exerciseId.equals(exerciseSimpleDTO.getId())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ID from path variable and the ID from the exercise don't match");
         }
 
-        Exercise newExercise = exerciseService.editFromDTO(exerciseDTO, auth.getName());
+        Exercise newExercise = exerciseService.editFromDTO(exerciseSimpleDTO, auth.getName());
         List<ExerciseFile> newTemplateFiles = exerciseFilesService.saveTemplateFiles(templateFilesDTO, newExercise, false);
 
         //TODO guardar los ficheros -> ¿transaccional guardando todos a la vez?

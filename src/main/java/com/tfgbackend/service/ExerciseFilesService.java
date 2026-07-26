@@ -135,7 +135,7 @@ public class ExerciseFilesService {
             ParseResult<CompilationUnit> result = parser.parse(fileDTO.getText());
 
             if (!result.isSuccessful() || result.getResult().isEmpty()) {
-                continue;
+                newTemplateFiles.add(saveFile(FileMapper.toEntityNoId(fileDTO, exercise, null)));
             }
 
             CompilationUnit cu = result.getResult().get();
@@ -151,6 +151,9 @@ public class ExerciseFilesService {
 
                 BlockStmt body = method.getBody().get();
                 if (body.getStatements().isEmpty()) {
+                    if (fileDTO.getEditableMethods() == null) {
+                        fileDTO.setEditableMethods(new ArrayList<>());
+                    }
                     fileDTO.getEditableMethods().add(new EditableMethod(method.getName().asString(), startLine+1, endLine-1));
                 }
 

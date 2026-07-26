@@ -1,6 +1,6 @@
 package com.tfgbackend.mappers;
 
-import com.tfgbackend.dto.ExerciseDTO;
+import com.tfgbackend.dto.ExerciseSimpleDTO;
 import com.tfgbackend.model.Exercise;
 import com.tfgbackend.model.ExerciseBattery;
 import com.tfgbackend.model.Tag;
@@ -11,7 +11,7 @@ import java.util.List;
 public class ExerciseMapper {
 
     public static Exercise toEntity(
-            ExerciseDTO dto,
+            ExerciseSimpleDTO dto,
             ExerciseBattery battery,
             List<Tag> tags,
             User teacher,
