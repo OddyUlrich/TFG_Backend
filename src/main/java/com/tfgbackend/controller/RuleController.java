@@ -60,8 +60,8 @@ public class RuleController {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
             }
 
-            Result<List<ParsedRule>> result = ruleProcessorAiService.parseRules(rulesText);
-            List<Rule> rules = rulesService.mapToRule(result.content().stream().toList());
+            List<ParsedRule> result = ruleProcessorAiService.parseRules(rulesText);
+            List<Rule> rules = rulesService.mapToRule(result);
 
             return ResponseEntity.status(HttpStatus.OK).body(
                     new ProcessedRulesResponse(

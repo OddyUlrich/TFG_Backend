@@ -89,10 +89,21 @@ public class ExerciseFileDTO {
 
     @Override
     public String toString() {
-        return "ExerciseFilesDTO{" +
-                "id='" + id + '\'' +
-                ", name='" + name + '\'' +
-                ", path='" + path + '\'' +
-                '}';
+        return """
+        File:
+          Name: %s
+          Path: %s
+
+        Editable methods:
+        %s
+
+        Source code:
+        %s
+        """.formatted(
+                name,
+                path,
+                editableMethods,
+                text
+        );
     }
 }

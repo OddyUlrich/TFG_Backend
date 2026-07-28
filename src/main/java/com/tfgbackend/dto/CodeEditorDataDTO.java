@@ -5,14 +5,14 @@ import java.util.List;
 public class CodeEditorDataDTO {
 
     private List<ExerciseFileDTO> filesForDisplay;
-    private List<ExerciseFileDTO> freshFiles;
+    private List<ExerciseFileDTO> templateFiles;
     private List<SolutionDTO> exerciseSolutions;
     private String currentSolution;
     private ExerciseSimpleDTO exercise;
 
-    public CodeEditorDataDTO(List<ExerciseFileDTO> filesForDisplay, List<ExerciseFileDTO> freshFiles, List<SolutionDTO> exerciseSolutions, String currentSolution, ExerciseSimpleDTO exercise) {
+    public CodeEditorDataDTO(List<ExerciseFileDTO> filesForDisplay, List<ExerciseFileDTO> templateFiles, List<SolutionDTO> exerciseSolutions, String currentSolution, ExerciseSimpleDTO exercise) {
         this.filesForDisplay = filesForDisplay;
-        this.freshFiles = freshFiles;
+        this.templateFiles = templateFiles;
         this.exerciseSolutions = exerciseSolutions;
         this.currentSolution = currentSolution;
         this.exercise = exercise;
@@ -26,12 +26,12 @@ public class CodeEditorDataDTO {
         this.filesForDisplay = filesForDisplay;
     }
 
-    public List<ExerciseFileDTO> getFreshFiles() {
-        return freshFiles;
+    public List<ExerciseFileDTO> getTemplateFiles() {
+        return templateFiles;
     }
 
-    public void setFreshFiles(List<ExerciseFileDTO> freshFiles) {
-        this.freshFiles = freshFiles;
+    public void setTemplateFiles(List<ExerciseFileDTO> templateFiles) {
+        this.templateFiles = templateFiles;
     }
 
     public List<SolutionDTO> getExerciseSolutions() {

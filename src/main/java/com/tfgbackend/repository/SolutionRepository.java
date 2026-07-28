@@ -13,7 +13,7 @@ import java.util.Optional;
 
 @Repository
 
-public interface SolutionRepository extends MongoRepository<Solution, String> {
+public interface SolutionRepository extends MongoRepository<Solution, String>, CustomSolutionRepository {
 
     @Aggregation(pipeline = {
             "{$match: {" +

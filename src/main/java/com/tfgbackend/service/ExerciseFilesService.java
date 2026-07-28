@@ -22,6 +22,7 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 
 import static com.tfgbackend.configuration.Util.isEmptyString;
 
@@ -109,18 +110,6 @@ public class ExerciseFilesService {
         return new TemplateAndSolutionFiles(new ArrayList<>(filesForDisplay.values()), templates);
     }
 
-    /* This function gets the string of the id from solution files. It is assumed that all
-    files received belong to the same solution.*/
-    public String obtainSolutionFromExerciseFiles(List<ExerciseFileDTO> exerciseFiles) {
-        for (ExerciseFileDTO file : exerciseFiles) {
-            if (!isEmptyString(file.getIdFromSolution())) {
-                return file.getIdFromSolution();
-            }
-        }
-
-        return null;
-    }
-
     //The boolean just indicates if they are the first files or there are already other ones related to the exercise
     public List<ExerciseFile> saveTemplateFiles(List<ExerciseFileDTO> exerciseFiles, Exercise exercise, boolean firstFiles) {
 
@@ -159,11 +148,37 @@ public class ExerciseFilesService {
 
             });
 
-
             newTemplateFiles.add(saveFile(FileMapper.toEntityNoId(fileDTO, exercise, null)));
         }
 
         return newTemplateFiles;
+    }
+
+    public void updateEditableMethodRange (ExerciseFileDTO file) {
+        ParseResult<CompilationUnit> result = parser.parse(file.getText());
+
+        if (!result.isSuccessful() || result.getResult().isEmpty()) {
+            return;
+        }
+
+        CompilationUnit cu = result.getResult().get();
+
+        for (EditableMethod method : file.getEditableMethods()) {
+            Optional<MethodDeclaration> methodOpt = cu.findFirst(
+                    MethodDeclaration.class,
+                    m -> m.getNameAsString().equals(method.getName())
+            );
+
+            if (methodOpt.isPresent() && methodOpt.get().getRange().isPresent()) {
+                Range range = methodOpt.get().getRange().get();
+
+                int startLine = range.begin.line;
+                int endLine = range.end.line;
+
+                method.setStartLine(startLine+1);
+                method.setEndLine(endLine-1);
+            }
+        }
     }
 
     public ExerciseFile saveFile(ExerciseFile file) {

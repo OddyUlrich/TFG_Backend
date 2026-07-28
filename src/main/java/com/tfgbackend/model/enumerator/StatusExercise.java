@@ -1,5 +1,5 @@
 package com.tfgbackend.model.enumerator;
 
 public enum StatusExercise {
-    PENDING, COMPLETED, REVIEWED
+    PENDING, COMPLETED, IN_PROGRESS;
 }

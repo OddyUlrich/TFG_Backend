@@ -13,7 +13,7 @@ public record Rule(
 ) {
         @Override
         public String toString() {
-                return description;
+                return "[" + type + "] " + description;
         }
 
 }
