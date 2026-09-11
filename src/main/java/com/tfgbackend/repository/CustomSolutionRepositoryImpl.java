@@ -1,7 +1,6 @@
 package com.tfgbackend.repository;
 
 import com.tfgbackend.model.Solution;
-import com.tfgbackend.model.User;
 import com.tfgbackend.model.enumerator.StatusExercise;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
